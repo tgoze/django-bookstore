@@ -24,19 +24,20 @@ def createBook(b):
 
 
 def getAllBooks():
-
     try:
         db_config = read_db_config()
         conn = MySQLConnection(**db_config)
         cursor = conn.cursor()
 
-        allbooks = []
         cursor.callproc('getAllBooks')
-
+        allBooks = []
+        results = cursor.stored_results()
         for result in cursor.stored_results():
+
             books = result.fetchall()
 
         for x in books:
+
             currentbook = book.Book()
             currentbook.set_bookID(x[0])
             currentbook.set_isbn13(x[1])
@@ -52,21 +53,63 @@ def getAllBooks():
             currentbook.set_genre(x[11])
             currentbook.set_authorID(x[12])
             currentbook.set_publisherID(x[13])
-            allbooks.append(currentbook)
+            allBooks.append(currentbook)
+
+
 
         conn.commit()
     except Error as error:
         print(error)
+
     finally:
         cursor.close()
         conn.close()
-    return allbooks
+    return allBooks
+
+def getBookbyTitle(title):
+    try:
+        db_config = read_db_config()
+        conn = MySQLConnection(**db_config)
+        cursor = conn.cursor()
+
+        args = [title]
+
+        cursor.callproc('getBookByTitle', args)
+
+        for result in cursor.stored_results():
+            books = result.fetchall()
+
+        for x in cursor.stored_results():
+            currentbook = book.Book()
+            currentbook.set_bookID(x[0])
+            currentbook.set_isbn13(x[1])
+            currentbook.set_isbn10(x[2])
+            currentbook.set_title(x[3])
+            currentbook.set_copyRightDate(x[4])
+            currentbook.set_type(x[5])
+            currentbook.set_edition(x[6])
+            currentbook.set_numberOfPages(x[7])
+            currentbook.set_size(x[8])
+            currentbook.set_weight(x[9])
+            currentbook.set_image(x[10])
+            currentbook.set_genre(x[11])
+            currentbook.set_authorID(x[12])
+            currentbook.set_publisherID(x[13])
 
 
 
+        conn.commit()
+    except Error as error:
+        print(error)
 
+    finally:
+        cursor.close()
+        conn.close()
+    return currentbook
 
 
 if __name__ == '__main__':
-    print(getAllBooks())
 
+    for x in getAllBooks():
+
+        print(x.title, x.bookID)
