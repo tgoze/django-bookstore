@@ -3,13 +3,13 @@ from mysql.connector import MySQLConnection, Error
 from dbconfig import read_db_config
 
 
-def create_publisher(publisher_obj):
-    args = (publisher_obj.company_name, publisher_obj.city, publisher_obj.state_code, publisher_obj.zip_code)
+def create_publisher(p_publisher):    
     try:
         db_config = read_db_config()        
         conn = MySQLConnection(**db_config)
         cursor = conn.cursor()
 
+        args = (p_publisher.company_name, p_publisher.city, p_publisher.state_code, p_publisher.zip_code)
         cursor.callproc('createPublisher', args)
         conn.commit()
 
@@ -54,14 +54,14 @@ def getall_publishers():
 
     return publishers
 
-def get_publisher_byname(company_name):
-    args = (company_name,)
+def get_publisher_byname(company_name):    
     publisher = Publisher()
     try:
         db_config = read_db_config()
         conn = MySQLConnection(**db_config)
         cursor = conn.cursor()
 
+        args = (company_name,)
         cursor.callproc('getPublisherByName', args)                
         # This gets the first resultset
         result = next(cursor.stored_results())
@@ -73,6 +73,7 @@ def get_publisher_byname(company_name):
         publisher.state_code = publisherRow[3]
         publisher.zip_code = publisherRow[4]
         leftover_rows = len(result.fetchall())
+        # Probably don't need this since we should make the company name a UI
         if leftover_rows != 0:
             print(str(leftover_rows) + " more row(s) have the company name: " + "\"" + company_name + "\"")   
 
@@ -85,12 +86,50 @@ def get_publisher_byname(company_name):
 
     return publisher
 
-if __name__ == '__main__':
-    print(get_publisher_byname('test').zip_code)
 
+def update_publisher(p_publisher):
+    try:
+        db_config = read_db_config()        
+        conn = MySQLConnection(**db_config)
+        cursor = conn.cursor()
+
+        args = (p_publisher.publisher_id, p_publisher.company_name, p_publisher.city, p_publisher.state_code, p_publisher.zip_code)
+        cursor.callproc('updatePublisher', args)
+        conn.commit()
+
+        cursor.close()
+        conn.close()
+    except Error as error:
+        print(error)
+    except Exception as e:
+        print(e)
+
+
+def delete_publisher(publisher_id):    
+    try:
+        db_config = read_db_config()        
+        conn = MySQLConnection(**db_config)
+        cursor = conn.cursor()
+
+        args= (publisher_id,)
+        cursor.callproc('deletePublisher', args)
+        conn.commit()
+
+        cursor.close()
+        conn.close()
+    except Error as error:
+        print(error)
+    except Exception as e:
+        print(e)
+
+
+if __name__ == '__main__':
+
+    delete_publisher(55)
     # pub = Publisher()
-    # pub.companyName = "test"
+    # pub.publisher_id = 55
+    # pub.company_name = "test"
     # pub.city = "test"
-    # pub.stateCode = "te"
-    # pub.zipCode = "teste"
-    # create_publisher(pub)
+    # pub.state_code = "te"
+    # pub.zip_code = "teste"
+    # update_publisher(pub)
