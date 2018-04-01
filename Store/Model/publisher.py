@@ -1,7 +1,7 @@
 class Publisher:
     def __init__(self):
-        self.publisherID = None
-        self.companyName = None
+        self.publisher_id = None
+        self.company_name = None
         self.city = None
-        self.stateCode = None
-        self.zipCode = None
+        self.state_code = None
+        self.zip_code = None
