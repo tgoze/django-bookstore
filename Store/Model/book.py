@@ -1,6 +1,5 @@
 class Book:
 
-
     def __init__(self):
         self.bookID = None
         self.isbn13 = None
@@ -80,7 +79,7 @@ class Book:
     def get_image(self):
         return self.image
 
-    def set_image(self,image):
+    def set_image(self, image):
         self.image = image
 
     def get_genre(self):

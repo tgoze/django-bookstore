@@ -23,6 +23,23 @@ def createBook(b):
         conn.close()
 
 
+def updateBook(b):
+    args = (b.get_bookID(), b.get_isbn13(), b.get_isbn10(), b.get_title(), b.get_copyRightDate(),
+            b.get_type(), b.get_edition(), b.get_numberOfPages(), b.get_size(), b.get_weight(),
+            b.get_image(), b.get_genre(), b.get_authorID(), b.get_publisherID())
+    try:
+        db_config = read_db_config()
+        conn = MySQLConnection(**db_config)
+        cursor = conn.cursor()
+
+        cursor.callproc('updateBook', args)
+
+        conn.commit()
+    except Error as error:
+        print(error)
+    finally:
+        cursor.close()
+        conn.close()
 def getAllBooks():
     try:
         db_config = read_db_config()
@@ -31,9 +48,8 @@ def getAllBooks():
 
         cursor.callproc('getAllBooks')
         allBooks = []
-        results = cursor.stored_results()
-        for result in cursor.stored_results():
 
+        for result in cursor.stored_results():
             books = result.fetchall()
 
         for x in books:
@@ -107,9 +123,19 @@ def getBookbyTitle(title):
         conn.close()
     return currentbook
 
+def deleteBook(b):
+    try:
+        db_config = read_db_config()
+        conn = MySQLConnection(**db_config)
+        cursor = conn.cursor()
+        args = [b]
+        cursor.callproc('deleteBook', args)
 
-if __name__ == '__main__':
+        conn.commit()
+    except Error as error:
+        print(error)
 
-    for x in getAllBooks():
+    finally:
+        cursor.close()
+        conn.close()
 
-        print(x.title, x.bookID)
