@@ -124,16 +124,3 @@ class PublisherDao(AbcDao):
             print(error)
         except Exception as e:
             print(e)
-
-
-if __name__ == '__main__':
-
-    pub_dao = PublisherDao()
-    print(pub_dao.get_byname('Penguin House').company_name)
-    # pub = Publisher()
-    # pub.publisher_id = 55
-    # pub.company_name = "test"
-    # pub.city = "test"
-    # pub.state_code = "te"
-    # pub.zip_code = "teste"
-    # create_publisher(pub)
