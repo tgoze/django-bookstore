@@ -37,13 +37,13 @@ class PublisherDao(AbcDao):
             # This loop iterates through the resultsets
             for result in cursor.stored_results():
                 # This loop iterates through the rows in each resultset
-                for publisherRow in result.fetchall():
+                for publisher_row in result.fetchall():
                     publisher = Publisher()
-                    publisher.publisher_id = publisherRow[0]
-                    publisher.company_name = publisherRow[1]
-                    publisher.city = publisherRow[2]
-                    publisher.state_code = publisherRow[3]
-                    publisher.zip_code = publisherRow[4]
+                    publisher.publisher_id = publisher_row[0]
+                    publisher.company_name = publisher_row[1]
+                    publisher.city = publisher_row[2]
+                    publisher.state_code = publisher_row[3]
+                    publisher.zip_code = publisher_row[4]
                     publishers.append(publisher)
 
             # Close the connection to the DB
@@ -68,12 +68,12 @@ class PublisherDao(AbcDao):
             # This gets the first resultset
             result = next(cursor.stored_results())
             # This gets the first row in the resultset
-            publisherRow = result.fetchone()
-            publisher.publisher_id = publisherRow[0]
-            publisher.company_name = publisherRow[1]
-            publisher.city = publisherRow[2]
-            publisher.state_code = publisherRow[3]
-            publisher.zip_code = publisherRow[4]
+            publisher_row = result.fetchone()
+            publisher.publisher_id = publisher_row[0]
+            publisher.company_name = publisher_row[1]
+            publisher.city = publisher_row[2]
+            publisher.state_code = publisher_row[3]
+            publisher.zip_code = publisher_row[4]
             leftover_rows = len(result.fetchall())
             # Probably don't need this since we should make the company name a UI
             if leftover_rows != 0:

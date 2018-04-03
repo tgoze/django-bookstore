@@ -1,6 +1,9 @@
-from Store.Model import book, bookdao
-if __name__ == '__main__':
+from book_dao import BookDao
 
-    for x in bookdao.searchBooks('b'):
+if __name__ == '__main__':
+    
+    book_dao = BookDao()
+    
+    for x in book_dao.searchBooks('b'):
         print(x.bookID, x.title, x.size, x.numberOfPages)
 
