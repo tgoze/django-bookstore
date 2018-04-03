@@ -1,6 +1,5 @@
 class Book:
 
-
     def __init__(self):
         self.bookID = None
         self.isbn13 = None
@@ -38,13 +37,13 @@ class Book:
     def get_title(self):
         return self.title
 
-    def set_title(self,title):
+    def set_title(self, title):
         self.title = title
 
     def get_copyRightDate(self):
         return self.copyRightDate
 
-    def set_copyRightDate(self,copyRightDate):
+    def set_copyRightDate(self, copyRightDate):
         self.copyRightDate = copyRightDate
 
     def get_type(self):
@@ -56,7 +55,7 @@ class Book:
     def get_edition(self):
         return self.edition
 
-    def set_edition(self,edition):
+    def set_edition(self, edition):
         self.edition = edition
 
     def get_numberOfPages(self):
@@ -80,7 +79,7 @@ class Book:
     def get_image(self):
         return self.image
 
-    def set_image(self,image):
+    def set_image(self, image):
         self.image = image
 
     def get_genre(self):
