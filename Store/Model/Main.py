@@ -1,9 +1,12 @@
 from book_dao import BookDao
+from genre_dao import GenreDao
+from genre import Genre
 
 if __name__ == '__main__':
     
-    book_dao = BookDao()
+    g = GenreDao()
+    for genre in g.get_all():
+        print(genre.genre_id,genre.genre)
     
-    for x in book_dao.searchBooks('b'):
-        print(x.bookID, x.title, x.size, x.numberOfPages)
+    
 
