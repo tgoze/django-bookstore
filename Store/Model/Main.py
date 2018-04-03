@@ -1,12 +1,12 @@
 from book_dao import BookDao
 from genre_dao import GenreDao
-from genre import Genre
+from inventory_dao import InventoryDao
+from inventory import Inventory
 
 if __name__ == '__main__':
     
-    g = GenreDao()
-    for genre in g.get_all():
-        print(genre.genre_id,genre.genre)
-    
+    inv = InventoryDao()
+    for x in inv.get_all():
+        print(x.book_id,x.quantity_on_hand,x.quantity_ordered,x.cost,x.retail_price)
     
 

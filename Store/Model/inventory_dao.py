@@ -1,17 +1,16 @@
-from genre import Genre
+from inventory import Inventory
 from mysql.connector import MySQLConnection, Error
 from dbconfig import read_db_config
 from abc_dao import AbcDao
 
-class GenreDao(AbcDao):
-
-    def create(self,p_genre):
+class InventoryDao(AbcDao):
+    def create(self, p_inventory):
         try:
             db_config = read_db_config()
             conn = MySQLConnection(**db_config)
             cursor = conn.cursor()
-            args = [p_genre.genre]
-            cursor.callproc('createGenre',args)
+            args = [p_inventory.book_id, p_inventory.quantity_on_hand, p_inventory.quantity_ordered, p_inventory.cost, p_inventory.price]
+            cursor.callproc('createInventory',args)
 
             conn.commit()
         except Error as error:
@@ -19,32 +18,32 @@ class GenreDao(AbcDao):
         finally:
             cursor.close()
             conn.close()
-    def delete(self, p_genre):
+    def update(self, p_inventory):
         try:
             db_config = read_db_config()
             conn = MySQLConnection(**db_config)
             cursor = conn.cursor()
-            args = [p_genre.genre_id]
-            cursor.callproc('deleteGenre', args)
+            args = [p_inventory.book_id, p_inventory.quantity_on_hand, p_inventory.quantity_ordered, p_inventory.cost, p_inventory.price]
+            cursor.callproc('upDateInventory',args)
 
             conn.commit()
         except Error as error:
             print(error)
-
         finally:
             cursor.close()
             conn.close()
-    def update(self, p_genre):
+    def delete(self, p_inventory):
         try:
             db_config = read_db_config()
             conn = MySQLConnection(**db_config)
             cursor = conn.cursor()
-            args = (p_genre.genre_id, p_genre.genre)
-            cursor.callproc('updateGenre', args)
+            args = [p_inventory.book_id]
+            cursor.callproc('deleteInventory', args)
 
             conn.commit()
         except Error as error:
             print(error)
+
         finally:
             cursor.close()
             conn.close()
@@ -54,17 +53,20 @@ class GenreDao(AbcDao):
             conn = MySQLConnection(**db_config)
             cursor = conn.cursor()
 
-            cursor.callproc('getAllGenres')
-            all_genres = []
+            cursor.callproc('getAllInventory')
+            all_inventory = []
 
             for result in cursor.stored_results():
-                genres = result.fetchall()
+                inventories = result.fetchall()
 
-            for x in genres:
-                currentgenre = Genre()
-                currentgenre.genre_id = x[0]
-                currentgenre.genre = x[1]
-                all_genres.append(currentgenre)
+            for x in inventories:
+                currentinventory = Inventory()
+                currentinventory.book_id = x[0]
+                currentinventory.quantity_on_hand = x[1]
+                currentinventory.quantity_ordered = x[2]
+                currentinventory.cost = x[3]
+                currentinventory.retail_price = x[4]
+                all_inventory.append(currentinventory)
 
                 cursor.close()
             conn.close()
@@ -73,4 +75,4 @@ class GenreDao(AbcDao):
         except Exception as e:
             print(e)
 
-        return all_genres
+        return all_inventory
