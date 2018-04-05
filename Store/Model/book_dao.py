@@ -1,7 +1,10 @@
-from book import Book
+from Store.Model.book import Book
+from Store.Model.publisher import Publisher
+from Store.Model.author import Author
+from Store.Model.genre import Genre
+from Store.Model.dbconfig import read_db_config
+from Store.Model.abc_dao import AbcDao
 from mysql.connector import MySQLConnection, Error
-from dbconfig import read_db_config
-from abc_dao import AbcDao
 
 class BookDao(AbcDao):
 
@@ -43,15 +46,62 @@ class BookDao(AbcDao):
             cursor.close()
             conn.close()
 
-
-    def get_all(self):
+    def get_byid(self, book_id):    
+        book = Book()
         try:
             db_config = read_db_config()
             conn = MySQLConnection(**db_config)
             cursor = conn.cursor()
 
-            cursor.callproc('getAllBooks')
-            allBooks = []
+            args = (book_id,)
+            cursor.callproc('getBookByID', args)                
+            # This gets the first resultset
+            result = next(cursor.stored_results())
+            # This gets the first row in the resultset
+            book_row = result.fetchone()
+            book.set_bookID(x[0])
+            book.set_isbn13(x[1])
+            book.set_isbn10(x[2])
+            book.set_title(x[3])
+            book.set_copyRightDate(x[4])
+            book.set_type(x[5])
+            book.set_edition(x[6])
+            book.set_numberOfPages(x[7])
+            book.set_size(x[8])
+            book.set_weight(x[9])
+            book.set_image(x[10])
+
+            genre = Genre()
+            genre.genre_id = x[11]
+            genre.genre = x[17]
+            author = Author()
+            author.author_id = x[12]
+            author.first_name = x[15]
+            author.last_name = x[16]
+            publisher = Publisher()
+            publisher.publisher_id = x[13]
+            publisher.company_name = x[14]
+            book.set_genre(genre)
+            book.set_author(author)
+            book.set_publisher(publisher)
+
+            cursor.close()
+            conn.close()
+        except Error as error:
+            print(error)
+        except Exception as e:
+            print(e)
+
+        return book
+
+    def get_all(self):
+        allBooks = []
+        try:
+            db_config = read_db_config()
+            conn = MySQLConnection(**db_config)
+            cursor = conn.cursor()
+
+            cursor.callproc('getAllBooks')            
 
             for result in cursor.stored_results():
                 books = result.fetchall()
@@ -70,12 +120,22 @@ class BookDao(AbcDao):
                 currentbook.set_size(x[8])
                 currentbook.set_weight(x[9])
                 currentbook.set_image(x[10])
-                currentbook.set_genre(x[11])
-                currentbook.set_authorID(x[12])
-                currentbook.set_publisherID(x[13])
+
+                genre = Genre()
+                genre.genre_id = x[11]
+                genre.genre = x[17]
+                author = Author()
+                author.author_id = x[12]
+                author.first_name = x[15]
+                author.last_name = x[16]
+                publisher = Publisher()
+                publisher.publisher_id = x[13]
+                publisher.company_name = x[14]
+                currentbook.set_genre(genre)
+                currentbook.set_author(author)
+                currentbook.set_publisher(publisher)
+
                 allBooks.append(currentbook)
-
-
 
             conn.commit()
         except Error as error:

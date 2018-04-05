@@ -1,0 +1,16 @@
+{% extends 'Store/layout.html' %}
+
+{% block content %}
+<h3>{{title}}</h3>
+<ul class="collection">
+    {% for book in books %}
+        <li class="collection-item">
+            <div>
+                <a href="books/details/{{book.bookID}}">{{book.title}}</a>  
+                by {{book.author.last_name}}, {{book.author.first_name}}               
+                <a href="!#" class="secondary-content"><i class="material-icons">delete</i></a>
+            </div>
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}

@@ -13,8 +13,8 @@ class Book:
         self.weight = None
         self.image = None
         self.genre = None
-        self.authorID = None
-        self.publisherID = None
+        self.author = None
+        self.publisher = None
 
     def get_bookID(self):
         return self.bookID
@@ -88,14 +88,14 @@ class Book:
     def set_genre(self,genre):
         self.genre = genre
 
-    def get_authorID(self):
-        return self.authorID
+    def get_author(self):
+        return self.author
 
-    def set_authorID(self,authorID):
-        self.authorID = authorID
+    def set_author(self,author):
+        self.author = author
 
-    def get_publisherID(self):
-        return self.publisherID
+    def get_publisher(self):
+        return self.publisher
 
-    def set_publisherID(self,publisherID):
-        self.publisherID = publisherID
+    def set_publisher(self,publisher):
+        self.publisher = publisher
