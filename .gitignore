@@ -1,4 +1,5 @@
 
+*.pyc
 .idea/
 .vscode/
 Store/Model/Main.py
