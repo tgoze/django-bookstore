@@ -1,8 +1,7 @@
-from customer_info import CustomerInfo
+from Store.Model.customer_info import CustomerInfo
+from Store.Model.dbconfig import read_db_config
+from Store.Model.abc_dao import AbcDao
 from mysql.connector import MySQLConnection, Error
-from dbconfig import read_db_config
-from abc_dao import AbcDao
-
 class CustomerInfoDAO(AbcDao):
     def create(self, p_customer):
         try:
@@ -61,7 +60,7 @@ class CustomerInfoDAO(AbcDao):
             print(e)
 
         return all_customer_info
-    def get_by_id(self, id):
+    def get_byid(self, id):
         try:
             db_config = read_db_config()
             conn = MySQLConnection(**db_config)

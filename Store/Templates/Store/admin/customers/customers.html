@@ -1,0 +1,22 @@
+{% extends 'Store/layout.html' %}
+{% load staticfiles %}
+
+{% block content %}
+<table>
+    <thead>
+        <tr>
+            <th>Customer ID</th>
+            <th>Customer Name</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+    {% for customer in customers %}
+        <tr>
+            <td><a href="customers/details/{{customer.customer_id}}">{{customer.customer_id}}</a></td>  
+            <td> Customer Name</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
