@@ -1,7 +1,7 @@
-from author import Author
+from Store.Model.author import Author
+from Store.Model.dbconfig import read_db_config
+from Store.Model.abc_dao import AbcDao
 from mysql.connector import MySQLConnection, Error
-from dbconfig import read_db_config
-from abc_dao import AbcDao
 
 class AuthorDao(AbcDao):
 

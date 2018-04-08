@@ -1,7 +1,7 @@
 class Book:
 
     def __init__(self):
-        self.bookID = None
+        self.book_id = None
         self.isbn13 = None
         self.isbn10 = None
         self.title = None
@@ -9,15 +9,15 @@ class Book:
         self.type = None
         self.edition = None
         self.numberOfPages = None
-        self.image = None
+        self.image_id = None
         self.genre = None
         self.author = None
         self.publisher = None
 
-    def get_bookID(self):
+    def get_book_id(self):
         return self.bookID
 
-    def set_bookID(self,bookID):
+    def set_book_id(self,bookID):
         self.bookID=bookID
 
     def get_isbn13(self):
@@ -62,11 +62,11 @@ class Book:
     def set_numberOfPages(self,numberOfPages):
         self.numberOfPages = numberOfPages
 
-    def get_image(self):
-        return self.image
+    def get_image_id(self):
+        return self.image_id
 
-    def set_image(self, image):
-        self.image = image
+    def set_image_id(self, image_id):
+        self.image_id = image_id
 
     def get_genre(self):
         return self.genre
