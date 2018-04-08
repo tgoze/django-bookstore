@@ -14,16 +14,15 @@ def index(request):
 
 class AdminBookView(TemplateView):
     template_name = 'Store/admin/books/books.html'
-
+    book_dao = BookDao()
+    books = book_dao.get_all()
+    
     def get(self, request):
-        book_dao = BookDao()
-        books = book_dao.get_all()
-
         form = BookForm()
 
         context = {
-            'title': 'Books',
-            'books': books,
+            'notification': "Please enter book data.",
+            'books': self.books,
             'form': form
         }
 
@@ -31,40 +30,52 @@ class AdminBookView(TemplateView):
 
     def post(self, request):
         book = Book()
-        book_dao = BookDao()
-        
         form = BookForm(request.POST)
-        if form.is_valid():
-            book.title = form.cleaned_data['title']
-            book.isbn10 = form.cleaned_data['isbn10']
-            book.isbn13 = form.cleaned_data['isbn13']
-            book.copyRightDate = form.cleaned_data['copyright_date']
-            book.edition = form.cleaned_data['edition']
-            book.numberOfPages = form.cleaned_data['num_pages']
-            book.type = form.cleaned_data['book_type']
-            author = Author()
-            author.author_id = int(form.cleaned_data['authors'])
-            book.author = author
-            publisher = Publisher()
-            publisher.publisher_id = int(form.cleaned_data['publishers'])
-            book.publisher = publisher
-            genre = Genre()
-            genre.genre_id = int(form.cleaned_data['genres'])
-            book.genre = genre
-            book.image_id = 1
+        
+        if 'create-book' in request.POST:
+            if form.is_valid():
+                book.title = form.cleaned_data['title']
+                book.isbn10 = form.cleaned_data['isbn10']
+                book.isbn13 = form.cleaned_data['isbn13']
+                book.copyRightDate = form.cleaned_data['copyright_date']
+                book.edition = form.cleaned_data['edition']
+                book.numberOfPages = form.cleaned_data['num_pages']
+                book.type = form.cleaned_data['book_type']
+                author = Author()
+                author.author_id = int(form.cleaned_data['authors'])
+                book.author = author
+                publisher = Publisher()
+                publisher.publisher_id = int(form.cleaned_data['publishers'])
+                book.publisher = publisher
+                genre = Genre()
+                genre.genre_id = int(form.cleaned_data['genres'])
+                book.genre = genre
+                book.image_id = 1
 
-            book_dao.create(book)
+                self.book_dao.create(book)
 
-            context = {
-                'text': "Post successful!"
+                context = {
+                    'notification': "Book saved successfully!",
+                    'books': self.books,
+                    'form': form
+                }
+            else:
+                context = {
+                    'notification': "Not a valid submission."
+                }
+
+            return render(request, self.template_name, context)
+        
+        elif 'delete-book' in request.POST:
+            book_id = int(request.POST.get('delete-skill'))
+            self.book_dao.delete(book_id)
+
+            context = {                
+                'books': self.books,
+                'form': form
             }
-        else:
-            context = {
-                'text': "Not valid bro"
-            }
 
-        return render(request, self.template_name, context)
-
+            return render(request, self.template_name, context)
 
 def admin_book_details(request, bookID):
     

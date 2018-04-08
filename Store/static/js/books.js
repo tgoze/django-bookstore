@@ -3,3 +3,7 @@ $(document).ready(function(){
     $('.datepicker').datepicker();
     $('select').formSelect();
 });
+
+// document.getElementById("myBtn").addEventListener("click", function(){
+//     M.toast
+// });

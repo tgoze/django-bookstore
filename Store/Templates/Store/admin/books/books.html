@@ -3,24 +3,30 @@
 {% load widget_tweaks %}
 
 {% block content %}
+<h4>Books</h4>
 <table>
     <thead>
         <tr>
-            <th>{{title}}</th>
+            <th>Book</th>
             <th>Author</th>
+            <th>Publisher</th>
+            <th>Edit</th>
             <th>Delete</th>
         </tr>
     </thead>
     <tbody>
-    {% for book in books %}
-        <tr>
-            <td><a href="books/details/{{book.bookID}}">{{book.title}}</a></td>  
-            <td>{{book.author.last_name}}, {{book.author.first_name}}</td>
-            <td><a href="!#" class="secondary-content"><i class="material-icons">delete</i></a></td>
-        </tr>
-    {% endfor %}
+        <form method="POST">
+        {% for book in books %}
+            <tr>
+                <td><a href="books/details/{{book.bookID}}">{{book.title}}</a></td>  
+                <td>{{book.author.last_name}}, {{book.author.first_name}}</td>
+                <td>{{book.publisher.company_name}}</td>
+                <td><a href="!#"><i class="material-icons">edit</i></a></td>
+                <td><a href="" type="submit" name="delete-skill" value="{{ book.book_id }}"><i class="material-icons">delete</i></a></td>                
+            </tr>
+        {% endfor %}
+        </form>     
     </tbody>
-    <h4>{{ text }}</h4>
 </table>
 
 <div class="fixed-action-btn">
@@ -104,12 +110,15 @@
             </div>
         </div>
         <div class="modal-footer">
-            <!-- <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
-            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Submit</a> -->
-            <button type="submit">Submit</button>
+            <!-- <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>-->
+            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+            <button type="submit" class="modal-action waves-effect waves-green btn-flat" 
+                onclick="M.toast({html: '{{ notification }}'})" name="create-book">Submit</button>
         </div>
     </form>
 </div>
+
+
 
 <script type="text/javascript" src="{% static "js/jquery-3.3.1.js" %}"></script>
 <script type="text/javascript" src="{% static "js/materialize.min.js" %}"></script>
