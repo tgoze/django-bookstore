@@ -2,6 +2,7 @@ Django==2.0.3
 django-authentication==0.1.5
 django-braces==1.0.0
 django-extensions==1.1.1
+django-widget-tweaks==1.4.2
 getMysqlConnPara==2.0.0
 mysql-connector-python==8.0.6
 mysql-connector-python-rf==2.2.2
