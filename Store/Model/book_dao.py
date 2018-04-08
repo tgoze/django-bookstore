@@ -186,7 +186,7 @@ class BookDao(AbcDao):
             for result in cursor.stored_results():
                 books = result.fetchall()
 
-            for x in cursor.stored_results():
+            for x in books:
                 currentbook = Book()
                 currentbook.set_bookID(x[0])
                 currentbook.set_isbn13(x[1])
