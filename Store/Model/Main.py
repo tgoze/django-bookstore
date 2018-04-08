@@ -7,21 +7,18 @@ from user_dao import UserDao
 from user import User
 from customer_address_dao import CustomerAddressDao
 from customer_address import CustomerAddress
-
-
+from payment_info import PaymentInfo
+from payment_info_dao import PaymentInfoDao
 
 if __name__ == '__main__':
     #settings.configure(DEBUG=True)
-    c = CustomerAddress()
-    cdao = CustomerAddressDao()
-    #c.address_id=1
-    c.street = '234 Main Street'
-    c.city = 'Troy'
-    c.state_code='MO'
-    c.zip_code=65616
-    c.customer_id=1
-    c.address_type='shipping'
-    cdao.create(c)
+    p = PaymentInfo()
+    pdao = PaymentInfoDao()
+    p.customer_id = 1
+  
+    for x in pdao.get_all(p):
+        print(x.card_number)
+
     
     
   
