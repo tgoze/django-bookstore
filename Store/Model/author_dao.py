@@ -56,6 +56,9 @@ class AuthorDao(AbcDao):
         return authors
 
 
+    def get_byid(self, author_id):
+        raise NotImplementedError
+
     def update(self, p_author):
         try:
             db_config = read_db_config()        

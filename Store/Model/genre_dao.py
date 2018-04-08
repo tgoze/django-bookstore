@@ -1,7 +1,7 @@
-from genre import Genre
+from Store.Model.genre import Genre
+from Store.Model.dbconfig import read_db_config
+from Store.Model.abc_dao import AbcDao
 from mysql.connector import MySQLConnection, Error
-from dbconfig import read_db_config
-from abc_dao import AbcDao
 
 class GenreDao(AbcDao):
 
@@ -48,6 +48,8 @@ class GenreDao(AbcDao):
         finally:
             cursor.close()
             conn.close()
+    def get_byid(self, genre_id):
+        raise NotImplementedError
     def get_all(self):
         try:
             db_config = read_db_config()

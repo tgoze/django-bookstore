@@ -9,8 +9,6 @@ class Book:
         self.type = None
         self.edition = None
         self.numberOfPages = None
-        self.size = None
-        self.weight = None
         self.image = None
         self.genre = None
         self.author = None
@@ -63,18 +61,6 @@ class Book:
 
     def set_numberOfPages(self,numberOfPages):
         self.numberOfPages = numberOfPages
-
-    def get_size(self):
-        return self.size
-
-    def set_size(self,size):
-        self.size = size
-
-    def get_weight(self):
-        return self.weight
-
-    def set_weight(self,weight):
-        self.weight = weight
 
     def get_image(self):
         return self.image

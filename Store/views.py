@@ -1,5 +1,9 @@
 from django.shortcuts import render
 from Store.Model.book_dao import BookDao
+from Store.Model.publisher_dao import PublisherDao
+from Store.Model.genre_dao import GenreDao
+
+from Store.forms import BookForm
 
 # Create your views here.
 def index(request): 
@@ -8,11 +12,18 @@ def index(request):
 def admin_books(request):
 
     book_dao = BookDao()
+    publisher_dao = PublisherDao()
+    genre_dao = GenreDao()
+
     books = book_dao.get_all()
+    publishers = publisher_dao.get_all()
+    genres = genre_dao.get_all()
 
     context = {
         'title': 'Books',
-        'books': books
+        'books': books,
+        'publishers': publishers,
+        'genres': genres
     }
 
     return render(request, 'Store/admin/books/books.html', context)
@@ -20,6 +31,7 @@ def admin_books(request):
 def admin_book_details(request, bookID):
     
     book_dao = BookDao()
+
     book = book_dao.get_byid(bookID)
 
     context = {
