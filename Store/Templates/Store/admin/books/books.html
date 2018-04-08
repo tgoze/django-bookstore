@@ -1,0 +1,111 @@
+{% extends 'Store/layout.html' %}
+{% load staticfiles %}
+
+{% block content %}
+<table>
+    <thead>
+        <tr>
+            <th>{{title}}</th>
+            <th>Author</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for book in books %}
+        <tr>
+            <td><a href="books/details/{{book.bookID}}">{{book.title}}</a></td>  
+            <td>{{book.author.last_name}}, {{book.author.first_name}}</td>
+            <td><a href="!#" class="secondary-content"><i class="material-icons">delete</i></a></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<div class="fixed-action-btn">
+    <a class="btn-floating modal-trigger" href="#addbook">
+        <i class="large material-icons">add</i>
+    </a>
+</div>
+
+<div id="addbook" class="modal">
+    <div class="modal-content">
+        <h4>Add Book</h4>
+        <div class="row">
+            <form action="" class="col s12">            
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input id="book_title" type="text" class="validate">
+                        <label for="book_title">Book Title</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s6">
+                        <input id="author_first" type="text" class="validate">
+                        <label for="author_first">First Name</label>
+                    </div>
+                    <div class="input-field col s6">
+                        <input id="author_last" type="text" class="validate">
+                        <label for="author_last">Last Name</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s6">
+                        <input id="isbn_10" type="text" data-length="10" class="validate">
+                        <label for="isbn_10">ISBN10</label>
+                    </div>
+                    <div class="input-field col s6">
+                        <input id="isbn_13" type="text" data-length="13" class="validate">
+                        <label for="isbn_13">ISBN13</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s4">
+                        <input id="cprt_date" type="text" class="datepicker">
+                        <label for="cprt_date">Copyright Date</label>
+                    </div>
+                    <div class="input-field col s4">
+                        <input id="edition" type="number">
+                        <label for="edition">Edition</label>
+                    </div>
+                    <div class="input-field col s4">
+                        <select>
+                            <option value="" disabled selected>Choose a publisher</option>
+                            {% for publisher in publishers %}
+                            <option value="1">{{publisher.company_name}}</option>
+                            {% endfor %}
+                        </select>
+                        <label>Publisher</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s4">
+                        <input id="book_type" type="text">
+                        <label for="book_type">Book Type</label>
+                    </div>
+                    <div class="input-field col s4">
+                        <input id="num_pages" type="number">
+                        <label for="num_pages">Number of Pages</label>
+                    </div>                    
+                    <div class="input-field col s4">
+                        <select>
+                            <option value="" disabled selected>Choose a genre</option>
+                            {% for genre in genres %}
+                            <option value="1">{{genre.genre}}</option>
+                            {% endfor %}
+                        </select>
+                        <label>Genre</label>
+                    </div>
+                </div>                                
+            </form>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+        <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Submit</a>
+    </div>
+</div>
+
+<script type="text/javascript" src="{% static "js/jquery-3.3.1.js" %}"></script>
+<script type="text/javascript" src="{% static "js/materialize.min.js" %}"></script>
+<script type="text/javascript" src="{% static "js/books.js" %}"></script>
+{% endblock %}

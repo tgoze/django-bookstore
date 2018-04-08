@@ -1,7 +1,7 @@
-from publisher import Publisher
+from Store.Model.publisher import Publisher
+from Store.Model.dbconfig import read_db_config
+from Store.Model.abc_dao import AbcDao
 from mysql.connector import MySQLConnection, Error
-from dbconfig import read_db_config
-from abc_dao import AbcDao
 
 class PublisherDao(AbcDao):
 
@@ -55,6 +55,10 @@ class PublisherDao(AbcDao):
             print(e)
 
         return publishers
+
+
+    def get_byid(self, publisher_id):
+        raise NotImplementedError
 
     def get_byname(self, company_name):    
         publisher = Publisher()
