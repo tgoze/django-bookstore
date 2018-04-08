@@ -3,18 +3,11 @@ from django.views.generic import TemplateView
 
 from Store.Model.book import Book
 from Store.Model.book_dao import BookDao
-<<<<<<< HEAD
-from Store.Model.publisher_dao import PublisherDao
-from Store.Model.genre_dao import GenreDao
-from Store.Model.customer_info_dao import CustomerInfoDAO
-from Store.forms import BookForm
-=======
 from Store.Model.author import Author
 from Store.Model.publisher import Publisher
 from Store.Model.genre import Genre
-from .forms import BookForm
+from .forms import *
 
->>>>>>> origin/tgoze
 
 def index(request): 
     return render(request, 'Store/index.html')
