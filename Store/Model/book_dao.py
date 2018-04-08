@@ -184,128 +184,6 @@ class BookDao(AbcDao):
     #     return allBooks
 
     
-<<<<<<< HEAD
-    def getBooksByAuthor(self, b,c):
-        try:
-            db_config = read_db_config()
-            conn = MySQLConnection(**db_config)
-            cursor = conn.cursor()
-            args = [b,c]
-            cursor.callproc('getBooksByAuthor', args)
-            allBooks = []
-
-            for result in cursor.stored_results():
-                books = result.fetchall()
-
-            for x in books:
-
-                currentbook = Book()
-                currentbook.set_bookID(x[3])
-                currentbook.set_isbn13(x[4])
-                currentbook.set_isbn10(x[5])
-                currentbook.set_title(x[6])
-                currentbook.set_copyRightDate(x[7])
-                currentbook.set_type(x[8])
-                currentbook.set_edition(x[9])
-                currentbook.set_numberOfPages(x[10])
-                currentbook.set_image(x[11])
-                currentbook.set_genre(x[12])
-                currentbook.set_authorID(x[13])
-                currentbook.set_publisherID(x[14])
-                allBooks.append(currentbook)
-
-
-
-            conn.commit()
-        except Error as error:
-            print(error)
-
-        finally:
-            cursor.close()
-            conn.close()
-        return allBooks
-
-
-    def getBookbyTitle(self, title):
-        try:
-            db_config = read_db_config()
-            conn = MySQLConnection(**db_config)
-            cursor = conn.cursor()
-
-            args = [title]
-
-            cursor.callproc('getBookByTitle', args)
-
-            for result in cursor.stored_results():
-                books = result.fetchall()
-
-            for x in books:
-                currentbook = Book()
-                currentbook.set_bookID(x[0])
-                currentbook.set_isbn13(x[1])
-                currentbook.set_isbn10(x[2])
-                currentbook.set_title(x[3])
-                currentbook.set_copyRightDate(x[4])
-                currentbook.set_type(x[5])
-                currentbook.set_edition(x[6])
-                currentbook.set_numberOfPages(x[7])
-                currentbook.set_image(x[8])
-                currentbook.set_genre(x[9])
-                currentbook.set_authorID(x[10])
-                currentbook.set_publisherID(x[11])
-
-
-
-            conn.commit()
-        except Error as error:
-            print(error)
-
-        finally:
-            cursor.close()
-            conn.close()
-        return currentbook
-
-
-    def searchBooks(python, b):
-        try:
-            db_config = read_db_config()
-            conn = MySQLConnection(**db_config)
-            cursor = conn.cursor()
-            args = [b]
-            cursor.callproc('searchBooks', args)
-            allBooks = []
-
-            for result in cursor.stored_results():
-                books = result.fetchall()
-
-            for x in books:
-
-                currentbook = Book()
-                currentbook.set_bookID(x[0])
-                currentbook.set_isbn13(x[1])
-                currentbook.set_isbn10(x[2])
-                currentbook.set_title(x[3])
-                currentbook.set_copyRightDate(x[4])
-                currentbook.set_type(x[5])
-                currentbook.set_edition(x[6])
-                currentbook.set_numberOfPages(x[7])
-                currentbook.set_image(x[8])
-                currentbook.set_genre(x[9])
-                currentbook.set_authorID(x[10])
-                currentbook.set_publisherID(x[11])
-                allBooks.append(currentbook)
-
-
-
-            conn.commit()
-        except Error as error:
-            print(error)
-
-        finally:
-            cursor.close()
-            conn.close()
-        return allBooks
-=======
     # def getBooksByAuthor(self, b,c):
     #     try:
     #         db_config = read_db_config()
@@ -426,7 +304,6 @@ class BookDao(AbcDao):
     #         cursor.close()
     #         conn.close()
     #     return allBooks
->>>>>>> origin/tgoze
 
     def delete(self, b):
         try:
