@@ -15,22 +15,23 @@ def index(request):
 class AdminBookView(TemplateView):
     template_name = 'Store/admin/books/books.html'
     book_dao = BookDao()
-    books = book_dao.get_all()
     
     def get(self, request):
         form = BookForm()
+        books = self.book_dao.get_all()
 
         context = {
             'notification': "Please enter book data.",
-            'books': self.books,
+            'books': books,
             'form': form
         }
 
         return render(request, self.template_name, context)
 
-    def post(self, request):
-        book = Book()
+    def post(self, request):    
         form = BookForm(request.POST)
+        books = self.book_dao.get_all()
+        book = Book()
         
         if 'create-book' in request.POST:
             if form.is_valid():
@@ -56,7 +57,7 @@ class AdminBookView(TemplateView):
 
                 context = {
                     'notification': "Book saved successfully!",
-                    'books': self.books,
+                    'books': books,
                     'form': form
                 }
             else:
@@ -65,17 +66,23 @@ class AdminBookView(TemplateView):
                 }
 
             return render(request, self.template_name, context)
-        
+
+        elif 'edit-book' in request.POST
+            book_id = int(request.POST.get('delete-book'))
+            book = self.book_dao.get_byid(book_id)
+
+
         elif 'delete-book' in request.POST:
-            book_id = int(request.POST.get('delete-skill'))
+            book_id = int(request.POST.get('delete-book'))
             self.book_dao.delete(book_id)
 
             context = {                
-                'books': self.books,
+                'books': books,
                 'form': form
             }
 
             return render(request, self.template_name, context)
+
 
 def admin_book_details(request, bookID):
     

@@ -2,6 +2,10 @@
 {% load staticfiles %}
 {% load widget_tweaks %}
 
+{% block head %}
+<link href="{% static "css/bookstyle.css" %}" type="text/css" rel="stylesheet">
+{% endblock %}
+
 {% block content %}
 <h4>Books</h4>
 <table>
@@ -16,16 +20,17 @@
     </thead>
     <tbody>
         <form method="POST">
-        {% for book in books %}
+            {% csrf_token %}
+            {% for book in books %}
             <tr>
                 <td><a href="books/details/{{book.bookID}}">{{book.title}}</a></td>  
                 <td>{{book.author.last_name}}, {{book.author.first_name}}</td>
                 <td>{{book.publisher.company_name}}</td>
-                <td><a href="!#"><i class="material-icons">edit</i></a></td>
-                <td><a href="" type="submit" name="delete-skill" value="{{ book.book_id }}"><i class="material-icons">delete</i></a></td>                
+                <td><button id="submit-link" type="submit" name="edit-book" value="{{ book.bookID }}"><i class="material-icons">edit</i></button></td>
+                <td><button id="submit-link" type="submit" name="delete-book" value="{{ book.bookID }}"><i class="material-icons">delete</i></button></td>                
             </tr>
-        {% endfor %}
-        </form>     
+            {% endfor %}
+        </form>           
     </tbody>
 </table>
 
@@ -36,7 +41,7 @@
 </div>
 
 <div id="addbook" class="modal">
-    <form action="" method="POST" class="col s12">
+    <form method="POST" class="col s12">
     {% csrf_token %}
     {{ form.non_field_errors }}            
         <div class="modal-content">
