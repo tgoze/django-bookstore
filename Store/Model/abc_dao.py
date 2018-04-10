@@ -7,6 +7,10 @@ class AbcDao(ABC):
         pass
     
     @abstractmethod
+    def get_byid(self):
+        pass
+
+    @abstractmethod
     def get_all(self):
         pass
 

@@ -1,7 +1,7 @@
 class Book:
 
     def __init__(self):
-        self.bookID = None
+        self.book_id = None
         self.isbn13 = None
         self.isbn10 = None
         self.title = None
@@ -9,17 +9,15 @@ class Book:
         self.type = None
         self.edition = None
         self.numberOfPages = None
-        self.size = None
-        self.weight = None
-        self.image = None
+        self.image_id = None
         self.genre = None
-        self.authorID = None
-        self.publisherID = None
+        self.author = None
+        self.publisher = None
 
-    def get_bookID(self):
+    def get_book_id(self):
         return self.bookID
 
-    def set_bookID(self,bookID):
+    def set_book_id(self,bookID):
         self.bookID=bookID
 
     def get_isbn13(self):
@@ -64,23 +62,11 @@ class Book:
     def set_numberOfPages(self,numberOfPages):
         self.numberOfPages = numberOfPages
 
-    def get_size(self):
-        return self.size
+    def get_image_id(self):
+        return self.image_id
 
-    def set_size(self,size):
-        self.size = size
-
-    def get_weight(self):
-        return self.weight
-
-    def set_weight(self,weight):
-        self.weight = weight
-
-    def get_image(self):
-        return self.image
-
-    def set_image(self, image):
-        self.image = image
+    def set_image_id(self, image_id):
+        self.image_id = image_id
 
     def get_genre(self):
         return self.genre
@@ -88,14 +74,14 @@ class Book:
     def set_genre(self,genre):
         self.genre = genre
 
-    def get_authorID(self):
-        return self.authorID
+    def get_author(self):
+        return self.author
 
-    def set_authorID(self,authorID):
-        self.authorID = authorID
+    def set_author(self,author):
+        self.author = author
 
-    def get_publisherID(self):
-        return self.publisherID
+    def get_publisher(self):
+        return self.publisher
 
-    def set_publisherID(self,publisherID):
-        self.publisherID = publisherID
+    def set_publisher(self,publisher):
+        self.publisher = publisher
