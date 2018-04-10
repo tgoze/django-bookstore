@@ -5,3 +5,4 @@ __pycache__/
 .vscode/
 Store/Model/Main.py
 Store/Model/Main.py
+__pycache__/

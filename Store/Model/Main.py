@@ -11,7 +11,7 @@ from payment_info import PaymentInfo
 from payment_info_dao import PaymentInfoDao
 
 if __name__ == '__main__':
-    #settings.configure(DEBUG=True)
+    settings.configure(DEBUG=True)
     p = PaymentInfo()
     pdao = PaymentInfoDao()
     p.customer_id = 1
