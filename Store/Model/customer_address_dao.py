@@ -1,7 +1,7 @@
-from customer_address import CustomerAddress
+from Store.Model.customer_address import CustomerAddress
+from Store.Model.dbconfig import read_db_config
+from Store.Model.abc_dao import AbcDao
 from mysql.connector import MySQLConnection, Error
-from dbconfig import read_db_config
-from abc_dao import AbcDao
 
 class CustomerAddressDao(AbcDao):
 
@@ -93,10 +93,11 @@ class CustomerAddressDao(AbcDao):
             for x in customers:
                 currentAddress= CustomerAddress()
                 currentAddress.address_id = x[0]
-                currentAddress.street = x[2]
-                currentAddress.city = x[3]
-                currentAddress.state_code = x[4]
-                currentAddress.zip_code = x[5]
+                currentAddress.street = x[1]
+                currentAddress.city = x[2]
+                currentAddress.state_code = x[3]
+                currentAddress.zip_code = x[4]
+                currentAddress.customer_id = x[5]
                 currentAddress.address_type = x[6]
                 all_customer_address.append(currentAddress)
 
@@ -107,3 +108,5 @@ class CustomerAddressDao(AbcDao):
         except Exception as e:
             print(e)
         return all_customer_address
+    def get_byid(self, parameter_list):
+        raise NotImplementedError
