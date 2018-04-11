@@ -1,0 +1,37 @@
+{% extends 'Store/layout.html' %}
+{% load staticfiles %}
+{% load widget_tweaks %}
+{% block content %}
+<div class="row ">
+        <form action="" method="POST" class="col s12 ">
+          {% csrf_token %}
+          {{ form.non_field_errors }}  
+        <div class="col s12 m6 ">
+          <div class="card grey lighten-3" >
+            <div class="card-content black-text">
+              <span class="card-title"><b>Sign in</b></span>
+              <div class="input-field col s6">
+                  {{ form.username.errors }}
+                  <label for="{{ form.username.id_for_label }}">username</label>
+                  {{ form.username}}
+              </div>
+              <div class="input-field col s6">
+                  {{form.password.errors}}
+                  <label for="{{ form.username.id_for_label }}">password</label>
+                  {{ form.password }}
+              </div>
+            </div> <br>
+            <button type="submit">Submit</button>
+            {{text}}
+            <div class="card-action">
+              <a href="#">This is a link</a>
+              <a href="#">This is a link</a>
+            </div>
+          </div>
+        </div>
+        </form>
+      </div>
+<script type="text/javascript" src="{% static "js/jquery-3.3.1.js" %}"></script>
+<script type="text/javascript" src="{% static "js/materialize.min.js" %}"></script>
+<script type="text/javascript" src="{% static "js/books.js" %}"></script>
+{% endblock %}

@@ -6,6 +6,12 @@ from Store.Model.book_dao import BookDao
 from Store.Model.author import Author
 from Store.Model.publisher import Publisher
 from Store.Model.genre import Genre
+from Store.Model.customer_info_dao import CustomerInfoDAO
+from Store.Model.user import User
+from Store.Model.user_dao import UserDao
+from Store.Model.customer_address import CustomerAddress
+from django.conf import settings
+from django.contrib.auth.hashers import check_password
 from .forms import *
 
 
@@ -108,11 +114,61 @@ class AdminBookDetailView(TemplateView):
 
     
 
-def admin_customers(request):
-    customer_info_dao = CustomerInfoDAO()
+class AdminCustomerView(TemplateView):
+    template_name = 'Store/admin/customers/customers.html'
+    
+    def get(self,request):
+        cdao = CustomerInfoDAO()
 
-    customers = customer_info_dao.get_all()
+        customers = cdao.get_all()
+        context = {
+            'customers': customers
+        }
+        return render(request, self.template_name, context)
+
+def admin_customer_details(request,customer_id):
+    cdao = CustomerInfoDAO()
+
+    customer = cdao.get_byid(customer_id)
+    customer_address = cdao.get_addressbyid(customer_id)
     context = {
-        'customers':customers
+        'customer': customer,
+        'caddress': customer_address
     }
-    return render(request, 'Store/admin/customers/customers.html', context)
+    return render(request,'Store/admin/customers/details.html', context)
+
+class LoginView(TemplateView):
+    template_name = 'Store/customer/login.html'
+    
+    def get(self,request):  
+        form = LoginForm()  
+
+        context = {
+            'form': form
+        }
+
+        return render(request, self.template_name, context)
+    def post(self,request):
+        #settings.configure(DEBUG=True)
+        user = User()
+        udao = UserDao()
+
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            user.username = form.cleaned_data['username']
+            user.password = form.cleaned_data['password']
+            if (check_password(user.password,udao.get_byusername(username).password) == True):
+
+                context = {
+                    'text': 'Yay password'
+                }
+            else:
+                context = {
+                    'text': 'sad password'
+                }
+        else:
+            context = {
+                'text': 'sad day'
+            }
+        return render(request,self.template_name, context)
+

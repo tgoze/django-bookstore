@@ -1,6 +1,6 @@
 {% extends 'Store/layout.html' %}
 {% load staticfiles %}
-
+{% load widget_tweaks %}
 {% block content %}
 <table>
     <thead>
@@ -11,10 +11,10 @@
         </tr>
     </thead>
     <tbody>
-    {% for customer in customers %}
+    {% for c in customers %}
         <tr>
-            <td><a href="customers/details/{{customer.customer_id}}">{{customer.customer_id}}</a></td>  
-            <td> Customer Name</td>
+            <td><a href="customers/details/{{c.customer_id}}">{{c.customer_id}}</a></td>  
+            <td> {{c.user.first_name}} {{c.user.last_name}}</td>
         </tr>
     {% endfor %}
     </tbody>
