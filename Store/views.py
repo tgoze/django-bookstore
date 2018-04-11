@@ -74,7 +74,7 @@ class AdminBookView(TemplateView):
             return render(request, self.template_name, context)
 
         elif 'edit-book' in request.POST:
-            book_id = int(request.POST.get('delete-book'))
+            book_id = int(request.POST.get('edit-book'))
             book = self.book_dao.get_byid(book_id)
 
 
@@ -90,17 +90,29 @@ class AdminBookView(TemplateView):
             return render(request, self.template_name, context)
 
 
-def admin_book_details(request, bookID):
-    
+class AdminBookDetailView(TemplateView):
+    template_name = 'Store/admin/books/details.html'
     book_dao = BookDao()
+    
+    def get(self, request, bookID):
+        book = self.book_dao.get_byid(bookID)
+    
+        context = {
+            'book': book
+        }
 
-    book = book_dao.get_byid(bookID)
+        return render(request, 'Store/admin/books/details.html', context)
 
-    context = {
-        'book': book
-    }
+    def post(self, request):
+        book = self.book_dao.get_byid(bookID)
+    
+        context = {
+            'book': book
+        }
 
-    return render(request, 'Store/admin/books/details.html', context)
+        return render(request, 'Store/admin/books/details.html', context)
+
+    
 
 class AdminCustomerView(TemplateView):
     template_name = 'Store/admin/customers/customers.html'
