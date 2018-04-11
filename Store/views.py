@@ -73,7 +73,7 @@ class AdminBookView(TemplateView):
 
             return render(request, self.template_name, context)
 
-        elif 'edit-book' in request.POST
+        elif 'edit-book' in request.POST:
             book_id = int(request.POST.get('delete-book'))
             book = self.book_dao.get_byid(book_id)
 
