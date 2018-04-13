@@ -33,4 +33,11 @@ class BookForm(forms.Form):
     genres = forms.ChoiceField(choices=genres)
 class LoginForm(forms.Form):
     username = forms.CharField()
-    password = forms.CharField()
+    password = forms.CharField(max_length=32, widget=forms.PasswordInput)
+class RegisterUserForm(forms.Form):
+    first_name = forms.CharField()
+    last_name = forms.CharField()
+    email = forms.CharField()
+    username = forms.CharField()
+    password = forms.CharField(max_length=32, widget=forms.PasswordInput)
+    

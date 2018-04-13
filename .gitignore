@@ -6,3 +6,6 @@ __pycache__/
 Store/Model/Main.py
 Store/Model/Main.py
 __pycache__/
+*.pyc
+*.pyc
+*.pyc

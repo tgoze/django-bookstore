@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView
-
 from Store.Model.book import Book
 from Store.Model.book_dao import BookDao
 from Store.Model.author import Author
@@ -11,13 +10,25 @@ from Store.Model.user import User
 from Store.Model.user_dao import UserDao
 from Store.Model.customer_address import CustomerAddress
 from django.conf import settings
-from django.contrib.auth.hashers import check_password
-from .forms import *
+from django.contrib.auth.hashers import check_password, BCryptPasswordHasher,make_password
 
+
+from .forms import *
+from bcrypt import*
 
 def index(request): 
     return render(request, 'Store/index.html')
 
+class TestView(TemplateView):
+    user = User()
+    template_name = 'Store/customer/test.html'
+    def get(self,request):
+        fav_color = request.session['fav_color']
+        context = {
+            'fav_color':fav_color
+        }
+
+        return render(request,self.template_name,context)
 class AdminBookView(TemplateView):
     template_name = 'Store/admin/books/books.html'
     book_dao = BookDao()
@@ -74,7 +85,11 @@ class AdminBookView(TemplateView):
             return render(request, self.template_name, context)
 
         elif 'edit-book' in request.POST:
+
+           
+
             book_id = int(request.POST.get('edit-book'))
+
             book = self.book_dao.get_byid(book_id)
 
 
@@ -136,15 +151,17 @@ def admin_customer_details(request,customer_id):
         'caddress': customer_address
     }
     return render(request,'Store/admin/customers/details.html', context)
-
 class LoginView(TemplateView):
+    user = User()
+    udao = UserDao()
     template_name = 'Store/customer/login.html'
-    
+    user.username = 'not logged in'
     def get(self,request):  
         form = LoginForm()  
-
+        form1 = RegisterUserForm()
         context = {
-            'form': form
+            'form': form,
+            #'form1': form1
         }
 
         return render(request, self.template_name, context)
@@ -157,18 +174,32 @@ class LoginView(TemplateView):
         if form.is_valid():
             user.username = form.cleaned_data['username']
             user.password = form.cleaned_data['password']
-            if (check_password(user.password,udao.get_byusername(username).password) == True):
-
+            user.id = udao.get_byusername(user.username).id
+            if (check_password(user.password,udao.get_byusername(user.username).password) == True):
                 context = {
                     'text': 'Yay password'
                 }
-            else:
+                request.session['fav_color'] = 'blue'
+
+        form1 = RegisterUserForm(request.POST)
+        if form1.is_valid():
+                user.first_name = form1.cleaned_data['first_name']
+                user.last_name = form1.cleaned_data['last_name']
+                user.email = form1.cleaned_data['last_name']
+                user.username = form1.cleaned_data['username']
+                x = form1.cleaned_data['password']
+                user.is_superuser = 0
+                user.is_active = 1
+                user.is_staff = 0
+                user.password = make_password(x,salt=None,hasher='default')
+                udao.create(user)
                 context = {
-                    'text': 'sad password'
+                    'text': 'user saved???'
                 }
         else:
-            context = {
-                'text': 'sad day'
-            }
+                context = {
+                    'text':'try again'
+                }
+            
         return render(request,self.template_name, context)
 
