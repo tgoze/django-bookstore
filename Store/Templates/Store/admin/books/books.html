@@ -26,7 +26,7 @@
                 <td><a href="books/details/{{ book.bookID }}">{{ book.title }}</a></td>  
                 <td>{{book.author.last_name}}, {{book.author.first_name}}</td>
                 <td>{{book.publisher.company_name}}</td>                
-                <td><a class="modal-trigger" href="#editbook/{{ book.bookID }}"><i class="material-icons">edit</i></a></td>
+                <td><a id="edit-book" href="books/details/{{ book.bookID }}"><i class="material-icons">edit</i></a></td>
                 <td><button id="submit-link" type="submit" name="delete-book" value="{{ book.bookID }}"><i class="material-icons">delete</i></button></td>
             </tr>
             {% endfor %}
@@ -117,80 +117,6 @@
         <div class="modal-footer">            
             <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
             <button type="submit" class="modal-action waves-effect waves-green btn-flat" name="create-book">Submit</button>
-        </div>
-    </form>
-</div>
-
-<div id="editbook/<int:bookID>" class="modal">
-    <form method="POST" class="col s12">
-    {% csrf_token %}
-    {{ form.non_field_errors }}            
-        <div class="modal-content">
-            <h4>Edit Book</h4>
-            <div class="row">            
-                <div class="row">
-                    <div class="input-field col s6">
-                        {{ form.title.errors }}
-                        <label for="{{ form.title.id_for_label }}">Book Title</label>
-                        {{ form.title }}
-                    </div>
-                    <div class="input-field col s6">                    
-                        {{ form.authors.errors }}
-                        {{ form.authors }}
-                        <label>Author</label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="input-field col s6">
-                        {{ form.isbn10.errors }}
-                        <label for="{{ form.isbn10.id_for_label }}">ISBN10</label>
-                        {{ form.isbn10 }}
-                    </div>
-                    <div class="input-field col s6">
-                        {{ form.isbn13.errors }}
-                        <label for="{{ form.isbn13.id_for_label }}">ISBN13</label>
-                        {{ form.isbn13 }}
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="input-field col s4">
-                        {{ form.copyright_date.errors }}
-                        <label for="{{ form.copyright_date.id_for_label }}">Copyright Date</label>
-                        {{ form.copyright_date|add_class:"datepicker" }}
-                    </div>
-                    <div class="input-field col s4">
-                        {{ form.edition.errors }}
-                        <label for="{{ form.edition.id_for_label }}">Edition</label>
-                        {{ form.edition }}
-                    </div>
-                    <div class="input-field col s4">
-                        {{ form.publishers.errors }}
-                        {{ form.publishers }}
-                        <label>Publisher</label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="input-field col s4">
-                        {{ form.book_type.errors }}
-                        <label for="{{ form.book_type.id_for_label }}">Book Type</label>
-                        {{ form.book_type }}
-                    </div>
-                    <div class="input-field col s4">
-                        {{ form.num_pages.errors }}
-                        <label for="{{ form.num_pages.id_for_label }}">Number of Pages</label>
-                        {{ form.num_pages }}
-                    </div>                    
-                    <div class="input-field col s4">
-                        {{ form.genres.errors }}
-                        {{ form.genres }}
-                        <label>Genre</label>
-                    </div>
-                </div>                                
-            </div>
-        </div>
-        <div class="modal-footer">            
-            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
-            <button type="submit" class="modal-action waves-effect waves-green btn-flat" name="edit-book" value="{{ book.bookID }}">Submit</button>            
         </div>
     </form>
 </div>

@@ -31,6 +31,7 @@ class BookForm(forms.Form):
     book_type = forms.CharField()
     num_pages = forms.IntegerField()
     genres = forms.ChoiceField(choices=genres)
+
 class LoginForm(forms.Form):
     username = forms.CharField()
     password = forms.CharField()

@@ -73,11 +73,6 @@ class AdminBookView(TemplateView):
 
             return render(request, self.template_name, context)
 
-        elif 'edit-book' in request.POST:
-            book_id = int(request.POST.get('edit-book'))
-            book = self.book_dao.get_byid(book_id)
-
-
         elif 'delete-book' in request.POST:
             book_id = int(request.POST.get('delete-book'))
             self.book_dao.delete(book_id)
@@ -96,9 +91,11 @@ class AdminBookDetailView(TemplateView):
     
     def get(self, request, bookID):
         book = self.book_dao.get_byid(bookID)
+        form = BookForm(instance=book)
     
         context = {
-            'book': book
+            'book': book,
+            'form': form
         }
 
         return render(request, 'Store/admin/books/details.html', context)
@@ -112,7 +109,6 @@ class AdminBookDetailView(TemplateView):
 
         return render(request, 'Store/admin/books/details.html', context)
 
-    
 
 class AdminCustomerView(TemplateView):
     template_name = 'Store/admin/customers/customers.html'
@@ -126,6 +122,7 @@ class AdminCustomerView(TemplateView):
         }
         return render(request, self.template_name, context)
 
+
 def admin_customer_details(request,customer_id):
     cdao = CustomerInfoDAO()
 
@@ -136,6 +133,7 @@ def admin_customer_details(request,customer_id):
         'caddress': customer_address
     }
     return render(request,'Store/admin/customers/details.html', context)
+
 
 class LoginView(TemplateView):
     template_name = 'Store/customer/login.html'
