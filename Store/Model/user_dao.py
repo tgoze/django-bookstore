@@ -124,6 +124,7 @@ class UserDao(AbcDao):
             print(e)
         return u
     def get_byusername(self,username):
+        u = None
         try:
             
             db_config = read_db_config()        

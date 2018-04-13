@@ -21,16 +21,64 @@
                   {{ form.password }}
               </div>
             </div> <br>
-            <button type="submit">Submit</button>
+            <button type="submit"><a href='test'>Submit</a></button>
             {{text}}
             <div class="card-action">
-              <a href="#">This is a link</a>
-              <a href="#">This is a link</a>
+                <a class="btn-floating modal-trigger" href="#newcustomer">Register</a>
             </div>
           </div>
         </div>
         </form>
       </div>
+<div id="newcustomer" class="modal">
+    <form method="POST" class="col s12">
+        {% csrf_token %}
+        {{ form1.non_field_errors }}
+  <div class="row">
+    <div class="input-field col s3">
+      {{form1.first_name.errors}}
+      <i class="material-icons prefix">account_circle</i>
+      <label for="{{form1.first_name.id_for_label}}">First Name</label>
+      {{form1.first_name}}
+    </div>
+    <div class="row">
+        {{form1.last_name.errors}}
+        <div class="input-field col s3">
+        <label for="{{form1.last_name.id_for_label}}">Last Name</label>
+        {{form1.last_name}}
+    </div>
+    <div class="input-field col s6">
+        {{form1.email.errors}}
+      <i class="material-icons prefix">email</i>
+      <label for="{{form1.email.id_for_label}}">E-mail</label>
+      {{form1.email}}
+    </div> <br>
+    <div class="input-field col s6">
+        {{forms1.username.errors}}
+            <i class="material-icons prefix">broken_image</i>
+            <label for="{{form1.username.id_for_label}}">username</label>
+            {{form1.username}}
+          </div>
+  </div>
+  <div class="input-field col s6">
+      {{form1.password.errors}}
+        <i class="material-icons prefix">broken_image</i>
+        <label for="{{form1.password.id_for_label}}">password</label>
+        {{form1.password}}
+      </div> <br>
+      {{text}}
+  </div>
+  <button type="submit"><a href='customer/test'>Create Account</a></button>
+
+    </form>
+</div>
+
+
+
+
+
+
+
 <script type="text/javascript" src="{% static "js/jquery-3.3.1.js" %}"></script>
 <script type="text/javascript" src="{% static "js/materialize.min.js" %}"></script>
 <script type="text/javascript" src="{% static "js/books.js" %}"></script>
