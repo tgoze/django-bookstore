@@ -1,0 +1,8 @@
+{% extends 'Store/layout.html' %}
+{% load staticfiles %}
+{% load widget_tweaks %}
+{% block content %}
+{%load cache content}
+    <h1> {{request.session.fav_color}} </h1>
+{% end cache % }
+{% endblock %}

@@ -1,6 +1,8 @@
 from django.urls import path
 from . import views
-from .views import AdminBookView, AdminCustomerView, LoginView
+from .views import AdminBookView, AdminCustomerView, LoginView, TestView
+
+from django.views.decorators.cache import cache_page
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -8,6 +10,6 @@ urlpatterns = [
     path('admin/books/details/<int:bookID>/', views.admin_book_details, name='admin_books_details'),
     path('admin/customers', AdminCustomerView.as_view()),
     path('admin/customers/details/<int:customer_id>/', views.admin_customer_details, name='admin_customer_detailss'),
-    path('customer/',LoginView.as_view())
-   
+    path('customer/',(LoginView.as_view())),
+    path('customer/test/', TestView.as_view())
 ]
