@@ -2,7 +2,7 @@ from django.urls import path
 from . import views
 from .views import AdminBookView, AdminCustomerView, LoginView, TestView
 
-from django.views.decorators.cache import cache_page
+
 
 urlpatterns = [
     path('', views.index, name='index'),

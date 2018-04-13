@@ -1,4 +1,4 @@
-from django.shortcuts import render, render_to_response
+from django.shortcuts import render
 from django.views.generic import TemplateView
 from Store.Model.book import Book
 from Store.Model.book_dao import BookDao
@@ -11,11 +11,11 @@ from Store.Model.user_dao import UserDao
 from Store.Model.customer_address import CustomerAddress
 from django.conf import settings
 from django.contrib.auth.hashers import check_password, BCryptPasswordHasher,make_password
-from django.template import RequestContext
-from django.core.cache import cache
+
+
 from .forms import *
 from bcrypt import*
-from datetime import *
+
 def index(request): 
     return render(request, 'Store/index.html')
 
@@ -24,8 +24,11 @@ class TestView(TemplateView):
     template_name = 'Store/customer/test.html'
     def get(self,request):
         fav_color = request.session['fav_color']
+        context = {
+            'fav_color':fav_color
+        }
 
-        return render_to_response(request,self.template_name,context=RequestContext(request))
+        return render(request,self.template_name,context)
 class AdminBookView(TemplateView):
     template_name = 'Store/admin/books/books.html'
     book_dao = BookDao()
