@@ -82,17 +82,17 @@ DATABASES = {
     'default': {
         'NAME': 'gelliott',
         'ENGINE': 'django.db.backends.mysql',
-        'USER': 'gelliottapp',
-        'PASSWORD': 'gelliott',
-        'HOST': 'www.berkstresser.org',
+        'USER': 'root',
+        'PASSWORD': 'running247',
+        'HOST': '35.226.123.113',
         'PORT': '3306'
     },
     'administrator': {
         'NAME': 'gelliott',
         'ENGINE': 'django.db.backends.mysql',
-        'USER': 'gelliottdev',
-        'PASSWORD': 'gelliott',
-        'HOST': 'www.berkstresser.org',
+        'USER': 'root',
+        'PASSWORD': 'running247',
+        'HOST': '35.226.123.113',
         'PORT': '3306'
     }
 }
