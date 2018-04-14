@@ -4,6 +4,7 @@ $(document).ready(function(){
     $('select').formSelect();
 });
 
-// document.getElementById("myBtn").addEventListener("click", function(){
-//     M.toast
-// });
+// document.getElementById("edit-book").onclick = function () {
+//     var instance = M.Modal.getInstance(elem);
+//     instance.open();
+// };

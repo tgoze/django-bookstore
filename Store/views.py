@@ -34,13 +34,15 @@ class AdminBookView(TemplateView):
     book_dao = BookDao()
     
     def get(self, request):
-        form = BookForm()
+        book_form = BookForm()
+        publisher_form = PublisherForm()
         books = self.book_dao.get_all()
 
         context = {
             'notification': "Please enter book data.",
             'books': books,
-            'form': form
+            'bookform': book_form,
+            'publisherform': publisher_form
         }
 
         return render(request, self.template_name, context)
@@ -84,6 +86,7 @@ class AdminBookView(TemplateView):
 
             return render(request, self.template_name, context)
 
+<<<<<<< HEAD
         elif 'edit-book' in request.POST:
 
            
@@ -93,6 +96,8 @@ class AdminBookView(TemplateView):
             book = self.book_dao.get_byid(book_id)
 
 
+=======
+>>>>>>> b9028ea8f7264a7d6e85274b781fdae39ecc5334
         elif 'delete-book' in request.POST:
             book_id = int(request.POST.get('delete-book'))
             self.book_dao.delete(book_id)
@@ -111,9 +116,23 @@ class AdminBookDetailView(TemplateView):
     
     def get(self, request, bookID):
         book = self.book_dao.get_byid(bookID)
-    
+        initial_data = {
+            'title': book.title,
+            'authors': book.author.author_id,
+            'isbn10': book.isbn10,
+            'isbn13': book.isbn13,
+            'copyright_date': book.copyRightDate,
+            'edition': book.edition,
+            'publishers': book.publisher.publisher_id,
+            'book_type': book.type,
+            'num_pages': book.numberOfPages,
+            'genres': book.genre.genre_id
+        }
+        form = BookForm(initial_data)        
+
         context = {
-            'book': book
+            'book': book,
+            'form': form
         }
 
         return render(request, 'Store/admin/books/details.html', context)
@@ -127,7 +146,6 @@ class AdminBookDetailView(TemplateView):
 
         return render(request, 'Store/admin/books/details.html', context)
 
-    
 
 class AdminCustomerView(TemplateView):
     template_name = 'Store/admin/customers/customers.html'
@@ -141,6 +159,7 @@ class AdminCustomerView(TemplateView):
         }
         return render(request, self.template_name, context)
 
+
 def admin_customer_details(request,customer_id):
     cdao = CustomerInfoDAO()
 
@@ -151,6 +170,11 @@ def admin_customer_details(request,customer_id):
         'caddress': customer_address
     }
     return render(request,'Store/admin/customers/details.html', context)
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> b9028ea8f7264a7d6e85274b781fdae39ecc5334
 class LoginView(TemplateView):
     user = User()
     udao = UserDao()
