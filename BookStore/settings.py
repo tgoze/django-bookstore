@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'Store',
     'widget_tweaks',
+    'localflavor',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.staticfiles',

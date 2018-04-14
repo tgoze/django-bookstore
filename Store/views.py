@@ -23,13 +23,15 @@ class AdminBookView(TemplateView):
     book_dao = BookDao()
     
     def get(self, request):
-        form = BookForm()
+        book_form = BookForm()
+        publisher_form = PublisherForm()
         books = self.book_dao.get_all()
 
         context = {
             'notification': "Please enter book data.",
             'books': books,
-            'form': form
+            'bookform': book_form,
+            'publisherform': publisher_form
         }
 
         return render(request, self.template_name, context)
@@ -91,8 +93,20 @@ class AdminBookDetailView(TemplateView):
     
     def get(self, request, bookID):
         book = self.book_dao.get_byid(bookID)
-        form = BookForm(instance=book)
-    
+        initial_data = {
+            'title': book.title,
+            'authors': book.author.author_id,
+            'isbn10': book.isbn10,
+            'isbn13': book.isbn13,
+            'copyright_date': book.copyRightDate,
+            'edition': book.edition,
+            'publishers': book.publisher.publisher_id,
+            'book_type': book.type,
+            'num_pages': book.numberOfPages,
+            'genres': book.genre.genre_id
+        }
+        form = BookForm(initial_data)        
+
         context = {
             'book': book,
             'form': form
