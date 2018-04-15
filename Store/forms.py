@@ -1,6 +1,7 @@
 from django import forms
 from django.forms.widgets import Select
 from localflavor.us.forms import *
+from localflavor.us.us_states import *
 
 from Store.Model.publisher_dao import PublisherDao
 from Store.Model.genre_dao import GenreDao
@@ -11,6 +12,7 @@ genre_dao = GenreDao()
 author_dao = AuthorDao()
 
 # This gets all of the choices for the select elements
+# It also adds a default option which is disabled
 authors = []
 authors.append(("default", {'label': "Choose an author", 'disabled': True}))
 for author in author_dao.get_all():
@@ -26,6 +28,10 @@ genres.append(("default", {'label': "Choose a genre", 'disabled': True}))
 for genre in genre_dao.get_all():
     genre_val = (str(genre.genre_id), str(genre.genre))
     genres.append(genre_val)
+states = []
+states.append(("default", {'label': "Choose a state", 'disabled': True}))
+for state in CONTIGUOUS_STATES:
+    states.append(state)
 
 # https://djangosnippets.org/snippets/2453/
 class SelectWithDisabled(Select):
@@ -65,9 +71,9 @@ class AuthorForm(forms.Form):
 
 class PublisherForm(forms.Form):
     company_name = forms.CharField()
-    #city = forms.CharField()
-    #state_code = USStateSelect()
-    #zip_code = USZipCodeField()
+    city = forms.CharField()
+    state_code = forms.ChoiceField(choices=states, initial="default", widget=SelectWithDisabled())
+    zip_code = USZipCodeField()
 
 
 class GenreForm(forms.Form):
@@ -77,10 +83,12 @@ class GenreForm(forms.Form):
 class LoginForm(forms.Form):
     username = forms.CharField()
     password = forms.CharField(max_length=32, widget=forms.PasswordInput)
+
+
 class RegisterUserForm(forms.Form):
     first_name = forms.CharField()
     last_name = forms.CharField()
-    email = forms.CharField()
+    email = forms.EmailField()
     username = forms.CharField()
     password = forms.CharField(max_length=32, widget=forms.PasswordInput)
     

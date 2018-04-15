@@ -1,8 +1,17 @@
 {% extends 'Store/layout.html' %}
 {% load staticfiles %}
 {% load widget_tweaks %}
+
+{% block nav %}
+  {% if user_id is none %}
+    <li>You are currently logged out</li>
+  {% else %}
+    <li><b>Greetings, {{ username }}!</b></li>
+  {% endif %}
+{% endblock %} 
+
 {% block content %}
 
-    <h1> {{request.session.fav_color}} </h1>
+    <h1> {{ text }} </h1>
 
 {% endblock %}

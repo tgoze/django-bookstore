@@ -32,6 +32,7 @@
             {% endfor %}
         </form>           
     </tbody>
+    {{notification}}
 </table>
 
 <div class="fixed-action-btn">
@@ -43,75 +44,75 @@
 <div id="addbook" class="modal">
     <form method="POST" class="col s12">
         {% csrf_token %}
-        {{ bookform.non_field_errors }}            
+        {{ book_form.non_field_errors }}            
         <div class="modal-content">
             <h4>Add Book</h4>
             <div class="row">            
                 <div class="row">
                     <div class="input-field col s6">
-                        {{ bookform.title.errors }}
-                        <label for="{{ bookform.title.id_for_label }}">Book Title</label>
-                        {{ bookform.title }}
+                        {{ book_form.title.errors }}
+                        <label for="{{ book_form.title.id_for_label }}">Book Title</label>
+                        {{ book_form.title }}
                     </div>
                     <div class="input-field col s5">                
-                        {{ bookform.authors.errors }}
-                        {{ bookform.authors }}
+                        {{ book_form.authors.errors }}
+                        {{ book_form.authors }}
                         <label>Author</label>
                     </div>
                     <div class="col s1">
-                        <a href="" class="btn-floating btn-small waves-effect"><i class="material-icons">add</i></a>
+                        <a href="#addauthor" class="addbtn btn-floating btn-small waves-effect modal-trigger"><i class="material-icons">add</i></a>
                     </div>
                 </div>
                 <div class="row">
                     <div class="input-field col s6">
-                        {{ bookform.isbn10.errors }}
-                        <label for="{{ bookform.isbn10.id_for_label }}">ISBN10</label>
-                        {{ bookform.isbn10 }}
+                        {{ book_form.isbn10.errors }}
+                        <label for="{{ book_form.isbn10.id_for_label }}">ISBN10</label>
+                        {{ book_form.isbn10 }}
                     </div>
                     <div class="input-field col s6">
-                        {{ bookform.isbn13.errors }}
-                        <label for="{{ bookform.isbn13.id_for_label }}">ISBN13</label>
-                        {{ bookform.isbn13 }}
+                        {{ book_form.isbn13.errors }}
+                        <label for="{{ book_form.isbn13.id_for_label }}">ISBN13</label>
+                        {{ book_form.isbn13 }}
                     </div>
                 </div>
                 <div class="row">
                     <div class="input-field col s4">
-                        {{ bookform.copyright_date.errors }}
-                        <label for="{{ bookform.copyright_date.id_for_label }}">Copyright Date</label>
-                        {{ bookform.copyright_date|add_class:"datepicker" }}
+                        {{ book_form.copyright_date.errors }}
+                        <label for="{{ book_form.copyright_date.id_for_label }}">Copyright Date</label>
+                        {{ book_form.copyright_date|add_class:"datepicker" }}
                     </div>
                     <div class="input-field col s4">
-                        {{ bookform.edition.errors }}
-                        <label for="{{ bookform.edition.id_for_label }}">Edition</label>
-                        {{ bookform.edition }}
+                        {{ book_form.edition.errors }}
+                        <label for="{{ book_form.edition.id_for_label }}">Edition</label>
+                        {{ book_form.edition }}
                     </div>
                     <div class="input-field col s3">
-                        {{ bookform.publishers.errors }}
-                        {{ bookform.publishers }}
+                        {{ book_form.publishers.errors }}
+                        {{ book_form.publishers }}
                         <label>Publisher</label>
                     </div>
                     <div class="col s1">
-                        <a href="#addpublisher" class="btn-floating btn-small waves-effect modal-trigger"><i class="material-icons">add</i></a>
+                        <a href="#addpublisher" class="addbtn btn-floating btn-small waves-effect modal-trigger"><i class="material-icons">add</i></a>
                     </div>
                 </div>
                 <div class="row">
                     <div class="input-field col s4">
-                        {{ bookform.book_type.errors }}
-                        <label for="{{ bookform.book_type.id_for_label }}">Book Type</label>
-                        {{ bookform.book_type }}
+                        {{ book_form.book_type.errors }}
+                        <label for="{{ book_form.book_type.id_for_label }}">Book Type</label>
+                        {{ book_form.book_type }}
                     </div>
                     <div class="input-field col s4">
-                        {{ bookform.num_pages.errors }}
-                        <label for="{{ bookform.num_pages.id_for_label }}">Number of Pages</label>
-                        {{ bookform.num_pages }}
+                        {{ book_form.num_pages.errors }}
+                        <label for="{{ book_form.num_pages.id_for_label }}">Number of Pages</label>
+                        {{ book_form.num_pages }}
                     </div>                    
                     <div class="input-field col s3">
-                        {{ bookform.genres.errors }}
-                        {{ bookform.genres }}                        
+                        {{ book_form.genres.errors }}
+                        {{ book_form.genres }}                        
                         <label>Genre</label>
                     </div>
                     <div class="col s1">                        
-                        <a href="" class="btn-floating btn-small waves-effect"><i class="material-icons">add</i></a>                                
+                        <a href="#addgenre" class="addbtn btn-floating btn-small waves-effect modal-trigger"><i class="material-icons">add</i></a>
                     </div>
                 </div>                                
             </div>
@@ -123,25 +124,93 @@
     </form>
 </div>
 
+<div id="addauthor" class="modal">
+    <form method="POST" class="col s12">
+        {% csrf_token %}
+        {{ author_form.non_field_errors }}            
+        <div class="modal-content">
+            <h4>Add Author</h4>
+            <div class="row">
+                <div class="row">
+                    <div class="input-field col s6">
+                        {{ author_form.first_name.errors }}
+                        <label for="{{ author_form.first_name.id_for_label }}">First Name</label>
+                        {{ author_form.first_name }}       
+                    </div>
+                    <div class="input-field col s6">
+                        {{ author_form.last_name.errors }}
+                        <label for="{{ author_form.last_name.id_for_label }}">Last Name</label>
+                        {{ author_form.last_name }}    
+                    </div>
+                </div>            
+            </div>
+        </div>        
+        <div class="modal-footer">            
+            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+            <button type="submit" class="modal-action waves-effect waves-green btn-flat" name="create-author">Submit</button>
+        </div>
+    </form>
+</div>
+
 <div id="addpublisher" class="modal">
     <form method="POST" class="col s12">
         {% csrf_token %}
-        {{ publisherform.non_field_errors }}            
+        {{ publisher_form.non_field_errors }}            
         <div class="modal-content">
             <h4>Add Publisher</h4>
             <div class="row">
                 <div class="row">
                     <div class="input-field col s6">
-                        {{ publisherform.company_name.errors }}
-                        <label for="{{ pubilsherform.company_name.id_for_label }}">Company Name</label>
-                        {{ publisherform.company_name }}       
+                        {{ publisher_form.company_name.errors }}
+                        <label for="{{ pubilsher_form.company_name.id_for_label }}">Company Name</label>
+                        {{ publisher_form.company_name }}       
+                    </div>
+                    <div class="input-field col s6">
+                        {{ publisher_form.city.errors }}
+                        <label for="{{ pubilsher_form.city.id_for_label }}">City</label>
+                        {{ publisher_form.city }}       
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s6">
+                        {{ publisher_form.state_code.errors }}                        
+                        {{ publisher_form.state_code }}
+                        <label>State</label>       
+                    </div>
+                    <div class="input-field col s6">
+                        {{ publisher_form.zip_code.errors }}
+                        <label for="{{ pubilsher_form.zip_code.id_for_label }}">Zip Code</label>
+                        {{ publisher_form.zip_code }}       
                     </div>
                 </div>
             </div>
-        </div>
+        </div>        
         <div class="modal-footer">            
             <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
             <button type="submit" class="modal-action waves-effect waves-green btn-flat" name="create-publisher">Submit</button>
+        </div>
+    </form>
+</div>
+
+<div id="addgenre" class="modal">
+    <form method="POST" class="col s12">
+        {% csrf_token %}
+        {{ genre_form.non_field_errors }}            
+        <div class="modal-content">
+            <h4>Add Genre</h4>
+            <div class="row">
+                <div class="row">
+                    <div class="input-field col s6">
+                        {{ genre_form.genre.errors }}
+                        <label for="{{ genre_form.genre.id_for_label }}">Genre</label>
+                        {{ genre_form.genre }}       
+                    </div>                    
+                </div>            
+            </div>
+        </div>        
+        <div class="modal-footer">            
+            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+            <button type="submit" class="modal-action waves-effect waves-green btn-flat" name="create-genre">Submit</button>
         </div>
     </form>
 </div>

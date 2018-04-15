@@ -4,7 +4,8 @@ $(document).ready(function(){
     $('select').formSelect();
 });
 
-// document.getElementById("edit-book").onclick = function () {
-//     var instance = M.Modal.getInstance(elem);
-//     instance.open();
-// };
+var addButtons = document.getElementsByClassName('addbtn')
+
+$(".addbtn").click(function(){
+    $('.modal').modal('close');
+});
