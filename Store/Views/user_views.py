@@ -15,7 +15,7 @@ from Store.Model.customer_address import CustomerAddress
 from django.conf import settings
 from django.contrib.auth.hashers import check_password, BCryptPasswordHasher,make_password
 
-from .forms import *
+from Store.forms import *
 from bcrypt import *
 
 class TestView(TemplateView):

@@ -14,10 +14,6 @@ from Store.Model.user_dao import UserDao
 from Store.Model.customer_address import CustomerAddress
 from django.conf import settings
 from django.contrib.auth.hashers import check_password, BCryptPasswordHasher,make_password
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/tgoze
 from .forms import *
 from bcrypt import *
 
@@ -34,22 +30,9 @@ class TestView(TemplateView):
             'user_id': user_id
         }
 
-<<<<<<< HEAD
-        return render(request,self.template_name, context)
-class AdminTestView(TemplateView):
-    u = User()
-    template_name = 'Store/customer/admin.html'
-    def get(self,request):
-        user_id = request.session['user_id']
-        context = {
-            'user_id': user_id
-        }
-        return render(request,self.template_name, context)
-=======
         return render(request,self.template_name,context)
 
 
->>>>>>> origin/tgoze
 class AdminBookView(TemplateView):
     template_name = 'Store/admin/books/books.html'
     book_dao = BookDao()
@@ -258,15 +241,6 @@ def admin_customer_details(request,customer_id):
 class LoginView(TemplateView):
     user = User()
     udao = UserDao()
-<<<<<<< HEAD
-    template_name = 'Store/customer/login.html'
-    def get(self,request):  
-        form = LoginForm()  
-        form1 = RegisterUserForm()
-        context = {
-            'form': form,
-           # 'form1': form1
-=======
     login_template = 'Store/customer/login.html'
     loggedin_template = 'Store/customer/test.html'
     user.username = 'not logged in'
@@ -277,7 +251,6 @@ class LoginView(TemplateView):
         context = {
             'loginform': loginform,
             'registerform': registerform           
->>>>>>> origin/tgoze
         }
 
         return render(request, self.login_template, context)
@@ -287,39 +260,6 @@ class LoginView(TemplateView):
         user = User()
         udao = UserDao()
 
-<<<<<<< HEAD
-        form = LoginForm(request.POST)
-        form1 = RegisterUserForm(request.POST)
-        if 'login' in request.POST:
-            if form.is_valid():
-                user.username = form.cleaned_data['username']
-                user.password = form.cleaned_data['password']
-                
-                if (check_password(user.password,udao.get_byusername(user.username).password) == True):
-                    
-                    user.id = self.udao.get_byusername(user.username).id
-                    user = self.udao.get_byid(user.id)
-                    
-                request.session['user_id'] = user.id
-                
-            return render(request,self.template_name, context=None)
-
-        if 'create-user' in request.POST:
-            if form1.is_valid():
-                    user.first_name = form1.cleaned_data['first_name']
-                    user.last_name = form1.cleaned_data['last_name']
-                    user.email = form1.cleaned_data['last_name']
-                    user.username = form1.cleaned_data['username']
-                    x = form1.cleaned_data['password']
-                    user.is_superuser = 0
-                    user.is_active = 1
-                    user.is_staff = 0
-                    user.password = make_password(x,salt=None,hasher='default')
-                    udao.create(user)
-                    context = {
-                        'text': 'user saved???'
-                    }
-=======
         login_form = LoginForm(request.POST)
         register_form = RegisterUserForm(request.POST)
 
@@ -364,16 +304,10 @@ class LoginView(TemplateView):
                 context = {
                     'text': 'user saved???'            
                 }
->>>>>>> origin/tgoze
             else:
                 context = {
                     'text': 'try again'                    
                 }
-<<<<<<< HEAD
-
-            return render(request,self.template_name, context)
-=======
                 
             return render(request,self.login_template, context)
->>>>>>> origin/tgoze
 

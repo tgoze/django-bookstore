@@ -83,29 +83,17 @@ DATABASES = {
     'default': {
         'NAME': 'gelliott',
         'ENGINE': 'django.db.backends.mysql',
-<<<<<<< HEAD
-        'USER': 'kara_line2',
-        'PASSWORD': '469247',
-        'HOST': '127.0.0.1',
-=======
         'USER': 'root',
         'PASSWORD': 'running247',
         'HOST': '35.226.123.113',
->>>>>>> origin/tgoze
         'PORT': '3306'
     },
     'administrator': {
         'NAME': 'gelliott',
         'ENGINE': 'django.db.backends.mysql',
-<<<<<<< HEAD
-        'USER': 'kara_line',
-        'PASSWORD': '469247',
-        'HOST': '127.0.0.1',
-=======
         'USER': 'root',
         'PASSWORD': 'running247',
         'HOST': '35.226.123.113',
->>>>>>> origin/tgoze
         'PORT': '3306'
     }
 }
