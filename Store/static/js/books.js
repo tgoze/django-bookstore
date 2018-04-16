@@ -4,6 +4,8 @@ $(document).ready(function(){
     $('select').formSelect();
 });
 
-// document.getElementById("myBtn").addEventListener("click", function(){
-//     M.toast
-// });
+var addButtons = document.getElementsByClassName('addbtn')
+
+$(".addbtn").click(function(){
+    $('.modal').modal('close');
+});

@@ -1,9 +1,14 @@
-{% extends 'Store/layout.html' %}
+{% extends 'Store/layout.html' %} 
+{% load staticfiles %} 
+{% load widget_tweaks %} 
+
+{% block head %}
+{% endblock %}
 
 {% block content %}
 <div class="row">
     <div class="col s12">
-        <h3>{{book.title}}</h3> 
+        <h3>{{book.title}}</h3>
     </div>
     <div class="col s6">
         <h1>Image here</h1>
@@ -13,16 +18,91 @@
             <div class="card-content">
                 <!--<span class="card-title">Card Title</span>-->
                 <p>
-                    Author: {{book.author.last_name}}, {{book.author.first_name}}<br>
-                    ISBN10: {{book.isbn10}}<br>
-                    ISBN13: {{book.isbn13}}<br>
-                    Copyright: {{book.copyRightDate}}<br>
+                    Author: {{book.author.last_name}}, {{book.author.first_name}}
+                    <br> ISBN10: {{book.isbn10}}
+                    <br> ISBN13: {{book.isbn13}}
+                    <br> Copyright: {{book.copyRightDate}}
+                    <br>
                 </p>
             </div>
             <div class="card-action">
-                <a href="#">Edit</a>
+                <a class="modal-trigger" href="#editbook">Edit</a>
             </div>
         </div>
     </div>
 </div>
+
+<div id="editbook" class="modal">
+    <form method="POST" class="col s12">
+        {% csrf_token %} {{ form.non_field_errors }}
+        <div class="modal-content">
+            <h4>Edit Book</h4>
+            <div class="row">
+                <div class="row">
+                    <div class="input-field col s6">
+                        {{ form.title.errors }}
+                        <label for="{{ form.title.id_for_label }}">Book Title</label>
+                        {{ form.title }}
+                    </div>
+                    <div class="input-field col s6">
+                        {{ form.authors.errors }} {{ form.authors }}
+                        <label>Author</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s6">
+                        {{ form.isbn10.errors }}
+                        <label for="{{ form.isbn10.id_for_label }}">ISBN10</label>
+                        {{ form.isbn10 }}
+                    </div>
+                    <div class="input-field col s6">
+                        {{ form.isbn13.errors }}
+                        <label for="{{ form.isbn13.id_for_label }}">ISBN13</label>
+                        {{ form.isbn13 }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s4">
+                        {{ form.copyright_date.errors }}
+                        <label for="{{ form.copyright_date.id_for_label }}">Copyright Date</label>
+                        {{ form.copyright_date|add_class:"datepicker" }}
+                    </div>
+                    <div class="input-field col s4">
+                        {{ form.edition.errors }}
+                        <label for="{{ form.edition.id_for_label }}">Edition</label>
+                        {{ form.edition }}
+                    </div>
+                    <div class="input-field col s4">
+                        {{ form.publishers.errors }} {{ form.publishers }}
+                        <label>Publisher</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s4">
+                        {{ form.book_type.errors }}
+                        <label for="{{ form.book_type.id_for_label }}">Book Type</label>
+                        {{ form.book_type }}
+                    </div>
+                    <div class="input-field col s4">
+                        {{ form.num_pages.errors }}
+                        <label for="{{ form.num_pages.id_for_label }}">Number of Pages</label>
+                        {{ form.num_pages }}
+                    </div>
+                    <div class="input-field col s4">
+                        {{ form.genres.errors }} {{ form.genres }}
+                        <label>Genre</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+            <button type="submit" class="modal-action waves-effect waves-green btn-flat" name="edit-book" value="{{ book.bookID }}">Submit</button>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript" src="{% static "js/jquery-3.3.1.js" %}"></script>
+<script type="text/javascript" src="{% static "js/materialize.min.js" %}"></script>
+<script type="text/javascript" src="{% static "js/books.js" %}"></script> 
 {% endblock %}

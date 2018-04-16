@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'Store',
     'widget_tweaks',
+    'localflavor',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.staticfiles',
@@ -82,17 +83,29 @@ DATABASES = {
     'default': {
         'NAME': 'gelliott',
         'ENGINE': 'django.db.backends.mysql',
+<<<<<<< HEAD
         'USER': 'kara_line2',
         'PASSWORD': '469247',
         'HOST': '127.0.0.1',
+=======
+        'USER': 'root',
+        'PASSWORD': 'running247',
+        'HOST': '35.226.123.113',
+>>>>>>> origin/tgoze
         'PORT': '3306'
     },
     'administrator': {
         'NAME': 'gelliott',
         'ENGINE': 'django.db.backends.mysql',
+<<<<<<< HEAD
         'USER': 'kara_line',
         'PASSWORD': '469247',
         'HOST': '127.0.0.1',
+=======
+        'USER': 'root',
+        'PASSWORD': 'running247',
+        'HOST': '35.226.123.113',
+>>>>>>> origin/tgoze
         'PORT': '3306'
     }
 }
@@ -115,6 +128,7 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
 PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
     'django.contrib.auth.hashers.BCryptPasswordHasher',
@@ -134,6 +148,18 @@ CACHES = {
     }
 }
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+
+# Cache
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
+    }
+}
+
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/

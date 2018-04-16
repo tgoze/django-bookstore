@@ -1,7 +1,9 @@
-{% extends 'Store/layout.html' %}
-{% load staticfiles %}
+{% extends 'Store/layout.html' %} 
+{% load staticfiles %} 
 {% load widget_tweaks %}
+
 {% block content %}
+<<<<<<< HEAD
 <div class="row ">
         <form action="" method="POST" class="col s12 ">
           {% csrf_token %}
@@ -30,40 +32,69 @@
             <div class="card-action">
                 New to Bookish? <br>
                 <a class="waves-effect waves-light btn-small modal-trigger" href="#newcustomer">Create New Account</a>
+=======
+<div class="row banner valign-wrapper">
+  <form method="POST" class="col s12">
+    {% csrf_token %} {{ loginform.non_field_errors }}
+    <div class="col s6 offset-s3">
+      <div class="card">
+        <div class="card-content black-text">
+          <span class="card-title">
+            <b>Sign in</b>
+          </span>
+          <div class="row">
+            <div class="input-field col s8">
+              {{ loginform.username.errors }}
+              <label for="{{ form.username.id_for_label }}">Username</label>
+              {{ loginform.username }}
+            </div>
+          </div>
+          <div class="row">
+            <div class="input-field col s8">
+              {{ loginform.password.errors }}
+              <label for="{{ form.username.id_for_label }}">Password</label>
+              {{ loginform.password }}
+>>>>>>> origin/tgoze
             </div>
           </div>
         </div>
-        </form>
+        {{text}}
+        <div class="card-action">          
+          <button type="submit" class="modal-action waves-effect waves-green btn-flat" name="login-user">Submit</button>
+        </div>
       </div>
+    </div>
+  </form>
+</div>
+<div class="row center-align">
+  <a class="waves-effect waves-light modal-trigger btn" href="#newcustomer">Register</a>    
+</div>
+
 <div id="newcustomer" class="modal">
-    <form method="POST" class="col s12">
-        {% csrf_token %}
-        {{ form1.non_field_errors }}
-  <div class="row">
-    <div class="input-field col s3">
-      {{form1.first_name.errors}}
-      <i class="material-icons prefix">account_circle</i>
-      <label for="{{form1.first_name.id_for_label}}">First Name</label>
-      {{form1.first_name}}
-    </div>
-    <div class="row">
-        {{form1.last_name.errors}}
-        <div class="input-field col s3">
-        <label for="{{form1.last_name.id_for_label}}">Last Name</label>
-        {{form1.last_name}}
-    </div>
-    <div class="input-field col s6">
-        {{form1.email.errors}}
-      <i class="material-icons prefix">email</i>
-      <label for="{{form1.email.id_for_label}}">E-mail</label>
-      {{form1.email}}
-    </div> <br>
-    <div class="input-field col s6">
-        {{forms1.username.errors}}
-            <i class="material-icons prefix">broken_image</i>
-            <label for="{{form1.username.id_for_label}}">username</label>
-            {{form1.username}}
+  <form method="POST" class="col s12">
+    {% csrf_token %} {{ registerform.non_field_errors }}
+    <div class="modal-content">
+      <h4>Register</h4>
+      <div class="row">
+        <div class="row">
+          <div class="input-field col s4">
+            {{registerform.first_name.errors}}
+            <i class="material-icons prefix">account_circle</i>
+            <label for="{{registerform.first_name.id_for_label}}">First Name</label>
+            {{registerform.first_name}}
           </div>
+          <div class="input-field col s4">
+            {{registerform.last_name.errors}}
+            <label for="{{registerform.last_name.id_for_label}}">Last Name</label>
+            {{registerform.last_name}}
+          </div>
+          <div class="input-field col s4">
+            {{registerform.username.errors}}
+            <i class="material-icons prefix">broken_image</i>
+            <label for="{{registerform.username.id_for_label}}">username</label>
+            {{registerform.username}}
+          </div>
+<<<<<<< HEAD
   </div>
   <div class="input-field col s6">
       {{form1.password.errors}}
@@ -76,15 +107,34 @@
   <button type="submit" name='create-user'><a href='test'>Create Account</a></button>
 
     </form>
+=======
+        </div>
+        <div class="row">
+          <div class="input-field col s6">
+            {{registerform.email.errors}}
+            <i class="material-icons prefix">email</i>
+            <label for="{{registerform.email.id_for_label}}">E-mail</label>
+            {{registerform.email}}
+          </div>
+          <div class="input-field col s6">
+            {{registerform.password.errors}}
+            <i class="material-icons prefix">broken_image</i>
+            <label for="{{registerform.password.id_for_label}}">password</label>
+            {{registerform.password}}
+          </div>
+        </div>
+        <br> {{text}}
+      </div>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+        <button type="submit" class="modal-action waves-effect waves-green btn-flat" name="create-user" href="customer/login.html">Submit</button>
+    </div>
+  </form>
+>>>>>>> origin/tgoze
 </div>
-
-
-
-
-
-
 
 <script type="text/javascript" src="{% static "js/jquery-3.3.1.js" %}"></script>
 <script type="text/javascript" src="{% static "js/materialize.min.js" %}"></script>
-<script type="text/javascript" src="{% static "js/books.js" %}"></script>
+<script type="text/javascript" src="{% static "js/books.js" %}"></script> 
 {% endblock %}
