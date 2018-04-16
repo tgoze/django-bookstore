@@ -11,8 +11,6 @@ from Store.Model.user_dao import UserDao
 from Store.Model.customer_address import CustomerAddress
 from django.conf import settings
 from django.contrib.auth.hashers import check_password, BCryptPasswordHasher,make_password
-
-
 from .forms import *
 from bcrypt import*
 
@@ -20,15 +18,24 @@ def index(request):
     return render(request, 'Store/index.html')
 
 class TestView(TemplateView):
-    user = User()
+    u = User()
     template_name = 'Store/customer/test.html'
     def get(self,request):
-        fav_color = request.session['fav_color']
+        user_id = request.session['user_id']
         context = {
-            'fav_color':fav_color
+            'user_id': user_id
         }
 
-        return render(request,self.template_name,context)
+        return render(request,self.template_name, context)
+class AdminTestView(TemplateView):
+    u = User()
+    template_name = 'Store/customer/admin.html'
+    def get(self,request):
+        user_id = request.session['user_id']
+        context = {
+            'user_id': user_id
+        }
+        return render(request,self.template_name, context)
 class AdminBookView(TemplateView):
     template_name = 'Store/admin/books/books.html'
     book_dao = BookDao()
@@ -155,13 +162,12 @@ class LoginView(TemplateView):
     user = User()
     udao = UserDao()
     template_name = 'Store/customer/login.html'
-    user.username = 'not logged in'
     def get(self,request):  
         form = LoginForm()  
         form1 = RegisterUserForm()
         context = {
             'form': form,
-            #'form1': form1
+           # 'form1': form1
         }
 
         return render(request, self.template_name, context)
@@ -171,35 +177,40 @@ class LoginView(TemplateView):
         udao = UserDao()
 
         form = LoginForm(request.POST)
-        if form.is_valid():
-            user.username = form.cleaned_data['username']
-            user.password = form.cleaned_data['password']
-            user.id = udao.get_byusername(user.username).id
-            if (check_password(user.password,udao.get_byusername(user.username).password) == True):
-                context = {
-                    'text': 'Yay password'
-                }
-                request.session['fav_color'] = 'blue'
-
         form1 = RegisterUserForm(request.POST)
-        if form1.is_valid():
-                user.first_name = form1.cleaned_data['first_name']
-                user.last_name = form1.cleaned_data['last_name']
-                user.email = form1.cleaned_data['last_name']
-                user.username = form1.cleaned_data['username']
-                x = form1.cleaned_data['password']
-                user.is_superuser = 0
-                user.is_active = 1
-                user.is_staff = 0
-                user.password = make_password(x,salt=None,hasher='default')
-                udao.create(user)
-                context = {
-                    'text': 'user saved???'
-                }
-        else:
+        if 'login' in request.POST:
+            if form.is_valid():
+                user.username = form.cleaned_data['username']
+                user.password = form.cleaned_data['password']
+                
+                if (check_password(user.password,udao.get_byusername(user.username).password) == True):
+                    
+                    user.id = self.udao.get_byusername(user.username).id
+                    user = self.udao.get_byid(user.id)
+                    
+                request.session['user_id'] = user.id
+                
+            return render(request,self.template_name, context=None)
+
+        if 'create-user' in request.POST:
+            if form1.is_valid():
+                    user.first_name = form1.cleaned_data['first_name']
+                    user.last_name = form1.cleaned_data['last_name']
+                    user.email = form1.cleaned_data['last_name']
+                    user.username = form1.cleaned_data['username']
+                    x = form1.cleaned_data['password']
+                    user.is_superuser = 0
+                    user.is_active = 1
+                    user.is_staff = 0
+                    user.password = make_password(x,salt=None,hasher='default')
+                    udao.create(user)
+                    context = {
+                        'text': 'user saved???'
+                    }
+            else:
                 context = {
                     'text':'try again'
                 }
-            
-        return render(request,self.template_name, context)
+
+            return render(request,self.template_name, context)
 

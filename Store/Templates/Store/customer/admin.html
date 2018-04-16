@@ -2,7 +2,7 @@
 {% load staticfiles %}
 {% load widget_tweaks %}
 {% block content %}
-    <h1>customer1</h1>
-    <h1> {{user_id}} </h1>
+    <h1>admin</h1>
+    <h1> {{request.session.user} </h1>
 
 {% endblock %}
