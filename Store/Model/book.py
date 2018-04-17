@@ -15,10 +15,10 @@ class Book:
         self.publisher = None
 
     def get_book_id(self):
-        return self.bookID
+        return self.book_id
 
-    def set_book_id(self,bookID):
-        self.bookID=bookID
+    def set_book_id(self,book_id):
+        self.book_id=book_id
 
     def get_isbn13(self):
         return self.isbn13

@@ -8,7 +8,10 @@ from Store.Model.publisher import Publisher
 from Store.Model.publisher_dao import PublisherDao
 from Store.Model.genre import Genre
 from Store.Model.genre_dao import GenreDao
-from Store.forms import BookForm, AuthorForm, PublisherForm, GenreForm
+from Store.forms import BookForm, BookImageForm, AuthorForm, PublisherForm, GenreForm
+
+from django.conf import settings
+from django.core.files.storage import FileSystemStorage
 
 
 class AdminBookView(TemplateView):
@@ -146,7 +149,7 @@ class AdminBookView(TemplateView):
 
 
 class AdminBookDetailView(TemplateView):
-    template_name = 'Store/admin/books/details.html'
+    template_name = 'Store/admin/books/details.html'    
     book_dao = BookDao()
     
     def get(self, request, bookID):
@@ -163,20 +166,96 @@ class AdminBookDetailView(TemplateView):
             'num_pages': book.numberOfPages,
             'genres': book.genre.genre_id
         }
-        form = BookForm(initial_data)        
+        book_form = BookForm(initial_data)
+        image_form = BookImageForm()        
 
         context = {
             'book': book,
-            'form': form
+            'image_url': self.book_dao.get_image(book.image_id),
+            'book_form': book_form,
+            'image_form': image_form
         }
 
         return render(request, self.template_name, context)
 
     def post(self, request, bookID):
+        book_form = BookForm(request.POST)
         book = self.book_dao.get_byid(bookID)
-    
+        
         context = {
             'book': book
+        }
+
+        if 'update-book' in request.POST:
+            if book_form.is_valid():
+                updated_book = Book()
+                updated_book.book_id = bookID
+                updated_book.title = book_form.cleaned_data['title']
+                updated_book.isbn10 = book_form.cleaned_data['isbn10']
+                updated_book.isbn13 = book_form.cleaned_data['isbn13']
+                updated_book.copyRightDate = book_form.cleaned_data['copyright_date']
+                updated_book.edition = book_form.cleaned_data['edition']
+                updated_book.numberOfPages = book_form.cleaned_data['num_pages']
+                updated_book.type = book_form.cleaned_data['book_type']
+                author = Author()
+                author.author_id = int(book_form.cleaned_data['authors'])
+                updated_book.author = author
+                publisher = Publisher()
+                publisher.publisher_id = int(book_form.cleaned_data['publishers'])
+                updated_book.publisher = publisher
+                genre = Genre()
+                genre.genre_id = int(book_form.cleaned_data['genres'])
+                updated_book.genre = genre
+                updated_book.image_id = 1
+
+                self.book_dao.update(updated_book)
+
+                context['notification'] = "Book updated successfully!"
+              
+            else:
+                context['notification'] = "Not a valid submission."
+
+        if 'add-image' in request.POST:
+            image_form = BookImageForm(request.POST, request.FILES)
+            
+            if image_form.is_valid():
+                image_file = request.FILES['image']
+                fs = FileSystemStorage()
+                filename = fs.save(image_file.name, image_file)
+                uploaded_file_url = fs.url(filename)
+
+                self.book_dao.create_image(uploaded_file_url, '')
+
+                context['notification'] = filename
+            else:
+                context['notification'] = "Not a valid submission."
+
+        return render(request, self.template_name, context)
+
+
+class CusBookView(TemplateView):
+    template_name = 'Store/customer/books/books.html'
+    book_dao = BookDao()
+    
+    def get(self, request):
+        books = self.book_dao.get_all()
+
+        context = {            
+            'books': books
+        }
+
+        return render(request, self.template_name, context)
+
+
+class CusBookDetailView(TemplateView):
+    template_name = 'Store/customer/books/details.html'
+    book_dao = BookDao()
+    
+    def get(self, request, bookID):
+        book = self.book_dao.get_byid(bookID)
+
+        context = {
+            'book': book        
         }
 
         return render(request, self.template_name, context)

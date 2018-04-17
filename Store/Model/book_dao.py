@@ -46,6 +46,7 @@ class BookDao(AbcDao):
             cursor.close()
             conn.close()
 
+
     def get_byid(self, book_id):    
         book = Book()
         try:
@@ -91,6 +92,7 @@ class BookDao(AbcDao):
             print(e)
 
         return book
+
 
     def get_all(self):
         allBooks = []
@@ -305,6 +307,7 @@ class BookDao(AbcDao):
     #         conn.close()
     #     return allBooks
 
+
     def delete(self, b):
         try:
             db_config = read_db_config()
@@ -320,3 +323,44 @@ class BookDao(AbcDao):
         finally:
             cursor.close()
             conn.close()
+
+
+    def create_image(self, image_url, caption):
+        try:
+            db_config = read_db_config()
+            conn = MySQLConnection(**db_config)
+            cursor = conn.cursor()
+            
+            args = (image_url, caption)
+            cursor.callproc('createImage', args)
+
+            conn.commit()
+        except Error as error:
+            print(error)
+
+        finally:
+            cursor.close()
+            conn.close()
+
+    def get_image(self, image_id):       
+        try:
+            db_config = read_db_config()
+            conn = MySQLConnection(**db_config)
+            cursor = conn.cursor()
+
+            args = (image_id,)
+            cursor.callproc('getImageByID', args)                
+            # This gets the first resultset
+            result = next(cursor.stored_results())
+            # This gets the first row in the resultset
+            image_row = result.fetchone()
+            image_url = image_row[1]
+
+            cursor.close()
+            conn.close()
+        except Error as error:
+            print(error)
+        except Exception as e:
+            print(e)
+
+        return image_url

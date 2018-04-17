@@ -64,6 +64,10 @@ class BookForm(forms.Form):
     genres = forms.ChoiceField(choices=genres, initial="default", widget=SelectWithDisabled())
 
 
+class BookImageForm(forms.Form):
+    image = forms.ImageField()
+
+
 class AuthorForm(forms.Form):
     first_name = forms.CharField()
     last_name = forms.CharField()
