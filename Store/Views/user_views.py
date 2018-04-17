@@ -11,6 +11,8 @@ from Store.Model.genre_dao import GenreDao
 from Store.Model.customer_info_dao import CustomerInfoDAO
 from Store.Model.user import User
 from Store.Model.user_dao import UserDao
+from Store.Model.customer_info import CustomerInfo
+from Store.Model.customer_info_dao import CustomerInfoDAO
 from Store.Model.customer_address import CustomerAddress
 from django.conf import settings
 from django.contrib.auth.hashers import check_password, BCryptPasswordHasher,make_password
@@ -20,6 +22,7 @@ from bcrypt import *
 
 class TestView(TemplateView):
     user = User()
+    udao = UserDao()
     template_name = 'Store/customer/test.html'
     def get(self,request):
         fav_color = request.session['fav_color']
@@ -27,6 +30,16 @@ class TestView(TemplateView):
             'fav_color':fav_color
         }
 
+        return render(request,self.template_name,context)
+    def post(self,request,user_id):
+        user.username = udao.get_byid(user_id).username
+        user.id = user_id
+        request.session['username'] = user.username
+        request.session['user_id'] = user.id
+        context={
+            'username': request.session['username'],
+            'user_id': request.session['user_id']
+        }
         return render(request,self.template_name,context)
 
 class AdminCustomerView(TemplateView):
@@ -53,6 +66,13 @@ def admin_customer_details(request,customer_id):
     }
     return render(request,'Store/admin/customers/details.html', context)
 
+class CustomerAccountView(TemplateView):
+    template_name = 'Store/customer/customeraccount.html'
+   
+    def get(self,request,user_id):
+        return render(request,self.template_name,context=None)
+    
+    
 
 class LoginView(TemplateView):
     user = User()

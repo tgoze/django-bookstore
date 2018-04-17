@@ -22,15 +22,16 @@ def index(request):
 
 
 class TestView(TemplateView):
-    u = User()
+    user = User()
     template_name = 'Store/customer/test.html'
     def get(self,request):
-        user_id = request.session['user_id']
+        fav_color = request.session['fav_color']
         context = {
-            'user_id': user_id
+            'fav_color':fav_color
         }
 
         return render(request,self.template_name,context)
+    
 
 
 class AdminBookView(TemplateView):

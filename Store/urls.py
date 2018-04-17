@@ -12,6 +12,7 @@ urlpatterns = [
     #path('admin/customers/details/<int:customer_id>/', admin_customer_details(), name='admin_customer_details'),
     path('customer/',(LoginView.as_view())),
     path('customer/test/', TestView.as_view()),
-    path('customer/',LoginView.as_view())
+    path('customer/',LoginView.as_view()),
+    path('customer/customeraccount/<int:user_id>/',CustomerAccountView.as_view())
 
 ]

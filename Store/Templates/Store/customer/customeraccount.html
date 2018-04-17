@@ -12,9 +12,7 @@
 
 {% block content %}
 
-    <h1> Welcome {{username}} {{user_id}}  </h1>
-    <form method="POST">
-        {% csrf_token %}
-    <h1> <a href='customeraccount/{{user_id}}'>My Account</a></h1>
-    </form>
+    <h1> Welcome {{user_id}} </h1>
+   <h1> Customer stuff</h1>
+
 {% endblock %}
