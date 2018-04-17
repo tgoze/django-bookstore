@@ -42,6 +42,7 @@ class TestView(TemplateView):
         }
         return render(request,self.template_name,context)
 
+
 class AdminCustomerView(TemplateView):
     template_name = 'Store/admin/customers/customers.html'
     
@@ -55,8 +56,10 @@ class AdminCustomerView(TemplateView):
         return render(request, self.template_name, context)
 
 
-def admin_customer_details(request,customer_id):
+class AdminCustomerDetailView(TemplateView):
+    template_name = 'Store/admin/customers/details.html'
     cdao = CustomerInfoDAO()
+<<<<<<< HEAD
 
     customer = cdao.get_byid(customer_id)
     customer_address = cdao.get_addressbyid(customer_id)
@@ -84,11 +87,18 @@ class LoginView(TemplateView):
     def get(self, request):  
         loginform = LoginForm()  
         registerform = RegisterUserForm()
+=======
+    
+    def get(self, request, customer_id):
+        customer = self.cdao.get_byid(customer_id)
+        customer_address = self.cdao.get_addressbyid(customer_id)
+>>>>>>> origin/tgoze
         context = {
-            'loginform': loginform,
-            'registerform': registerform           
+            'customer': customer,
+            'caddress': customer_address
         }
 
+<<<<<<< HEAD
         return render(request, self.login_template, context)
 
     def post(self, request):
@@ -146,3 +156,6 @@ class LoginView(TemplateView):
                 }
                 
             return render(request,self.login_template, context)
+=======
+        return render(request, self.template_name, context)
+>>>>>>> origin/tgoze
