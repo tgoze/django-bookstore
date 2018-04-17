@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'Store',
     'widget_tweaks',
+    'localflavor',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.staticfiles',
@@ -82,17 +83,17 @@ DATABASES = {
     'default': {
         'NAME': 'gelliott',
         'ENGINE': 'django.db.backends.mysql',
-        'USER': 'gelliottapp',
-        'PASSWORD': 'gelliott',
-        'HOST': 'www.berkstresser.org',
+        'USER': 'root',
+        'PASSWORD': 'running247',
+        'HOST': '35.226.123.113',
         'PORT': '3306'
     },
     'administrator': {
         'NAME': 'gelliott',
         'ENGINE': 'django.db.backends.mysql',
-        'USER': 'gelliottdev',
-        'PASSWORD': 'gelliott',
-        'HOST': 'www.berkstresser.org',
+        'USER': 'root',
+        'PASSWORD': 'running247',
+        'HOST': '35.226.123.113',
         'PORT': '3306'
     }
 }
@@ -115,6 +116,7 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
 PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
     'django.contrib.auth.hashers.BCryptPasswordHasher',
@@ -127,13 +129,28 @@ PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.UnsaltedMD5PasswordHasher',
     'django.contrib.auth.hashers.CryptPasswordHasher',
 ]
+
+# Cache
+
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
         'LOCATION': '127.0.0.1:11211',
     }
 }
-SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+
+# Media
+
+MEDIA_URL = '/static/media/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'Store/static/media')
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/2.0/howto/static-files/
+
+STATIC_URL = '/static/'
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
@@ -147,9 +164,3 @@ USE_I18N = True
 USE_L10N = False
 
 USE_TZ = True
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.0/howto/static-files/
-
-STATIC_URL = '/static/'

@@ -51,6 +51,7 @@ class GenreDao(AbcDao):
     def get_byid(self, genre_id):
         raise NotImplementedError
     def get_all(self):
+        all_genres = []
         try:
             db_config = read_db_config()
             conn = MySQLConnection(**db_config)

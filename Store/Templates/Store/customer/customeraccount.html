@@ -1,0 +1,18 @@
+{% extends 'Store/layout.html' %}
+{% load staticfiles %}
+{% load widget_tweaks %}
+
+{% block nav %}
+  {% if user_id is none %}
+    <li>You are currently logged out</li>
+  {% else %}
+    <li><b>Greetings, {{ username }}!</b></li>
+  {% endif %}
+{% endblock %} 
+
+{% block content %}
+
+    <h1> Welcome {{username}} {{user_id}} </h1>
+   <h1> Customer stuff</h1>
+
+{% endblock %}

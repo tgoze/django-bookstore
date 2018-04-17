@@ -2,8 +2,11 @@ $(document).ready(function(){
     $('.modal').modal();
     $('.datepicker').datepicker();
     $('select').formSelect();
+    $('.materialboxed').materialbox();
 });
 
-// document.getElementById("myBtn").addEventListener("click", function(){
-//     M.toast
-// });
+var addButtons = document.getElementsByClassName('addbtn')
+
+$(".addbtn").click(function(){
+    $('.modal').modal('close');
+});
