@@ -12,9 +12,25 @@ from bcrypt import *
 
 class HomeView(TemplateView):
     template_name = 'Store/index.html'
+    cus_account = 'Store/customer/customeraccount.hmtl'
+    user = User()
+    udao = UserDao()
 
     def get(self, request):
         return render(request, self.template_name)
+    def post(self,request, user_id):
+        context = {
+        
+        }
+        user = udao.get_byid(user_id)
+        request.session['user_id'] = user.id
+        request.session['username'] = user.username
+        context['user_id'] = request.session['user_id'],
+        context['username'] = request.session['username'] 
+        return render(request, self.cus_account,context)                   
+
+        
+    
 
 class LoginView(TemplateView):
     user = User()
@@ -55,7 +71,7 @@ class LoginView(TemplateView):
                     request.session['user_id'] = user.id
                     request.session['username'] = user.username
                     context['text'] = 'Yay password'                
-                    context['user_id'] = request.session['user_id'],
+                    context['user_id'] = request.session['user_id']
                     context['username'] = request.session['username']                    
 
                     if user.is_staff == 0:

@@ -59,103 +59,26 @@ class AdminCustomerView(TemplateView):
 class AdminCustomerDetailView(TemplateView):
     template_name = 'Store/admin/customers/details.html'
     cdao = CustomerInfoDAO()
-<<<<<<< HEAD
-
-    customer = cdao.get_byid(customer_id)
-    customer_address = cdao.get_addressbyid(customer_id)
-    context = {
-        'customer': customer,
-        'caddress': customer_address
-    }
-    return render(request,'Store/admin/customers/details.html', context)
-
-class CustomerAccountView(TemplateView):
-    template_name = 'Store/customer/customeraccount.html'
-   
-    def get(self,request,user_id):
-        return render(request,self.template_name,context=None)
-    
-    
-
-class LoginView(TemplateView):
-    user = User()
-    udao = UserDao()
-    login_template = 'Store/customer/login.html'
-    loggedin_template = 'Store/customer/test.html'
-    user.username = 'not logged in'
-
-    def get(self, request):  
-        loginform = LoginForm()  
-        registerform = RegisterUserForm()
-=======
     
     def get(self, request, customer_id):
         customer = self.cdao.get_byid(customer_id)
         customer_address = self.cdao.get_addressbyid(customer_id)
->>>>>>> origin/tgoze
         context = {
             'customer': customer,
             'caddress': customer_address
         }
 
-<<<<<<< HEAD
-        return render(request, self.login_template, context)
-
-    def post(self, request):
-        #settings.configure(DEBUG=True)
-        user = User()
-        udao = UserDao()
-
-        login_form = LoginForm(request.POST)
-        register_form = RegisterUserForm(request.POST)
-
-        if 'login-user' in request.POST:
-            if login_form.is_valid():
-                user.username = login_form.cleaned_data['username']
-                user.password = login_form.cleaned_data['password']
-                user.id = udao.get_byusername(user.username).id
-                if check_password(user.password,udao.get_byusername(user.username).password):
-                    request.session['user_id'] = user.id
-                    request.session['username'] = user.username
-                    context = {
-                        'text': 'Yay password',
-                        'user_id': request.session['user_id'],
-                        'username': request.session['username']
-                    }                    
-                else:
-                    context = {
-                        'text': 'Bad password bro',
-                        'user_id': None
-                    }    
-            else:
-                context = {
-                    'text': 'try again',
-                    'user_id': None
-                }
-
-            return render(request, self.loggedin_template, context)
-
-        if 'create-user' in request.POST:        
-            if register_form.is_valid():
-                user.first_name = register_form.cleaned_data['first_name']
-                user.last_name = register_form.cleaned_data['last_name']
-                user.email = register_form.cleaned_data['last_name']
-                user.username = register_form.cleaned_data['username']
-                x = register_form.cleaned_data['password']
-                user.is_superuser = 0
-                user.is_active = 1
-                user.is_staff = 0
-                user.password = make_password(x,salt=None,hasher='default')
-                udao.create(user)
-                context = {
-                    'text': 'user saved???'            
-                }
-            else:
-                context = {
-                    'text': 'try again'                    
-                }
-                
-            return render(request,self.login_template, context)
-=======
         return render(request, self.template_name, context)
->>>>>>> origin/tgoze
+class CustomerAccountView(TemplateView):
+    template_name = 'Store/customer/customeraccount.html'
+    user = User()
+    udao = UserDao()
+    
+    def get(self,request,user_id):
+        context = {
+        
+        }
+        user = self.udao.get_byid(user_id)
+        context['username'] = user.username
+        context['user_id'] = user.id
+        return render(request,self.template_name,context)
