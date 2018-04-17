@@ -20,8 +20,8 @@ class LoginView(TemplateView):
     user = User()
     udao = UserDao()
     template_name = 'Store/login.html'
-    cus_loggedin_template = 'Store/customer/index.html'
-    admin_loggedin_template = 'Store/customer/index.html'
+    cus_loggedin_template = 'Store/customer/index.html' #this html needs made
+    admin_loggedin_template = 'Store/customer/index.html' #this html needs made
     user.username = 'not logged in'
 
     def get(self, request):  
