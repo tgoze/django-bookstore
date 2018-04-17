@@ -11,23 +11,14 @@ from Store.Model.genre_dao import GenreDao
 from Store.Model.customer_info_dao import CustomerInfoDAO
 from Store.Model.user import User
 from Store.Model.user_dao import UserDao
+from Store.Model.customer_info import CustomerInfo
+from Store.Model.customer_info_dao import CustomerInfoDAO
 from Store.Model.customer_address import CustomerAddress
 from django.conf import settings
 from django.contrib.auth.hashers import check_password, BCryptPasswordHasher,make_password
 
 from Store.forms import *
 from bcrypt import *
-
-class TestView(TemplateView):
-    user = User()
-    template_name = 'Store/customer/test.html'
-    def get(self,request):
-        fav_color = request.session['fav_color']
-        context = {
-            'fav_color':fav_color
-        }
-
-        return render(request,self.template_name,context)
 
 
 class AdminCustomerView(TemplateView):
@@ -56,3 +47,18 @@ class AdminCustomerDetailView(TemplateView):
         }
 
         return render(request, self.template_name, context)
+
+
+class CustomerAccountView(TemplateView):
+    template_name = 'Store/customer/customeraccount.html'
+    user = User()
+    udao = UserDao()
+    
+    def get(self,request,user_id):
+        context = {
+        
+        }
+        user = self.udao.get_byid(user_id)
+        context['username'] = user.username
+        context['user_id'] = user.id
+        return render(request,self.template_name,context)
