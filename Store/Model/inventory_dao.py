@@ -1,7 +1,7 @@
-from inventory import Inventory
+from Store.Model.inventory import Inventory
 from mysql.connector import MySQLConnection, Error
-from dbconfig import read_db_config
-from abc_dao import AbcDao
+from Store.Model.dbconfig import read_db_config
+from Store.Model.abc_dao import AbcDao
 
 class InventoryDao(AbcDao):
     def create(self, p_inventory):
@@ -24,7 +24,7 @@ class InventoryDao(AbcDao):
             conn = MySQLConnection(**db_config)
             cursor = conn.cursor()
             args = [p_inventory.book_id, p_inventory.quantity_on_hand, p_inventory.quantity_ordered, p_inventory.cost, p_inventory.price]
-            cursor.callproc('upDateInventory',args)
+            cursor.callproc('updateInventory',args)
 
             conn.commit()
         except Error as error:
@@ -76,3 +76,31 @@ class InventoryDao(AbcDao):
             print(e)
 
         return all_inventory
+
+    def get_byid(self, book_id):
+        inventory = Inventory()
+        try:
+            db_config = read_db_config()
+            conn = MySQLConnection(**db_config)
+            cursor = conn.cursor()
+
+            args = (book_id,)
+            cursor.callproc('getInventoryByID', args)                
+            # This gets the first resultset
+            result = next(cursor.stored_results())
+            # This gets the first row in the resultset
+            inventory_row = result.fetchone()
+            inventory.book_id = inventory_row[0]
+            inventory.quantity_on_hand = inventory_row[1]
+            inventory.quantity_ordered = inventory_row[2]
+            inventory.cost = inventory_row[3]
+            inventory.retail_price = inventory_row[4]
+
+            cursor.close()
+            conn.close()
+        except Error as error:
+            print(error)
+        except Exception as e:
+            print(e)
+
+        return inventory

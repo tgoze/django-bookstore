@@ -11,7 +11,7 @@ class BookDao(AbcDao):
     def create(self, b):
 
         args = (b.get_isbn13(),b.get_isbn10(), b.get_title(),b.get_copyRightDate(),
-                b.get_type(),b.get_edition(),b.get_numberOfPages(),b.get_image_id(),
+                b.get_type(),b.get_edition(),b.get_numberOfPages(),
                 b.get_genre().genre_id,b.get_author().author_id,b.get_publisher().publisher_id)
         try:
             db_config = read_db_config()
@@ -30,7 +30,7 @@ class BookDao(AbcDao):
 
     def update(self, b):
         args = (b.get_book_id(), b.get_isbn13(), b.get_isbn10(), b.get_title(), b.get_copyRightDate(),
-                b.get_type(), b.get_edition(), b.get_numberOfPages(), b.get_image_id(), 
+                b.get_type(), b.get_edition(), b.get_numberOfPages(), 
                 b.get_genre().genre_id, b.get_author().author_id, b.get_publisher().publisher_id)
         try:
             db_config = read_db_config()
@@ -68,18 +68,17 @@ class BookDao(AbcDao):
             book.set_type(book_row[5])
             book.set_edition(book_row[6])
             book.set_numberOfPages(book_row[7])
-            book.set_image_id(book_row[8])
 
             genre = Genre()
-            genre.genre_id = book_row[9]
-            genre.genre = book_row[15]
+            genre.genre_id = book_row[10]
+            genre.genre = book_row[14]
             author = Author()
-            author.author_id = book_row[10]
-            author.first_name = book_row[13]
-            author.last_name = book_row[14]
+            author.author_id = book_row[9]
+            author.first_name = book_row[12]
+            author.last_name = book_row[13]
             publisher = Publisher()
-            publisher.publisher_id = book_row[11]
-            publisher.company_name = book_row[12]
+            publisher.publisher_id = book_row[10]
+            publisher.company_name = book_row[11]
             book.set_genre(genre)
             book.set_author(author)
             book.set_publisher(publisher)
@@ -117,18 +116,17 @@ class BookDao(AbcDao):
                 currentbook.set_type(x[5])
                 currentbook.set_edition(x[6])
                 currentbook.set_numberOfPages(x[7])
-                currentbook.set_image_id(x[8])
 
                 genre = Genre()
-                genre.genre_id = x[9]
-                genre.genre = x[15]
+                genre.genre_id = x[8]
+                genre.genre = x[14]
                 author = Author()
-                author.author_id = x[10]
-                author.first_name = x[13]
-                author.last_name = x[14]
+                author.author_id = x[9]
+                author.first_name = x[12]
+                author.last_name = x[13]
                 publisher = Publisher()
-                publisher.publisher_id = x[11]
-                publisher.company_name = x[12]
+                publisher.publisher_id = x[10]
+                publisher.company_name = x[11]
                 currentbook.set_genre(genre)
                 currentbook.set_author(author)
                 currentbook.set_publisher(publisher)
@@ -323,44 +321,3 @@ class BookDao(AbcDao):
         finally:
             cursor.close()
             conn.close()
-
-
-    def create_image(self, image_url, caption):
-        try:
-            db_config = read_db_config()
-            conn = MySQLConnection(**db_config)
-            cursor = conn.cursor()
-            
-            args = (image_url, caption)
-            cursor.callproc('createImage', args)
-
-            conn.commit()
-        except Error as error:
-            print(error)
-
-        finally:
-            cursor.close()
-            conn.close()
-
-    def get_image(self, image_id):       
-        try:
-            db_config = read_db_config()
-            conn = MySQLConnection(**db_config)
-            cursor = conn.cursor()
-
-            args = (image_id,)
-            cursor.callproc('getImageByID', args)                
-            # This gets the first resultset
-            result = next(cursor.stored_results())
-            # This gets the first row in the resultset
-            image_row = result.fetchone()
-            image_url = image_row[1]
-
-            cursor.close()
-            conn.close()
-        except Error as error:
-            print(error)
-        except Exception as e:
-            print(e)
-
-        return image_url

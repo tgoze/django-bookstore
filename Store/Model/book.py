@@ -1,5 +1,8 @@
-class Book:
+from Store.Model.genre import Genre
+from Store.Model.author import Author
+from Store.Model.publisher import Publisher
 
+class Book:
     def __init__(self):
         self.book_id = None
         self.isbn13 = None
@@ -8,11 +11,10 @@ class Book:
         self.copyRightDate = None
         self.type = None
         self.edition = None
-        self.numberOfPages = None
-        self.image_id = None
-        self.genre = None
-        self.author = None
-        self.publisher = None
+        self.numberOfPages = None        
+        self.genre = Genre()
+        self.author = Author()
+        self.publisher = Publisher()
 
     def get_book_id(self):
         return self.book_id
@@ -61,12 +63,6 @@ class Book:
 
     def set_numberOfPages(self,numberOfPages):
         self.numberOfPages = numberOfPages
-
-    def get_image_id(self):
-        return self.image_id
-
-    def set_image_id(self, image_id):
-        self.image_id = image_id
 
     def get_genre(self):
         return self.genre

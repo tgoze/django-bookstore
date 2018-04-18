@@ -8,6 +8,10 @@ from Store.Model.publisher import Publisher
 from Store.Model.publisher_dao import PublisherDao
 from Store.Model.genre import Genre
 from Store.Model.genre_dao import GenreDao
+from Store.Model.inventory import Inventory
+from Store.Model.inventory_dao import InventoryDao
+from Store.Model.image import Image
+from Store.Model.image_dao import ImageDao
 from Store.forms import BookForm, BookImageForm, AuthorForm, PublisherForm, GenreForm
 
 from django.conf import settings
@@ -79,8 +83,7 @@ class AdminBookView(TemplateView):
                 book.publisher = publisher
                 genre = Genre()
                 genre.genre_id = int(book_form.cleaned_data['genres'])
-                book.genre = genre
-                book.image_id = 1
+                book.genre = genre                
 
                 self.book_dao.create(book)
 
@@ -151,9 +154,14 @@ class AdminBookView(TemplateView):
 class AdminBookDetailView(TemplateView):
     template_name = 'Store/admin/books/details.html'    
     book_dao = BookDao()
+    image_dao = ImageDao()
+    inventory_dao = InventoryDao()
     
     def get(self, request, bookID):
         book = self.book_dao.get_byid(bookID)
+        images = self.image_dao.get_byid(bookID)
+        inventory  = self.inventory_dao.get_byid(bookID)
+
         initial_data = {
             'title': book.title,
             'authors': book.author.author_id,
@@ -171,7 +179,7 @@ class AdminBookDetailView(TemplateView):
 
         context = {
             'book': book,
-            'image_url': self.book_dao.get_image(book.image_id),
+            'images': images,
             'book_form': book_form,
             'image_form': image_form
         }
@@ -205,8 +213,7 @@ class AdminBookDetailView(TemplateView):
                 updated_book.publisher = publisher
                 genre = Genre()
                 genre.genre_id = int(book_form.cleaned_data['genres'])
-                updated_book.genre = genre
-                updated_book.image_id = 1
+                updated_book.genre = genre                
 
                 self.book_dao.update(updated_book)
 
@@ -224,7 +231,12 @@ class AdminBookDetailView(TemplateView):
                 filename = fs.save(image_file.name, image_file)
                 uploaded_file_url = fs.url(filename)
 
-                self.book_dao.create_image(uploaded_file_url, '')
+                image = Image()
+                image.image_url = uploaded_file_url
+                image.caption = ''
+                image.book_id = bookID
+
+                self.image_dao.create(image)
 
                 context['notification'] = filename
             else:

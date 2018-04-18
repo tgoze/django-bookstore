@@ -28,8 +28,6 @@ class HomeView(TemplateView):
         return render(request, self.cus_account,context)                   
 
         
-    
-
 class LoginView(TemplateView):
     user = User()
     udao = UserDao()
