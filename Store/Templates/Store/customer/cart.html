@@ -1,0 +1,26 @@
+{% extends 'Store/layout.html' %}
+{% load staticfiles %}
+{% load widget_tweaks %}
+
+{% block content %}
+<h4>Shopping Cart</h4>
+<table>
+    <thead>
+        <tr>
+            <th>Book</th>
+            <th>Author</th>
+            <th>Publisher</th>                        
+        </tr>
+    </thead>
+    <tbody>    
+        {% for item in cart_items %}
+        <tr>
+            <td><a href="books/details/{{ item.book.book_id }}">{{ item.book.title }}</a></td>  
+            <td>{{ item.book.author.author_id }}</td>
+            <td>{{ item.book.publisher.publisher_id }}</td>                                
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{{loggedin_user_id}}
+{% endblock %}

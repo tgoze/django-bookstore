@@ -15,8 +15,6 @@ class HomeView(TemplateView):
     def get(self, request):
         return render(request, self.template_name)
         
-    
-
 class LoginView(TemplateView):
     user = User()
     udao = UserDao()
