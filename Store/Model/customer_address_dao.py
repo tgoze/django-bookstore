@@ -78,13 +78,14 @@ class CustomerAddressDao(AbcDao):
         except Exception as e:
             print(e)
         return all_customer_address
-    def get_all_addresses_by_customer_id(self,p_customer):
+    def get_all_addresses_by_customer_id(self,id):
+        
         try:
             db_config = read_db_config()
             conn = MySQLConnection(**db_config)
             cursor = conn.cursor()
-            args = [p_customer.customer_id]
-            cursor.callproc('getAllCustomerAddress',args)
+            args = [id]
+            cursor.callproc('getCustomerAddressByCustomerID',args)
             all_customer_address = []
 
             for result in cursor.stored_results():

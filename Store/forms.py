@@ -95,4 +95,13 @@ class RegisterUserForm(forms.Form):
     email = forms.EmailField()
     username = forms.CharField()
     password = forms.CharField(max_length=32, widget=forms.PasswordInput)
-    
+
+
+class CustomerInfoForm(forms.Form):
+    home_phone = forms.CharField(max_length="10", min_length="10")
+    work_phone = forms.CharField(max_length="10", min_length="10")
+    first_name = forms.CharField()
+    last_name = forms.CharField()
+    email = forms.EmailField()
+class DeleteAddressForm(forms.Form):
+    address_id = forms.CharField(disabled = True)

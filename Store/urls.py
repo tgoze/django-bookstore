@@ -1,5 +1,4 @@
 from django.urls import path
-from . import views
 from Store.Views.home_views import *
 from Store.Views.book_views import *
 from Store.Views.user_views import *
@@ -18,6 +17,7 @@ urlpatterns = [
     path('customer/books', CusBookView.as_view()),
     path('customer/books/details/<int:bookID>/', CusBookDetailView.as_view()),
     path('customer/customeraccount/<int:user_id>/', CustomerAccountView.as_view()),
+    path('customer/index', CustomerIndexView.as_view())
 ]
 
 if settings.DEBUG:

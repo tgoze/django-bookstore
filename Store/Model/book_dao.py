@@ -117,18 +117,18 @@ class BookDao(AbcDao):
                 currentbook.set_type(x[5])
                 currentbook.set_edition(x[6])
                 currentbook.set_numberOfPages(x[7])
-                currentbook.set_image_id(x[8])
+                #currentbook.set_image_id(x[8])
 
                 genre = Genre()
-                genre.genre_id = x[9]
-                genre.genre = x[15]
+                genre.genre_id = x[8]
+                genre.genre = x[14]
                 author = Author()
-                author.author_id = x[10]
-                author.first_name = x[13]
-                author.last_name = x[14]
+                author.author_id = x[9]
+                author.first_name = x[12]
+                author.last_name = x[13]
                 publisher = Publisher()
-                publisher.publisher_id = x[11]
-                publisher.company_name = x[12]
+                publisher.publisher_id = x[10]
+                publisher.company_name = x[11]
                 currentbook.set_genre(genre)
                 currentbook.set_author(author)
                 currentbook.set_publisher(publisher)
