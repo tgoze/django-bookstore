@@ -96,3 +96,10 @@ class RegisterUserForm(forms.Form):
     username = forms.CharField()
     password = forms.CharField(max_length=32, widget=forms.PasswordInput)
     
+
+class CartForm(forms.Form):
+    def __init__(self, max_quantity, *args, **kwargs):
+        super(CartForm, self).__init__(*args, **kwargs)
+        self.fields['quantity_ordered'] = forms.IntegerField(max_value=max_quantity)
+
+    quantity_ordered = forms.IntegerField(max_value=None)

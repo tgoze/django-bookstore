@@ -28,7 +28,9 @@
                     <br><b>Details:</b><br>                    
                     {{ book.type }}<br>
                     {{ book.numberOfPages }} pages<br>
-                    {{ book.genre.genre }}                    
+                    {{ book.genre.genre }}<br>
+                    <br><b>Quantity on Hand:</b> {{ inventory.quantity_on_hand }}
+                    <br><b>Quantity Ordered:</b> {{ inventory.quantity_ordered }}
                 </p>
             </div>
             <div class="card-action">

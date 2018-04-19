@@ -6,36 +6,68 @@
 {% endblock %}
 
 {% block content %}
+<div class="section"></div>
 <div class="row">
-    <div class="col s12">
-        <h3>{{book.title}}</h3>
-    </div>
     <div class="col s6">
-        <h1>Image here</h1>
+        <div class="carousel">
+            {% for image in images %}
+            <a class="carousel-item" href="#one!"><img src="{{ image.image_url }}"></a>                  
+            {% endfor %}
+        </div>
     </div>
     <div class="col s6">
         <div class="card">
             <div class="card-content">
                 <span class="card-title">{{ book.title }}</span>
-                <p>
-                    by {{ book.author.last_name }}, {{ book.author.first_name }}<br>
-                    {{ book.publisher.company_name }} ({{ book.copyRightDate }})<br>
-                    <br><b>ISBN10:</b>  {{ book.isbn10 }}
-                    <br><b>ISBN13:</b>  {{ book.isbn13 }}<br>
-                    <br><b>Details:</b>
+                <div class="section">
                     <p>
+                        by {{ book.author.last_name }}, {{ book.author.first_name }}<br>
+                        {{ book.publisher.company_name }} ({{ book.copyRightDate }})<br>
+                        <br><b>ISBN10:</b>  {{ book.isbn10 }}
+                        <br><b>ISBN13:</b>  {{ book.isbn13 }}<br>
+                        <br><b>Details:</b><br>                    
                         {{ book.type }}<br>
                         {{ book.numberOfPages }} pages<br>
-                        {{ book.genre.genre }}
+                        {{ book.genre.genre }}<br>                    
                     </p>
-                </p>
-                <div class="right-align">
-                    <a class="btn-floating btn-large">
-                        <i class="large material-icons">add_shopping_cart</i>
-                    </a>               
-                </div>                    
+                </div>
+                <div class="row">
+                    <h5 class="col s10">
+                        ${{ inventory.retail_price }}
+                    </h5>
+                    <div class="col s2">                    
+                        <a class="btn-floating btn-large modal-trigger" href="#addtocart">
+                            <i class="large material-icons">add_shopping_cart</i>
+                        </a>               
+                    </div> 
+                </div>                                                   
             </div>            
         </div>
     </div>
 </div>
+
+<div id="addtocart" class="modal">
+    <form method="POST" class="col s12">
+        {% csrf_token %}
+        {{ cart_form.non_field_errors }}            
+        <div class="modal-content">
+            <h4>Add "{{ book.title }}" to cart</h4>
+            <div class="row">
+                <div class="input-field col s4 offset-s4">
+                    {{ cart_form.quantity_ordered.errors }}
+                    <label for="{{ cart_form.quantity_ordered.id_for_label }}">Quantity</label> 
+                    {{ cart_form.quantity_ordered }}     
+                </div>
+            </div>
+        </div>        
+        <div class="modal-footer">            
+            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+            <button type="submit" class="modal-action waves-effect waves-green btn-flat" name="add-cart">Submit</button>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript" src="{% static "js/jquery-3.3.1.js" %}"></script>
+<script type="text/javascript" src="{% static "js/materialize.min.js" %}"></script>
+<script type="text/javascript" src="{% static "js/books.js" %}"></script>
 {% endblock %}
