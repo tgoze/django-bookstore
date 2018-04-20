@@ -82,11 +82,15 @@ class CustomerAccountView(TemplateView):
         }
         info_form = CustomerInfoForm(initial_data)
         daddress = DeleteAddressForm()
+        aaddress = AddAddressForm()
+        eaddress = EditAddressForm()
         context = {
             'customer': customer,
             'info_form': info_form,
             'caddress': caddress,
-            'daddress': daddress
+            'daddress': daddress,
+            'aaddress': aaddress,
+            'eaddress': eaddress
         }
         user = self.udao.get_byid(user_id)
         context['username'] = user.username
@@ -95,6 +99,8 @@ class CustomerAccountView(TemplateView):
     def post(self,request,user_id):
         info_form = CustomerInfoForm(request.POST)
         daddress = DeleteAddressForm(request.POST)
+        aaddress = AddAddressForm(request.POST)
+        eaddress = EditAddressForm(request.POST)
         customer = self.cdao.get_byid(user_id)
         context = {
             'customer': customer
@@ -111,6 +117,14 @@ class CustomerAccountView(TemplateView):
                 u.email = info_form.cleaned_data['email']
                 updateinfo.set_user(u)
                 self.cdao.update(updateinfo)
+                caddress = self.cadao.get_all_addresses_by_customer_id(user_id)
+                context={
+                    'customer': customer,
+                    'info_form': info_form,
+                    'caddress': caddress,
+                    'daddress': daddress,
+                    'eaddress': eaddress
+                }
                 request.session['user_id'] = user_id
                 request.session['username'] = self.cdao.get_byid(user_id).user.username
                 context['user_id'] = request.session['user_id'],
@@ -121,6 +135,62 @@ class CustomerAccountView(TemplateView):
                 a.address_id = daddress.cleaned_data['address_id']
                 a.customer_id = user_id
                 self.cadao.delete(a)
+                caddress = self.cadao.get_all_addresses_by_customer_id(user_id)
+                context={
+                    'customer': customer,
+                    'info_form': info_form,
+                    'caddress': caddress,
+                    'daddress': daddress,
+                    'aaddress': aaddress,
+                    'eaddresss': eaddress
+                }
+                request.session['user_id'] = user_id
+                request.session['username'] = self.cdao.get_byid(user_id).user.username
+                context['user_id'] = request.session['user_id'],
+                context['username'] = request.session['username'] 
+        if 'add-address' in request.POST:
+            if aaddress.is_valid():
+                a = CustomerAddress()
+                a.customer_id = user_id
+                a.street = aaddress.cleaned_data['street']
+                a.city = aaddress.cleaned_data['city']
+                a.state_code = aaddress.cleaned_data['state_code']
+                a.zip_code = aaddress.cleaned_data['zip_code']
+                a.address_type = aaddress.cleaned_data['address_type']
+                self.cadao.create(a)
+                caddress = self.cadao.get_all_addresses_by_customer_id(user_id)
+                context={
+                    'customer': customer,
+                    'info_form': info_form,
+                    'caddress': caddress,
+                    'daddress': daddress,
+                    'aaddress': aaddress,
+                    'eaddress': eaddress
+                }
+                request.session['user_id'] = user_id
+                request.session['username'] = self.cdao.get_byid(user_id).user.username
+                context['user_id'] = request.session['user_id'],
+                context['username'] = request.session['username'] 
+        if 'edit-address' in request.POST:
+            if eaddress.is_valid():
+                a = CustomerAddress()
+                a.address_id = eaddress.cleaned_data['address_id']
+                a.customer_id = user_id
+                a.street = eaddress.cleaned_data['street']
+                a.city = eaddress.cleaned_data['city']
+                a.state_code = eaddress.cleaned_data['state_code']
+                a.zip_code = eaddress.cleaned_data['zip_code']
+                a.address_type = eaddress.cleaned_data['address_type']
+                self.cadao.update(a)
+                caddress = self.cadao.get_all_addresses_by_customer_id(user_id)
+                context={
+                'customer': customer,
+                'info_form': info_form,
+                'caddress': caddress,
+                'daddress': daddress,
+                'aaddress': aaddress,
+                'eaddress': eaddress
+                }
                 request.session['user_id'] = user_id
                 request.session['username'] = self.cdao.get_byid(user_id).user.username
                 context['user_id'] = request.session['user_id'],

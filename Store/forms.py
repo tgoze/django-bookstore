@@ -32,6 +32,11 @@ states = []
 states.append(("default", {'label': "Choose a state", 'disabled': True}))
 for state in CONTIGUOUS_STATES:
     states.append(state)
+address_types = []
+address_types.append(("default", {'label': "Choose an address type", 'disabled': True}))
+address_types.append(('Billing','Billing'))
+address_types.append(('Shipping','Shipping'))
+
 
 # https://djangosnippets.org/snippets/2453/
 class SelectWithDisabled(Select):
@@ -104,4 +109,17 @@ class CustomerInfoForm(forms.Form):
     last_name = forms.CharField()
     email = forms.EmailField()
 class DeleteAddressForm(forms.Form):
-    address_id = forms.CharField(disabled = True)
+    address_id = forms.CharField()
+class AddAddressForm(forms.Form):
+    street = forms.CharField()
+    city = forms.CharField()
+    state_code = forms.ChoiceField(choices=states, initial="default", widget=SelectWithDisabled())
+    zip_code = USZipCodeField()
+    address_type = forms.ChoiceField(choices=address_types, initial="default", widget=SelectWithDisabled())
+class EditAddressForm(forms.Form):
+    address_id = forms.CharField()
+    street = forms.CharField()
+    city = forms.CharField()
+    state_code = forms.ChoiceField(choices=states, initial="default", widget=SelectWithDisabled())
+    zip_code = USZipCodeField()
+    address_type = forms.ChoiceField(choices=address_types, initial="default", widget=SelectWithDisabled())

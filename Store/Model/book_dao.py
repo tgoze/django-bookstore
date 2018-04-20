@@ -116,10 +116,6 @@ class BookDao(AbcDao):
                 currentbook.set_type(x[5])
                 currentbook.set_edition(x[6])
                 currentbook.set_numberOfPages(x[7])
-<<<<<<< HEAD
-                #currentbook.set_image_id(x[8])
-=======
->>>>>>> origin/tgoze
 
                 genre = Genre()
                 genre.genre_id = x[8]
