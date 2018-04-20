@@ -1,7 +1,7 @@
-from payment_info import PaymentInfo
+from Store.Model.payment_info import PaymentInfo
 from mysql.connector import MySQLConnection, Error
-from dbconfig import read_db_config
-from abc_dao import AbcDao
+from Store.Model.dbconfig import read_db_config
+from Store.Model.abc_dao import AbcDao
 
 class PaymentInfoDao(AbcDao):
     
@@ -10,7 +10,8 @@ class PaymentInfoDao(AbcDao):
             db_config = read_db_config()
             conn = MySQLConnection(**db_config)
             cursor = conn.cursor()
-            args = [p_payment.card_number, p_payment.expir_date, p_payment.cvc, p_payment.customer_id, p_payment.billing_address_id]
+            args = [p_payment.card_number, p_payment.cvc, p_payment.expir_date, p_payment.card_issuer,
+                    p_payment.customer_id, p_payment.billing_address_id]
             cursor.callproc('createPaymentInfo',args)
 
             conn.commit()
@@ -19,12 +20,14 @@ class PaymentInfoDao(AbcDao):
         finally:
             cursor.close()
             conn.close()
+
     def update(self, p_payment):
         try:
             db_config = read_db_config()
             conn = MySQLConnection(**db_config)
             cursor = conn.cursor()
-            args = [p_payment.card_id, p_payment.card_number, p_payment.expir_date, p_payment.cvc, p_payment.customer_id, p_payment.billing_address_id]
+            args = [p_payment.card_id, p_payment.card_number, p_payment.cvc, p_payment.expir_date, 
+                    p_payment.card_issuer, p_payment.customer_id, p_payment.billing_address_id]
             cursor.callproc('updatePaymentInfo',args)
 
             conn.commit()
@@ -33,6 +36,7 @@ class PaymentInfoDao(AbcDao):
         finally:
             cursor.close()
             conn.close()
+
     def delete(self, p_payment):
         try:
             db_config = read_db_config()
@@ -48,6 +52,10 @@ class PaymentInfoDao(AbcDao):
         finally:
             cursor.close()
             conn.close()
+        
+    def get_byid(self):
+        raise NotImplementedError
+
     def get_all(self, p_payment):
         all_payments = []
         try:
@@ -64,9 +72,9 @@ class PaymentInfoDao(AbcDao):
             for x in payments:
                 currentpayment = PaymentInfo()
                 currentpayment.card_id = x[0]
-                currentpayment.card_number = x[1]
-                currentpayment.expir_date = x[2]
-                currentpayment.cvc = x[3]
+                currentpayment.last_four = x[1]
+                currentpayment.expir_date = x[2]    
+                currentpayment.card_issuer = x[3]            
                 currentpayment.customer_id = x[4]
                 currentpayment.billing_address_id = x[5]
                 all_payments.append(currentpayment)

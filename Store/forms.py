@@ -124,3 +124,10 @@ class EditAddressForm(forms.Form):
     state_code = forms.ChoiceField(choices=states, initial="default", widget=SelectWithDisabled())
     zip_code = USZipCodeField()
     address_type = forms.ChoiceField(choices=address_types, initial="default", widget=SelectWithDisabled())
+    
+
+class CartForm(forms.Form):
+    def __init__(self, max_quantity, *args, **kwargs):
+        super(CartForm, self).__init__(*args, **kwargs)
+        self.fields['quantity_ordered'] = forms.IntegerField(max_value=max_quantity)
+    quantity_ordered = forms.IntegerField(max_value=None)

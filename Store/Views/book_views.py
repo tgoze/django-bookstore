@@ -12,7 +12,9 @@ from Store.Model.inventory import Inventory
 from Store.Model.inventory_dao import InventoryDao
 from Store.Model.image import Image
 from Store.Model.image_dao import ImageDao
-from Store.forms import BookForm, BookImageForm, AuthorForm, PublisherForm, GenreForm
+from Store.Model.cart import Cart
+from Store.Model.cart_dao import CartDao
+from Store.forms import BookForm, BookImageForm, AuthorForm, PublisherForm, GenreForm, CartForm
 
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
@@ -157,10 +159,10 @@ class AdminBookDetailView(TemplateView):
     image_dao = ImageDao()
     inventory_dao = InventoryDao()
     
-    def get(self, request, bookID):
-        book = self.book_dao.get_byid(bookID)
-        images = self.image_dao.get_byid(bookID)
-        inventory  = self.inventory_dao.get_byid(bookID)
+    def get(self, request, book_id):
+        book = self.book_dao.get_byid(book_id)
+        images = self.image_dao.get_byid(book_id)
+        inventory  = self.inventory_dao.get_byid(book_id)
 
         initial_data = {
             'title': book.title,
@@ -180,15 +182,16 @@ class AdminBookDetailView(TemplateView):
         context = {
             'book': book,
             'images': images,
+            'inventory': inventory,
             'book_form': book_form,
             'image_form': image_form
         }
 
         return render(request, self.template_name, context)
 
-    def post(self, request, bookID):
+    def post(self, request, book_id):
         book_form = BookForm(request.POST)
-        book = self.book_dao.get_byid(bookID)
+        book = self.book_dao.get_byid(book_id)
         
         context = {
             'book': book
@@ -197,7 +200,7 @@ class AdminBookDetailView(TemplateView):
         if 'update-book' in request.POST:
             if book_form.is_valid():
                 updated_book = Book()
-                updated_book.book_id = bookID
+                updated_book.book_id = book_id
                 updated_book.title = book_form.cleaned_data['title']
                 updated_book.isbn10 = book_form.cleaned_data['isbn10']
                 updated_book.isbn13 = book_form.cleaned_data['isbn13']
@@ -234,7 +237,7 @@ class AdminBookDetailView(TemplateView):
                 image = Image()
                 image.image_url = uploaded_file_url
                 image.caption = ''
-                image.book_id = bookID
+                image.book_id = book_id
 
                 self.image_dao.create(image)
 
@@ -262,12 +265,41 @@ class CusBookView(TemplateView):
 class CusBookDetailView(TemplateView):
     template_name = 'Store/customer/books/details.html'
     book_dao = BookDao()
-    
-    def get(self, request, bookID):
-        book = self.book_dao.get_byid(bookID)
+    cart_dao = CartDao()
+    image_dao = ImageDao()
+    inventory_dao = InventoryDao()
+
+    def get(self, request, book_id):
+        book = self.book_dao.get_byid(book_id)
+        images = self.image_dao.get_byid(book_id)
+        inventory  = self.inventory_dao.get_byid(book_id)
+        max_quantity = self.inventory_dao.get_byid(book_id).quantity_on_hand        
+        cart_form = CartForm(max_quantity)
 
         context = {
-            'book': book        
+            'book': book, 
+            'images': images,
+            'inventory': inventory,
+            'cart_form': cart_form   
         }
+
+        return render(request, self.template_name, context)
+
+    def post(self, request, book_id):
+        book = self.book_dao.get_byid(book_id)
+        images = self.image_dao.get_byid(book_id)
+
+        context = {
+            'book': book,
+            'images': images        
+        }
+
+        cart = Cart()
+        cart.book.book_id = book_id
+        cart.user_id = request.session['user_id']
+        cart_form = CartForm(request.POST)        
+        if cart_form.is_valid():
+            cart.quantity_ordered = cart_form.cleaned_data['quantity_ordered']
+            self.cart_dao.create(cart)
 
         return render(request, self.template_name, context)
