@@ -1,0 +1,34 @@
+{% extends 'Store/layout.html' %}
+{% block nav %}
+  {% if user_id is none %}
+    <li>You are currently logged out</li>
+  {% else %}
+    <li><b>Greetings, {{username}}</li>
+  {% endif %}
+{% endblock %} 
+
+{% block content %}
+<h1 align="middle">ADMIN</h1>
+<table>
+  <tr>
+    <thead>Manage</thead>
+  </tr>
+  <tr>
+    <td>
+        <a href="admin/books"> BOOKS</a>
+    </td>
+    <td> 
+        <a href="admin/customers"> CUSTOMERS</a>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      ORDERS
+    </td>
+    <td>
+      INVENTORY
+    </td>
+  </tr>
+</table>
+
+{% endblock %}

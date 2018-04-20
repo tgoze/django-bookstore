@@ -19,7 +19,8 @@ urlpatterns = [
     path('customer/cart', CartView.as_view()),
     path('customer/books/details/<int:bookID>/', CusBookDetailView.as_view()),
     path('customer/customeraccount/<int:user_id>/', CustomerAccountView.as_view()),
-    path('customer/index', CustomerIndexView.as_view())
+    path('customer/index', CustomerIndexView.as_view()),
+    path('admin/index', AdminIndexView.as_view())
 ]
 
 if settings.DEBUG:

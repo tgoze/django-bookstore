@@ -100,7 +100,8 @@ class RegisterUserForm(forms.Form):
     email = forms.EmailField()
     username = forms.CharField()
     password = forms.CharField(max_length=32, widget=forms.PasswordInput)
-
+    home_phone = forms.CharField(max_length="10", min_length="10")
+    work_phone = forms.CharField(max_length="10", min_length="10")
 
 class CustomerInfoForm(forms.Form):
     home_phone = forms.CharField(max_length="10", min_length="10")

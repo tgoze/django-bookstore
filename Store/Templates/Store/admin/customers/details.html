@@ -15,31 +15,8 @@
             </p>
             </div>
             <div class="card-action">
-                    <a href="#">{% if customer.user.is_active == 1 %} Deactivate{% else %} Activate{% endif %}</a>
-                   
-                  </div>
+                <a href="#">{% if customer.user.is_active == 1 %} Deactivate{% else %} Activate{% endif %}</a>
+              </div>
           </div>
         </div>
-        <div class="col s12 m6">
-        <div class="card  grey lighten-3">
-                <div class="card-content black-text">
-                  <span class="card-title">Customer Address Information</span>
-                  <table>
-                      <tr>
-                      <thead>
-                            <td>Address</td>
-                            <td>Address Type</td>
-                      </thead> 
-                    </tr>
-                      {% for ca in caddress %}
-                        <tr>
-                            <td>{{ca.address.street}} {{ca.address.city}} {{ca.address.state_code}}</td>
-                            <td>{{ca.address.address_type}} </td>
-                        </tr>
-                      {% endfor %}
-                </table>
-                </div>
-              </div>
-      </div>
-      </div>
 {% endblock %}

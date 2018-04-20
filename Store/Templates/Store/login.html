@@ -45,8 +45,6 @@
     {% csrf_token %} {{ registerform.non_field_errors }}
     <div class="modal-content">
       <h4>Register</h4>
-      <div class="row">
-        <div class="row">
           <div class="input-field col s4">
             {{registerform.first_name.errors}}
             <i class="material-icons prefix">account_circle</i>
@@ -64,8 +62,6 @@
             <label for="{{registerform.username.id_for_label}}">username</label>
             {{registerform.username}}
           </div>
-        </div>
-        <div class="row">
           <div class="input-field col s6">
             {{registerform.email.errors}}
             <i class="material-icons prefix">email</i>
@@ -78,9 +74,18 @@
             <label for="{{registerform.password.id_for_label}}">password</label>
             {{registerform.password}}
           </div>
-        </div>
-        <br> {{text}}
-      </div>
+          <div class="input-field col s6">
+              {{registerform.work_phone.errors}}
+              <i class="material-icons prefix">broken_image</i>
+              <label for="{{registerform.work_phone.id_for_label}}">work phone</label>
+              {{registerform.work_phone}}
+          </div>
+          <div class="input-field col s6">
+              {{registerform.home_phone.errors}}
+              <i class="material-icons prefix">broken_image</i>
+              <label for="{{registerform.home_phone.id_for_label}}">home phone</label>
+              {{registerform.home_phone}}
+            </div>
     </div>
     <div class="modal-footer">
         <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>

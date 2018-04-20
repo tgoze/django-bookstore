@@ -19,7 +19,10 @@ from django.contrib.auth.hashers import check_password, BCryptPasswordHasher,mak
 from Store.forms import *
 from bcrypt import *
 
-
+class AdminIndexView(TemplateView):
+    template_name = 'Store/admin/index.html'
+    def get(self,request):
+        return render(request,self.template_name,context=None)
 class AdminCustomerView(TemplateView):
     template_name = 'Store/admin/customers/customers.html'
     
