@@ -1,5 +1,6 @@
 from Store.Model.abc_dao import AbcDao
 from Store.Model.cart import Cart
+from Store.Model.inventory import Inventory
 
 from Store.Model.dbconfig import read_db_config
 from mysql.connector import MySQLConnection, Error
@@ -57,6 +58,8 @@ class CartDao(AbcDao):
                     cart.book.genre.genre_id = cart_row[10]
                     cart.book.author.author_id = cart_row[11]
                     cart.book.publisher.publisher_id = cart_row[12]
+                    cart.book.inventory.quantity_on_hand = cart_row[13]
+                    cart.book.inventory.retail_price = cart_row[14]
                     cart_items.append(cart)
 
             # Close the connection to the DB

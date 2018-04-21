@@ -1,6 +1,7 @@
 from Store.Model.genre import Genre
 from Store.Model.author import Author
 from Store.Model.publisher import Publisher
+from Store.Model.inventory import Inventory
 
 class Book:
     def __init__(self):
@@ -15,6 +16,7 @@ class Book:
         self.genre = Genre()
         self.author = Author()
         self.publisher = Publisher()
+        self.inventory = Inventory()
 
     def get_book_id(self):
         return self.book_id

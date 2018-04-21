@@ -15,14 +15,15 @@
 </head>
 <nav>
     <div class="nav-wrapper teal">
-    <a href="/" class="brand-logo">Bookish</a>
+    <a href="{% url 'home' %}" class="brand-logo">Bookish</a>
     <ul id="nav-mobile" class="right hide-on-med-and-down">
         {% block nav %}
         {% endblock %}
-        {% if user_id is none %}
-            <li><a href="login">Login</a></li>
-        {% else %}
+        {% if user_id %}
+            <li><a href="{% url 'cart' %}"><i class="material-icons">shopping_cart</i></a></li>
             <li><a href="">Logout</a></li>
+        {% else %}
+            <li><a href="login">Login</a></li>            
         {% endif %}              
     </ul>
     </div>

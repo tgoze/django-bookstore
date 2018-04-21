@@ -70,7 +70,7 @@ class BookDao(AbcDao):
             book.set_numberOfPages(book_row[7])
 
             genre = Genre()
-            genre.genre_id = book_row[10]
+            genre.genre_id = book_row[8]
             genre.genre = book_row[14]
             author = Author()
             author.author_id = book_row[9]
