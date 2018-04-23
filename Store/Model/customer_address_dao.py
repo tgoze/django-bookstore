@@ -20,6 +20,7 @@ class CustomerAddressDao(AbcDao):
         finally:
             cursor.close()
             conn.close()
+
     def update(self, p_customer):
         try:
             db_config = read_db_config()
@@ -78,20 +79,21 @@ class CustomerAddressDao(AbcDao):
         except Exception as e:
             print(e)
         return all_customer_address
-    def get_all_addresses_by_customer_id(self,p_customer):
+
+    def get_by_customer_and_type(self, p_customer_id, p_address_type):
         try:
             db_config = read_db_config()
             conn = MySQLConnection(**db_config)
             cursor = conn.cursor()
-            args = [p_customer.customer_id]
-            cursor.callproc('getAllCustomerAddress',args)
+            args = (p_customer_id, p_address_type)
+            cursor.callproc('getAddressByCustomerAndType', args)
             all_customer_address = []
 
             for result in cursor.stored_results():
                 customers = result.fetchall()
 
             for x in customers:
-                currentAddress= CustomerAddress()
+                currentAddress = CustomerAddress()
                 currentAddress.address_id = x[0]
                 currentAddress.street = x[1]
                 currentAddress.city = x[2]
@@ -101,12 +103,13 @@ class CustomerAddressDao(AbcDao):
                 currentAddress.address_type = x[6]
                 all_customer_address.append(currentAddress)
 
-                cursor.close()
+            cursor.close()
             conn.close()
         except Error as error:
             print(error)
         except Exception as e:
             print(e)
         return all_customer_address
+
     def get_byid(self, parameter_list):
         raise NotImplementedError

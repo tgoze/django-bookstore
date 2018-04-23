@@ -103,3 +103,13 @@ class CartForm(forms.Form):
         self.fields['quantity_ordered'] = forms.IntegerField(max_value=max_quantity)
 
     quantity_ordered = forms.IntegerField(max_value=None)
+
+
+class ShipPayForm(forms.Form):
+    def __init__(self, card_choices, shipping_choices, *args, **kwargs):
+        super(ShipPayForm, self).__init__(*args, **kwargs)
+        self.fields['credit_cards'] = forms.ChoiceField(widget=forms.RadioSelect, choices=card_choices)
+        self.fields['shipping_addresses'] = forms.ChoiceField(widget=forms.RadioSelect, choices=shipping_choices)
+
+    credit_cards = forms.ChoiceField()
+    shipping_addresses = forms.ChoiceField()

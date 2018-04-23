@@ -1,3 +1,5 @@
+from Store.Model.customer_address import CustomerAddress
+
 class PaymentInfo:
     def __init__(self):
         self.card_id = None
@@ -7,4 +9,4 @@ class PaymentInfo:
         self.expir_date = None
         self.card_issuer = None
         self.customer_id = None
-        self.billing_address_id = None
+        self.billing_address = CustomerAddress()

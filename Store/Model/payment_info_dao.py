@@ -11,7 +11,7 @@ class PaymentInfoDao(AbcDao):
             conn = MySQLConnection(**db_config)
             cursor = conn.cursor()
             args = [p_payment.card_number, p_payment.cvc, p_payment.expir_date, p_payment.card_issuer,
-                    p_payment.customer_id, p_payment.billing_address_id]
+                    p_payment.customer_id, p_payment.billing_address.address_id]
             cursor.callproc('createPaymentInfo',args)
 
             conn.commit()
@@ -27,7 +27,7 @@ class PaymentInfoDao(AbcDao):
             conn = MySQLConnection(**db_config)
             cursor = conn.cursor()
             args = [p_payment.card_id, p_payment.card_number, p_payment.cvc, p_payment.expir_date, 
-                    p_payment.card_issuer, p_payment.customer_id, p_payment.billing_address_id]
+                    p_payment.card_issuer, p_payment.customer_id, p_payment.billing_address.address_id]
             cursor.callproc('updatePaymentInfo',args)
 
             conn.commit()
@@ -55,15 +55,18 @@ class PaymentInfoDao(AbcDao):
         
     def get_byid(self):
         raise NotImplementedError
+    
+    def get_all(self): 
+        raise NotImplementedError
 
-    def get_all(self, p_payment):
+    def get_by_customer_id(self, customer_id):
         all_payments = []
         try:
             db_config = read_db_config()
             conn = MySQLConnection(**db_config)
             cursor = conn.cursor()
-            args = [p_payment.customer_id]
-            cursor.callproc('getAllPaymentInfoByCustomerID',args)
+            args = [customer_id]
+            cursor.callproc('getAllPaymentInfoByCustomerID', args)
             
 
             for result in cursor.stored_results():
@@ -76,7 +79,13 @@ class PaymentInfoDao(AbcDao):
                 currentpayment.expir_date = x[2]    
                 currentpayment.card_issuer = x[3]            
                 currentpayment.customer_id = x[4]
-                currentpayment.billing_address_id = x[5]
+                currentpayment.billing_address.address_id = x[5]
+                currentpayment.billing_address.street = x[6]
+                currentpayment.billing_address.city = x[7]
+                currentpayment.billing_address.state_code = x[8]
+                currentpayment.billing_address.zip_code = x[9]
+                currentpayment.billing_address.address_type = x[10]
+
                 all_payments.append(currentpayment)
 
                 cursor.close()
