@@ -26,7 +26,8 @@ class CustomerInfoDAO(AbcDao):
             db_config = read_db_config()
             conn = MySQLConnection(**db_config)
             cursor = conn.cursor()
-            args = [p_customer.customer_id, p_customer.work_phone, p_customer.home_phone]
+            args = [p_customer.customer_id, p_customer.work_phone, p_customer.home_phone, 
+                p_customer.user.first_name, p_customer.user.last_name, p_customer.user.email]
             cursor.callproc('updateCustomerInfo',args)
 
             conn.commit()

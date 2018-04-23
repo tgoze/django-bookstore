@@ -12,7 +12,195 @@
 
 {% block content %}
 
-    <h1> Welcome {{username}} {{user_id}} </h1>
-   <h1> Customer stuff</h1>
 
+    <div class="row">
+      <div class="col s12 m7">
+          <h3>Welcome {{username}} </h3>
+      </div>
+      <div class="col s12 m5">
+          <div class="card">
+              <div class="card-content">
+                  <span class="card-title"><b>General Information</b></span>
+                    <ul>
+                        <li><b>Name:</b> {{customer.user.first_name}} {{customer.user.last_name}}</li>
+                        <li><b>E-mail:</b> {{customer.user.email}} </li>
+                        <li><b>Home:</b> {{customer.home_phone}} Work: {{customer.work_phone}}</li>
+                        <li><b>Date Joined:</b> {{customer.user.date_joined}}</li>
+                    </ul>          
+              </div>  
+              <div class="card-action">
+                  <a class="modal-trigger btn" href="#editinfo">Edit</a>
+                  <a class="modal-trigger" href="#changeusernamepassword"> Change Username and Password</a>
+                </div>          
+          </div>
+      </div>
+  </div>
+  <div class="row">
+  <div class="col s12 m7">
+        <div class="card">
+            <div class="card-content">
+                <span class="card-title"><b>Address Information</b></span>
+                <table>
+                        <tr>
+                        <thead>
+                              <td>Address</td>
+                              <td>Address Type</td>
+                        </thead> 
+                      </tr>
+                        {% for ca in caddress %}
+                          <tr>
+                              <td>
+                                  <form request="POST" name="address-detail">
+                                  <a href="caddressaccount/{{ca.address_id}}">{{ca.street}} {{ca.city}}, {{ca.state_code}} {{ca.zip_code}}</a>
+                                </form>
+                                </td>
+                              <td>{{ca.address_type}} </td>
+                          </tr>
+                        {% endfor %}
+                  </table>    
+                <div class="card-action">
+                    <a class="modal-trigger btn " href="#addAddress"><i class=" material-icons">add_box</i></a>
+                  </div>     
+            </div>       
+        </div>
+    </div>
+    <div class="col s12 m5">
+            <div class="card">
+                <div class="card-content">
+                    <span class="card-title"><b>Payment Information</b></span>
+                    <table>
+                            <tr>
+                            <thead>
+                                  <td>Cards on File</td>
+                            </thead> 
+                          </tr>
+                            {% for p in payment %}
+                              <tr>
+                                 <td>{{p.card_issuer}} ending in {{p.last_four}}</td>
+                                  <td><a class="modal-trigger " href='#editCard{{ca.address_id}}'><i class=" tiny material-icons">edit</i></a></td>
+                                  <td><a class="modal-trigger " href='#deleteCard{{ca.address_id}}'><i class=" tiny material-icons">close</i></a></td>
+                              </tr>
+                            {% endfor %}
+                      </table>    
+                    <div class="card-action">
+                        <a class="modal-trigger btn " href="addcard"><i class=" material-icons">add_box</i></a>
+                      </div>     
+                </div>       
+            </div>
+        </div>
+</div>
+
+  <div id="editinfo" class="modal">
+      <form method="POST" class="col s12">
+          {% csrf_token %} 
+          {{ info_form.non_field_errors }}
+          <div class="modal-content">
+              <h4>Edit General Information</h4>
+              <div class="row">
+                  <div class="row">
+                        <div class="input-field col s6">
+                                {{ info_form.first_name.errors }}
+                                <label for="{{ info_form.first_name.id_for_label }}">First Name</label>
+                                {{ info_form.first_name }}
+                            </div>
+                            <div class="input-field col s6">
+                                {{ info_form.last_name.errors }}
+                                <label for="{{ info_form.last_name.id_for_label }}">Last Name</label>
+                                {{ info_form.last_name }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s12">
+                                    {{ info_form.email.errors }}
+                                    <label for="{{ info_form.email.id_for_label }}">E-mail</label>
+                                    {{ info_form.email }}
+                                </div>
+                        </div>
+                        <div class="row">
+                      <div class="input-field col s6">
+                          {{ info_form.home_phone.errors }}
+                          <label for="{{ info_form.home_phone.id_for_label }}">Home Phone</label>
+                          {{ info_form.home_phone }}
+                      </div>
+                      <div class="input-field col s6">
+                          {{ info_form.work_phone.errors }}
+                          <label for="{{ info_form.work_phone.id_for_label }}">Work Phone</label>
+                          {{ info_form.work_phone }}
+                      </div>
+                      </div>
+              </div>
+          </div>
+          <div class="modal-footer">
+              <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+              <button type="submit" class="modal-action waves-effect waves-green btn-flat" name="edit-info">Submit</button>
+          </div>
+      </form>
+  </div>
+  <div id="addAddress" class="modal">
+        <form method="POST" class="col s12">
+            {% csrf_token %} 
+            {{ aaddress.non_field_errors }}
+            <div class="modal-content">
+                <div class="input-field col s6">
+                    {{ aaddress.street.errors }}
+                    <label for="{{ aaddress.street.id_for_label }}">Street</label>
+                    {{ aaddress.street }}
+                </div>
+                <div class="input-field col s6">
+                    {{ aaddress.city.errors }}
+                    <label for="{{ aaddress.city.id_for_label }}">City</label>
+                    {{ aaddress.city }}
+                </div>
+                <div class="input-field col s6">
+                    {{ aaddress.state_code.errors }}                        
+                    {{ aaddress.state_code }}
+                    <label>State</label>       
+                </div>
+                <div class="input-field col s6">
+                    {{ aaddress.zip_code.errors }}
+                    <label for="{{ aaddress.zip_code.id_for_label }}">Zip Code</label>
+                    {{ aaddress.zip_code }}       
+                </div>
+                <div class="input-field col s6">
+                    {{ aaddress.address_type.errors }}
+                    {{ aaddress.address_type }}    
+                    <label>Address Type</label>   
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+                <button type="submit" class="modal-action waves-effect waves-green btn-flat" name="add-address">Add</button>
+            </div>
+        </form>
+  </div>
+  <div id="changeusernamepassword">
+        <form method="POST" class="col s12">
+                {% csrf_token %} 
+                {{ Cuserpass.non_field_errors }}
+                <div class="modal-content">
+                    <div class="input-field col s6">
+                        {{ Cuserpass.username.errors }}
+                        <label for="{{ Cuserpass.username.id_for_label }}">new username</label>
+                        {{ Cuserpass.username }}
+                    </div>
+                    <div class="input-field col s6">
+                        {{ Cuserpass.password.errors }}
+                        <label for="{{ Cuserpass.password.id_for_label }}">verify current password</label>
+                        {{ Cuserpass.password }}
+                    </div>
+                    <div class="input-field col s6">
+                        {{ Cuserpass.password2.errors }}
+                        <label for="{{ Cuserpass.password2.id_for_label }}">new password</label>
+                        {{ Cuserpass.password2 }}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+                    <button type="submit" class="modal-action waves-effect waves-green btn-flat" name="changeusernamepassword">Update</button>
+                </div>
+            </form>
+  </div>
+<script type="text/javascript" src="{% static "js/jquery-3.3.1.js" %}"></script>
+<script type="text/javascript" src="{% static "js/materialize.min.js" %}"></script>
+<script type="text/javascript" src="{% static "js/books.js" %}"></script> 
 {% endblock %}

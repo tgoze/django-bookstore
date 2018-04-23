@@ -1,4 +1,5 @@
 from Store.Model.payment_info import PaymentInfo
+from Store.Model.customer_address import CustomerAddress
 from mysql.connector import MySQLConnection, Error
 from Store.Model.dbconfig import read_db_config
 from Store.Model.abc_dao import AbcDao
@@ -53,12 +54,37 @@ class PaymentInfoDao(AbcDao):
             cursor.close()
             conn.close()
         
-    def get_byid(self):
-        raise NotImplementedError
-    
-    def get_all(self): 
-        raise NotImplementedError
+    def get_by_address_id(self, p_customer_id, p_address_id):
+        all_payments = []
+        try:
+            db_config = read_db_config()
+            conn = MySQLConnection(**db_config)
+            cursor = conn.cursor()
+            args = [p_address_id, p_customer_id]
+            cursor.callproc('getPaymentInfoByAddressID',args)
+            
 
+            for result in cursor.stored_results():
+                payments = result.fetchall()
+
+            for x in payments:
+                currentpayment = PaymentInfo()
+                currentpayment.card_id = x[0]
+                currentpayment.last_four = x[2]
+                currentpayment.expir_date = x[3]    
+                currentpayment.card_issuer = x[4]            
+                currentpayment.customer_id = x[5]
+                currentpayment.billing_address_id = x[6]
+                all_payments.append(currentpayment)
+
+                cursor.close()
+            conn.close()
+        except Error as error:
+            print(error)
+        except Exception as e:
+            print(e)
+        return all_payments
+    
     def get_by_customer_id(self, customer_id):
         all_payments = []
         try:
@@ -95,3 +121,9 @@ class PaymentInfoDao(AbcDao):
         except Exception as e:
             print(e)
         return all_payments
+
+    def get_byid(self):
+        raise NotImplementedError
+    
+    def get_all(self): 
+        raise NotImplementedError
