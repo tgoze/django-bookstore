@@ -118,14 +118,26 @@ class AddAddressForm(forms.Form):
     zip_code = USZipCodeField()
     address_type = forms.ChoiceField(choices=address_types, initial="default", widget=SelectWithDisabled())
 class EditAddressForm(forms.Form):
-    address_id = forms.CharField()
     street = forms.CharField()
     city = forms.CharField()
     state_code = forms.ChoiceField(choices=states, initial="default", widget=SelectWithDisabled())
     zip_code = USZipCodeField()
     address_type = forms.ChoiceField(choices=address_types, initial="default", widget=SelectWithDisabled())
     
+class AddPaymentInfoForm(forms.Form):
+    card_number = forms.CharField(max_length="16", min_length="16")
+    cvc = forms.CharField(max_length="3", min_length="3", widget=forms.PasswordInput)
+    expir_date = forms.DateField()
+    card_issuer = forms.CharField()
+class BillingAddressesForm(forms.Form):
+    address = forms.ChoiceField(label='Choose Billing Address', widget=forms.RadioSelect())
 
+class ChangeUsernamePassword(forms.Form):
+    username = forms.CharField()
+    password = forms.CharField(max_length=32, widget=forms.PasswordInput)
+    password2 = forms.CharField(max_length=32, widget=forms.PasswordInput)
+class OrderForm(forms.Form):
+    quantity_ordered = forms.IntegerField()
 class CartForm(forms.Form):
     def __init__(self, max_quantity, *args, **kwargs):
         super(CartForm, self).__init__(*args, **kwargs)

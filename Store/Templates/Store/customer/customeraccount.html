@@ -14,10 +14,10 @@
 
 
     <div class="row">
-      <div class="col s12 m6">
+      <div class="col s12 m7">
           <h3>Welcome {{username}} </h3>
       </div>
-      <div class="col s6">
+      <div class="col s12 m5">
           <div class="card">
               <div class="card-content">
                   <span class="card-title"><b>General Information</b></span>
@@ -30,15 +30,16 @@
               </div>  
               <div class="card-action">
                   <a class="modal-trigger btn" href="#editinfo">Edit</a>
+                  <a class="modal-trigger" href="#changeusernamepassword"> Change Username and Password</a>
                 </div>          
           </div>
       </div>
   </div>
   <div class="row">
-  <div class="col s12 m6">
+  <div class="col s12 m7">
         <div class="card">
             <div class="card-content">
-                <span class="card-title"><b> Address Information</b></span>
+                <span class="card-title"><b>Address Information</b></span>
                 <table>
                         <tr>
                         <thead>
@@ -48,10 +49,12 @@
                       </tr>
                         {% for ca in caddress %}
                           <tr>
-                              <td>{{ca.street}} {{ca.city}}, {{ca.state_code}} {{ca.zip_code}}</td>
+                              <td>
+                                  <form request="POST" name="address-detail">
+                                  <a href="caddressaccount/{{ca.address_id}}">{{ca.street}} {{ca.city}}, {{ca.state_code}} {{ca.zip_code}}</a>
+                                </form>
+                                </td>
                               <td>{{ca.address_type}} </td>
-                              <td><a class="modal-trigger " href='#editAddress{{ca.address_id}}'><i class=" tiny material-icons">edit</i></a></td>
-                              <td><a class="modal-trigger " href='#deleteAddress{{ca.address_id}}'><i class=" tiny material-icons">close</i></a></td>
                           </tr>
                         {% endfor %}
                   </table>    
@@ -61,28 +64,26 @@
             </div>       
         </div>
     </div>
-    <div class="col s12 m6">
+    <div class="col s12 m5">
             <div class="card">
                 <div class="card-content">
                     <span class="card-title"><b>Payment Information</b></span>
                     <table>
                             <tr>
                             <thead>
-                                  <td>Address</td>
-                                  <td>Address Type</td>
+                                  <td>Cards on File</td>
                             </thead> 
                           </tr>
-                            {% for ca in caddress %}
+                            {% for p in payment %}
                               <tr>
-                                  <td>{{ca.street}} {{ca.city}}, {{ca.state_code}} {{ca.zip_code}}</td>
-                                  <td>{{ca.address_type}} </td>
-                                  <td><a class="modal-trigger " href='#editAddress{{ca.address_id}}'><i class=" tiny material-icons">edit</i></a></td>
-                                  <td><a class="modal-trigger " href='#deleteAddress{{ca.address_id}}'><i class=" tiny material-icons">close</i></a></td>
+                                 <td>{{p.card_issuer}} ending in {{p.last_four}}</td>
+                                  <td><a class="modal-trigger " href='#editCard{{ca.address_id}}'><i class=" tiny material-icons">edit</i></a></td>
+                                  <td><a class="modal-trigger " href='#deleteCard{{ca.address_id}}'><i class=" tiny material-icons">close</i></a></td>
                               </tr>
                             {% endfor %}
                       </table>    
                     <div class="card-action">
-                        <a class="modal-trigger btn " href="#addAddress"><i class=" material-icons">add_box</i></a>
+                        <a class="modal-trigger btn " href="addcard"><i class=" material-icons">add_box</i></a>
                       </div>     
                 </div>       
             </div>
@@ -131,84 +132,10 @@
           </div>
           <div class="modal-footer">
               <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
-              <button type="submit" class="modal-action waves-effect waves-green btn-flat" name="edit-info" value="{{ customer.customer_id }}">Submit</button>
+              <button type="submit" class="modal-action waves-effect waves-green btn-flat" name="edit-info">Submit</button>
           </div>
       </form>
   </div>
-  {% for ca in caddress %}
-  <div id="deleteAddress{{ca.address_id}}" class="modal">
-    <form method="POST" class="col s6" >
-        {% csrf_token %} 
-        {{ daddress.non_field_errors }}
-        <div class="modal-content">
-            <h3>Confirm Address Delete</h3>
-            <div class="input-field  col s6">
-                {{daddress.address_id.errors}}
-                    <input type="hidden" name="address_id" value="{{ca.address_id}}">
-                    {{daddress.address_id.errors}}
-                </div>
-            <h4>
-            <ul>
-                <li> {{ca.street}}</li>
-                <li> {{ca.city}}, {{ca.state_code}} {{ca.zip_code}}</li>
-                <li>Address Type: {{ca.address_type}}</li>
-            </ul>
-        </h4>
-        </div>
-        <div class="modal-footer">
-                <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
-                <button type="submit" class="modal-action waves-effect waves-green btn-flat" name="delete-address" value="{{ ca.address_id}}">Delete</button>
-        </div>
-    </form>
-  </div>
-  {% endfor %}
-  {% for ca in caddress %}
-    <div id="editAddress{{ca.address_id}}" class="modal">
-        <form request="POST" class="col s6" >
-        {% csrf_token %} 
-        {{ eaddress.non_field_errors }}
-        <div class="modal-content">
-            <h3> Edit Address:</h3>
-            <h6>
-                <ul>
-                    <li> {{ca.street}}</li>
-                    <li> {{ca.city}}, {{ca.state_code}} {{ca.zip_code}}</li>
-                    <li>Address Type: {{ca.address_type}}</li>
-                </ul>
-            </h6>
-                <div class="input-field col s6">
-                    {{ eaddress.street.errors }}
-                    <label for="{{ eaddress.street.id_for_label }}">Street</label>
-                    {{ eaddress.street }}
-                </div>
-                <div class="input-field col s6">
-                    {{ eaddress.city.errors }}
-                    <label for="{{ eaddress.city.id_for_label }}">City</label>
-                    {{ eaddress.city }}
-                </div>
-                <div class="input-field col s6">
-                    {{ eaddress.state_code.errors }}                        
-                    {{ eaddress.state_code }}
-                    <label>State</label>       
-                </div>
-                <div class="input-field col s6">
-                    {{ eaddress.zip_code.errors }}
-                    <label for="{{ eaddress.zip_code.id_for_label }}">Zip Code</label>
-                    {{ eaddress.zip_code }}       
-                </div>
-                <div class="input-field col s6">
-                        {{ eaddress.address_type.errors }}
-                        {{ eaddress.address_type }}    
-                        <label>Address Type</label>   
-                </div>
-        </div>
-    <div class="modal-footer">
-        <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
-        <button type="submit" class="modal-action waves-effect waves-green btn-flat" name="edit-address" value="{{ ca.address_id}}">Edit</button>
-    </div>
-</form>
-</div>
-  {% endfor %}
   <div id="addAddress" class="modal">
         <form method="POST" class="col s12">
             {% csrf_token %} 
@@ -242,11 +169,37 @@
             </div>
             <div class="modal-footer">
                 <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
-                <button type="submit" class="modal-action waves-effect waves-green btn-flat" name="add-address" value="{{ ca.address_id}}">Add</button>
+                <button type="submit" class="modal-action waves-effect waves-green btn-flat" name="add-address">Add</button>
             </div>
         </form>
   </div>
-
+  <div id="changeusernamepassword">
+        <form method="POST" class="col s12">
+                {% csrf_token %} 
+                {{ Cuserpass.non_field_errors }}
+                <div class="modal-content">
+                    <div class="input-field col s6">
+                        {{ Cuserpass.username.errors }}
+                        <label for="{{ Cuserpass.username.id_for_label }}">new username</label>
+                        {{ Cuserpass.username }}
+                    </div>
+                    <div class="input-field col s6">
+                        {{ Cuserpass.password.errors }}
+                        <label for="{{ Cuserpass.password.id_for_label }}">verify current password</label>
+                        {{ Cuserpass.password }}
+                    </div>
+                    <div class="input-field col s6">
+                        {{ Cuserpass.password2.errors }}
+                        <label for="{{ Cuserpass.password2.id_for_label }}">new password</label>
+                        {{ Cuserpass.password2 }}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+                    <button type="submit" class="modal-action waves-effect waves-green btn-flat" name="changeusernamepassword">Update</button>
+                </div>
+            </form>
+  </div>
 <script type="text/javascript" src="{% static "js/jquery-3.3.1.js" %}"></script>
 <script type="text/javascript" src="{% static "js/materialize.min.js" %}"></script>
 <script type="text/javascript" src="{% static "js/books.js" %}"></script> 

@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, reverse
 from django.views.generic import TemplateView
 from Store.Model.user import User
 from Store.Model.user_dao import UserDao
@@ -63,37 +63,35 @@ class LoginView(TemplateView):
                     else:
                         self.template_name = self.admin_loggedin_template
                 else:
-                    context['text'] = 'Bad password bro'
+                    loginform = LoginForm()  
+                    registerform = RegisterUserForm()
+                    context = {
+                    'loginform': loginform,
+                    'registerform': registerform,   
+                    'text': 'Either username or password is incorrect'        
+                    }          
                         
             else:
                 context['text'] = 'try again'
 
         if 'create-user' in request.POST:        
             if registerform.is_valid():
-                user = User()
-                user.first_name = registerform.cleaned_data['first_name']
-                user.last_name = registerform.cleaned_data['last_name']
-                user.email = registerform.cleaned_data['email']
-                user.username = registerform.cleaned_data['username']
+                u = User()
+                u.first_name = registerform.cleaned_data['first_name']
+                u.last_name = registerform.cleaned_data['last_name']
+                u.email = registerform.cleaned_data['email']
+                u.username = registerform.cleaned_data['username']
                 x = registerform.cleaned_data['password']
-                user.is_superuser = 0
-                user.is_active = 1
-                user.is_staff = 0
-                user.password = make_password(x,salt=None,hasher='default')
-                self.udao.create(user)
-                user = self.udao.get_byusername(user.username)  
+                u.is_superuser = 0
+                u.is_active = 1
+                u.is_staff = 0
+                u.password = make_password(x,salt=None,hasher='default')
+                self.udao.create(u)
+                user = self.udao.get_byusername(u.username)  
                 customer = CustomerInfo()
                 customer.customer_id = user.id
                 customer.work_phone = registerform.cleaned_data['work_phone']
                 customer.home_phone = registerform.cleaned_data['home_phone']
                 self.cdao.create(customer)
-                request.session['user_id'] = user.id
-                request.session['username'] = user.username 
-                context['user_id'] = request.session['user_id']
-                context['username'] = request.session['username']   
-                self.template_name = self.cus_loggedin_template     
-            context = {
-                    'loginform': loginform,
-                    'registerform': registerform           
-                }                  
+                       
         return render(request, self.template_name, context)

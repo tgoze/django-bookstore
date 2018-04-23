@@ -1,4 +1,5 @@
 from Store.Model.inventory import Inventory
+from Store.Model.book_dao import BookDao
 from mysql.connector import MySQLConnection, Error
 from Store.Model.dbconfig import read_db_config
 from Store.Model.abc_dao import AbcDao
@@ -66,6 +67,8 @@ class InventoryDao(AbcDao):
                 currentinventory.quantity_ordered = x[2]
                 currentinventory.cost = x[3]
                 currentinventory.retail_price = x[4]
+                bdao = BookDao()
+                currentinventory.book = bdao.get_byid(currentinventory.book_id)
                 all_inventory.append(currentinventory)
 
                 cursor.close()
@@ -95,6 +98,7 @@ class InventoryDao(AbcDao):
             inventory.quantity_ordered = inventory_row[2]
             inventory.cost = inventory_row[3]
             inventory.retail_price = inventory_row[4]
+            
 
             cursor.close()
             conn.close()
