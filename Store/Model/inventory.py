@@ -5,3 +5,4 @@ class Inventory:
         self.quantity_ordered = None
         self.cost = None
         self.retail_price = None
+        self.book = None

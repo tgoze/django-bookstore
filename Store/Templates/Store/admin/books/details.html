@@ -10,12 +10,25 @@
 <div class="row">
     <div class="banner"></div>
     <div class="col s6">
-        <img class="materialboxed responsive-img" width="400" src="{{ image_url }}" alt="Image not found">                    
+        <div class="carousel">
+            {% for image in images %}
+            <a class="carousel-item" href="#one!"><img src="{{ image.image_url }}"></a>                  
+            {% endfor %}
+        </div>
     </div>
     <div class="col s6">
         <div class="card">
-            <div class="card-content">
-                <span class="card-title">{{ book.title }}</span>
+            <div class="card-content">            
+                <div class="row">
+                    <div class="col s12">
+                        <span class="card-title">{{ book.title }}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s12">
+                        ${{ inventory.retail_price }} / ${{ inventory.cost }}
+                    </div>
+                </div>
                 <p>
                     by {{ book.author.last_name }}, {{ book.author.first_name }}<br>
                     {{ book.publisher.company_name }} ({{ book.copyRightDate }})<br>
@@ -24,7 +37,9 @@
                     <br><b>Details:</b><br>                    
                     {{ book.type }}<br>
                     {{ book.numberOfPages }} pages<br>
-                    {{ book.genre.genre }}                    
+                    {{ book.genre.genre }}<br>
+                    <br><b>Quantity on Hand:</b> {{ inventory.quantity_on_hand }}
+                    <br><b>Quantity Ordered:</b> {{ inventory.quantity_ordered }}
                 </p>
             </div>
             <div class="card-action">

@@ -32,6 +32,11 @@ states = []
 states.append(("default", {'label': "Choose a state", 'disabled': True}))
 for state in CONTIGUOUS_STATES:
     states.append(state)
+address_types = []
+address_types.append(("default", {'label': "Choose an address type", 'disabled': True}))
+address_types.append(('Billing','Billing'))
+address_types.append(('Shipping','Shipping'))
+
 
 # https://djangosnippets.org/snippets/2453/
 class SelectWithDisabled(Select):
@@ -95,4 +100,68 @@ class RegisterUserForm(forms.Form):
     email = forms.EmailField()
     username = forms.CharField()
     password = forms.CharField(max_length=32, widget=forms.PasswordInput)
+    home_phone = forms.CharField(max_length="10", min_length="10")
+    work_phone = forms.CharField(max_length="10", min_length="10")
     
+
+class CustomerInfoForm(forms.Form):
+    home_phone = forms.CharField(max_length="10", min_length="10")
+    work_phone = forms.CharField(max_length="10", min_length="10")
+    first_name = forms.CharField()
+    last_name = forms.CharField()
+    email = forms.EmailField()
+
+
+class DeleteAddressForm(forms.Form):
+    address_id = forms.CharField()
+
+
+class AddAddressForm(forms.Form):
+    street = forms.CharField()
+    city = forms.CharField()
+    state_code = forms.ChoiceField(choices=states, initial="default", widget=SelectWithDisabled())
+    zip_code = USZipCodeField()
+    address_type = forms.ChoiceField(choices=address_types, initial="default", widget=SelectWithDisabled())
+
+
+class EditAddressForm(forms.Form):
+    street = forms.CharField()
+    city = forms.CharField()
+    state_code = forms.ChoiceField(choices=states, initial="default", widget=SelectWithDisabled())
+    zip_code = USZipCodeField()
+    address_type = forms.ChoiceField(choices=address_types, initial="default", widget=SelectWithDisabled())
+    
+class AddPaymentInfoForm(forms.Form):
+    card_number = forms.CharField(max_length="16", min_length="16")
+    cvc = forms.CharField(max_length="3", min_length="3", widget=forms.PasswordInput)
+    expir_date = forms.DateField()
+    card_issuer = forms.CharField()
+class BillingAddressesForm(forms.Form):
+    address = forms.ChoiceField(label='Choose Billing Address', widget=forms.RadioSelect())
+
+class ChangeUsernamePassword(forms.Form):
+    username = forms.CharField()
+    password = forms.CharField(max_length=32, widget=forms.PasswordInput)
+    password2 = forms.CharField(max_length=32, widget=forms.PasswordInput)
+
+
+class OrderForm(forms.Form):
+    quantity_ordered = forms.IntegerField()
+
+
+class CartForm(forms.Form):
+    def __init__(self, max_quantity, *args, **kwargs):
+        super(CartForm, self).__init__(*args, **kwargs)
+        self.fields['quantity_ordered'] = forms.IntegerField(max_value=max_quantity)
+
+    quantity_ordered = forms.IntegerField(max_value=None)
+
+
+class ShipPayForm(forms.Form):
+    def __init__(self, card_choices, shipping_choices, *args, **kwargs):
+        super(ShipPayForm, self).__init__(*args, **kwargs)
+        self.fields['credit_cards'] = forms.ChoiceField(widget=forms.RadioSelect, choices=card_choices)
+        self.fields['shipping_addresses'] = forms.ChoiceField(widget=forms.RadioSelect, choices=shipping_choices)
+
+    credit_cards = forms.ChoiceField()
+    shipping_addresses = forms.ChoiceField()

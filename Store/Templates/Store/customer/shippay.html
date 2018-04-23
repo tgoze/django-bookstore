@@ -1,0 +1,102 @@
+{% extends 'Store/layout.html' %} 
+{% load staticfiles %} 
+{% load widget_tweaks %}
+
+{% block head %}
+<link href="{% static "css/checkout.css" %}" type="text/css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<nav class="clean">
+    <div class="nav-wrapper">
+        <div class="col s12">
+            <a href="{% url 'cart' %}" class="breadcrumb">Cart</a>
+            <a href="#!" class="breadcrumb">Shipping & Payment</a>            
+        </div>            
+    </div>
+</nav>
+
+<div class="row">
+    <div class="col s6">
+        <div class="section">
+            <h5>Payment Option</h5>
+        </div>        
+        <div class="section">
+            <div class="row">
+                <div class="col s6">
+                    <h6>Credit Card</h6>
+                </div>
+                <div class="col s6">
+                    <h6>Billing Address</h6>
+                </div>
+            </div>                        
+            <div class="row">                
+                <div class="col s6">
+                    <ul>
+                        {% for card in shippay_form.credit_cards %}
+                        <li class="card-item">
+                            <label>                                                    
+                            {{ card.tag }}
+                            <span>{{ card.choice_label }}</span>
+                            </label>
+                        </li>                        
+                        {% endfor %}                        
+                    </ul>                                        
+                </div>                        
+                <div class="col s6 grey-text">                                                            
+                    <ul>
+                        {% for card in cards %}
+                        <li class="card-item">                            
+                            {{ card.billing_address.street }}<br>
+                            {{ card.billing_address.city }}, {{ card.billing_address.state_code}} {{ card.billing_address.zip_code }}           
+                        </li>                                 
+                        {% endfor %}                        
+                    </ul>                    
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s1 offset-s10">
+                    <a href="!#" class="addbtn btn-floating btn-small waves-effect modal-trigger"><i class="material-icons">edit</i></a>
+                </div>
+                <div class="col s1">
+                    <a href="!#" class="addbtn btn-floating btn-small waves-effect modal-trigger"><i class="material-icons">add</i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col s6">
+        <div class="section">
+            <h5>Shipping Address</h5>
+        </div>
+        <div class="section">
+            {% for address in shipping_addresses %}
+            <div class="row">
+                <div class="col s12">
+                    <label>
+                        <input name="group2" type="radio" class="with-gap" />
+                        <span>
+                            {{ address.street }}<br>
+                            {{ address.city }}, {{ address.state_code }} {{ address.zip_code }}
+                        </span>
+                    </label>
+                </div>               
+            </div>
+            {% endfor %}
+            <div class="row">
+                <div class="col s1 offset-s10">
+                    <a href="!#" class="addbtn btn-floating btn-small waves-effect modal-trigger"><i class="material-icons">edit</i></a>
+                </div>
+                <div class="col s1">
+                    <a href="!#" class="addbtn btn-floating btn-small waves-effect modal-trigger"><i class="material-icons">add</i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="fixed-action-btn">
+    <a class="btn-floating btn-large modal-trigger" href="{% url 'checkout' %}">
+        <i class="large material-icons">arrow_forward</i>
+    </a>
+</div>
+{% endblock %}

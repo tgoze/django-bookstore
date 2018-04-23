@@ -2,7 +2,7 @@ $(document).ready(function(){
     $('.modal').modal();
     $('.datepicker').datepicker();
     $('select').formSelect();
-    $('.materialboxed').materialbox();
+    $('.carousel').carousel();
 });
 
 var addButtons = document.getElementsByClassName('addbtn')

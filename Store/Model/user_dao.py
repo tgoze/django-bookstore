@@ -55,6 +55,22 @@ class UserDao(AbcDao):
             print(error)
         except Exception as e:
             print(e)
+    def updateLastLogin(self,id):
+        try:
+            db_config = read_db_config()        
+            conn = MySQLConnection(**db_config)
+            cursor = conn.cursor()
+
+            args = [id]
+            cursor.callproc('updateLastLogin', args)
+            conn.commit()
+
+            cursor.close()
+            conn.close()
+        except Error as error:
+            print(error)
+        except Exception as e:
+            print(e)
     def get_all(self):
         try:
             
@@ -158,3 +174,19 @@ class UserDao(AbcDao):
         except Exception as e:
             print(e)
         return u
+    def updateUserPass(self,p_user):
+        try:
+            db_config = read_db_config()        
+            conn = MySQLConnection(**db_config)
+            cursor = conn.cursor()
+
+            args = (p_user.id, p_user.username,  p_user.password)
+            cursor.callproc('updateUserPass', args)
+            conn.commit()
+
+            cursor.close()
+            conn.close()
+        except Error as error:
+            print(error)
+        except Exception as e:
+            print(e)
