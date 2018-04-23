@@ -136,8 +136,11 @@ class AddPaymentInfoForm(forms.Form):
     cvc = forms.CharField(max_length="3", min_length="3", widget=forms.PasswordInput)
     expir_date = forms.DateField()
     card_issuer = forms.CharField()
+
+
 class BillingAddressesForm(forms.Form):
     address = forms.ChoiceField(label='Choose Billing Address', widget=forms.RadioSelect())
+
 
 class ChangeUsernamePassword(forms.Form):
     username = forms.CharField()
@@ -158,7 +161,9 @@ class CartForm(forms.Form):
 
 
 class ShipPayForm(forms.Form):
-    def __init__(self, card_choices, shipping_choices, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
+        card_choices = kwargs.pop('card_choices')
+        shipping_choices = kwargs.pop('shipping_choices')
         super(ShipPayForm, self).__init__(*args, **kwargs)
         self.fields['credit_cards'] = forms.ChoiceField(widget=forms.RadioSelect, choices=card_choices)
         self.fields['shipping_addresses'] = forms.ChoiceField(widget=forms.RadioSelect, choices=shipping_choices)
