@@ -165,9 +165,8 @@ class CustomerAddressDao(AbcDao):
                 currentAddress.zip_code = x[4]
                 currentAddress.customer_id = x[5]
                 currentAddress.address_type = x[6]
-                
 
-                cursor.close()
+            cursor.close()
             conn.close()
         except Error as error:
             print(error)

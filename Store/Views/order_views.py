@@ -43,6 +43,7 @@ class ShipPayView(TemplateView):
     template_name = 'Store/customer/shippay.html'
     payment_dao = PaymentInfoDao()
     customer_address_dao = CustomerAddressDao()
+    cart_dao = CartDao()
 
     def get(self, request):
         context = {}
@@ -86,21 +87,33 @@ class ShipPayView(TemplateView):
             card_choices.append(card_val)
         shipping_choices = []
         for address in ship_addresses:
-            address_val = (str(address.address_id), str(address.street) + str(address.city) + ", " 
+            address_val = (str(address.address_id), str(address.street) + " " + str(address.city) + ", " 
                 + str(address.state_code) + " " + str(address.zip_code))
             shipping_choices.append(address_val)
 
         shippay_form = ShipPayForm(request.POST, card_choices=card_choices, shipping_choices=shipping_choices)
 
-        # If the data was validated, store it in a dictionary
+        # Validate POST data
         context = {}
-        if 'place-order' in request.POST:
+        if 'review-order' in request.POST:
             if shippay_form.is_valid():
-                payment_choice  = shippay_form.cleaned_data['credit_cards']
-                shipping_choice = shippay_form.cleaned_data['shipping_addresses']
+                # Get choice of card and shipping address
+                payment_choice_id  = shippay_form.cleaned_data['credit_cards']
+                shipping_choice_id = shippay_form.cleaned_data['shipping_addresses']
+                payment_choice = self.payment_dao.get_byid(payment_choice_id)
+                shipping_choice = self.customer_address_dao.get_byid(shipping_choice_id)
+
+                # Uses the cart dao to get cart information
+                cart_items = self.cart_dao.get_all(user_id)
+                cart_total = 0
+                for item in cart_items:
+                    cart_total += item.book.inventory.retail_price
 
                 context['payment_choice'] = payment_choice
                 context['shipping_choice'] = shipping_choice                
+                context['cart_items'] = cart_items
+                context['cart_total'] = cart_total
+                context['user_id'] = user_id
                         
         return render(request, 'Store/customer/checkout.html', context)
 
@@ -110,24 +123,12 @@ class CheckOutView(TemplateView):
     cart_dao = CartDao() 
 
     def get(self, request):
-        context = {}
-        if 'user_id' in request.session:
-            user_id = request.session['user_id']
-            cart_items = self.cart_dao.get_all(user_id)
-            
-            cart_total = 0
-            for item in cart_items:
-                cart_total += item.book.inventory.retail_price
-
-            context['cart_items'] = cart_items
-            context['cart_total'] = cart_total
-            context['user_id'] = user_id
-
-        else:
-            return redirect(reverse('login'))
-
-        return render(request, self.template_name, context)
+        return redirect(reverse('ship_pay'))
 
     def post(self, request):
+
         context = {}
+        if 'place-order' in request.POST:
+            print('work on me')
+        
         return render(request, self.template_name, context)

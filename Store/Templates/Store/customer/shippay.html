@@ -96,12 +96,14 @@
             </div>
         </div>
         <div class="fixed-action-btn">
-            <button class="btn-floating btn-large modal-trigger" type="submit" name="place-order">
+            <button class="btn-floating btn-large modal-trigger tooltipped" data-position="left" data-tooltip="Review order" type="submit" name="review-order">
                 <i class="large material-icons">arrow_forward</i>
             </button>
         </div>
     </form>
 </div>
 
-
+<script type="text/javascript" src="{% static "js/jquery-3.3.1.js" %}"></script>
+<script type="text/javascript" src="{% static "js/materialize.min.js" %}"></script>
+<script type="text/javascript" src="{% static "js/orders.js" %}"></script>
 {% endblock %}
