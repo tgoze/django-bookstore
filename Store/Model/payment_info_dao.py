@@ -123,13 +123,13 @@ class PaymentInfoDao(AbcDao):
         return all_payments
 
     def get_byid(self, card_id):       
+        card = PaymentInfo()
         try:
             db_config = read_db_config()
             conn = MySQLConnection(**db_config)
             cursor = conn.cursor()
             args = [card_id]
             cursor.callproc('getPaymentInfoByCardID', args)
-            card= PaymentInfo()
 
             for result in cursor.stored_results():
                 cards = result.fetchall()

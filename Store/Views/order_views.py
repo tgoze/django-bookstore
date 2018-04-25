@@ -7,6 +7,8 @@ from Store.Model.payment_info import PaymentInfo
 from Store.Model.payment_info_dao import PaymentInfoDao
 from Store.Model.customer_address import CustomerAddress
 from Store.Model.customer_address_dao import CustomerAddressDao
+from Store.Model.retail_order import RetailOrder
+from Store.Model.retail_order_dao import RetailOrderDao
 
 from Store.forms import ShipPayForm
 
@@ -43,7 +45,6 @@ class ShipPayView(TemplateView):
     template_name = 'Store/customer/shippay.html'
     payment_dao = PaymentInfoDao()
     customer_address_dao = CustomerAddressDao()
-    cart_dao = CartDao()
 
     def get(self, request):
         context = {}
@@ -76,7 +77,7 @@ class ShipPayView(TemplateView):
     def post(self, request):
         # Gets form data
         user_id = request.session['user_id']
-        cards =  self.payment_dao.get_by_customer_id(user_id)
+        cards = self.payment_dao.get_by_customer_id(user_id)
         ship_addresses = self.customer_address_dao.get_by_customer_and_type(user_id, "Shipping")
 
         # This code organizes the credit card info and shipping info so that the Django form can handle it
@@ -94,41 +95,66 @@ class ShipPayView(TemplateView):
         shippay_form = ShipPayForm(request.POST, card_choices=card_choices, shipping_choices=shipping_choices)
 
         # Validate POST data
-        context = {}
         if 'review-order' in request.POST:
             if shippay_form.is_valid():
-                # Get choice of card and shipping address
-                payment_choice_id  = shippay_form.cleaned_data['credit_cards']
-                shipping_choice_id = shippay_form.cleaned_data['shipping_addresses']
-                payment_choice = self.payment_dao.get_byid(payment_choice_id)
-                shipping_choice = self.customer_address_dao.get_byid(shipping_choice_id)
+                # Get choice of payment and shipping address
+                payment_choice_id = shippay_form.cleaned_data['credit_cards']
+                shipping_choice_id = shippay_form.cleaned_data['shipping_addresses']             
 
-                # Uses the cart dao to get cart information
-                cart_items = self.cart_dao.get_all(user_id)
-                cart_total = 0
-                for item in cart_items:
-                    cart_total += item.book.inventory.retail_price
-
-                context['payment_choice'] = payment_choice
-                context['shipping_choice'] = shipping_choice                
-                context['cart_items'] = cart_items
-                context['cart_total'] = cart_total
-                context['user_id'] = user_id
+                request.session['payment_choice'] = payment_choice_id
+                request.session['shipping_choice'] = shipping_choice_id                
                         
-        return render(request, 'Store/customer/checkout.html', context)
+        return redirect(reverse('checkout'))
 
 
 class CheckOutView(TemplateView):
     template_name = 'Store/customer/checkout.html'
-    cart_dao = CartDao() 
+    retail_order_dao = RetailOrderDao() 
+    payment_dao = PaymentInfoDao()
+    customer_address_dao = CustomerAddressDao()
+    cart_dao = CartDao()
 
     def get(self, request):
-        return redirect(reverse('ship_pay'))
+        if 'payment_choice' in request.session:
+            # Get data from db to show order summary
+            payment_choice = self.payment_dao.get_byid(request.session['payment_choice'])
+            shipping_choice = self.customer_address_dao.get_byid(request.session['shipping_choice'])
+            cart_items = self.cart_dao.get_all(request.session['user_id'])
+
+            cart_total = 0
+            for item in cart_items:
+                cart_total += (item.book.inventory.retail_price * item.quantity_ordered)
+
+            context = {
+                'payment_choice': payment_choice,
+                'shipping_choice': shipping_choice,
+                'cart_items': cart_items,
+                'cart_total': cart_total,
+                'user_id': request.session['user_id']
+            }
+        else:
+            return redirect(reverse('ship_pay'))
+
+        return render(request, self.template_name, context)
 
     def post(self, request):
-
+        retail_order = RetailOrder()
         context = {}
+
         if 'place-order' in request.POST:
-            print('work on me')
+            try:
+                # Get data from form
+                retail_order.customer.customer_id = request.session['user_id']
+                retail_order.shipping_address.address_id = request.POST['shipping_choice']
+                retail_order.billing_address.address_id = request.POST['billing_choice']
+                retail_order.card.card_id = request.POST['payment_choice']
+
+                # Submit order information to server
+                self.retail_order_dao.create(retail_order)
+
+                context['notification'] = "Order made!"
+            except:
+                print("Error occured")
+                context['notification'] = "Error!"
         
         return render(request, self.template_name, context)

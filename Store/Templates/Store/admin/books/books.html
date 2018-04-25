@@ -2,10 +2,6 @@
 {% load staticfiles %}
 {% load widget_tweaks %}
 
-{% block head %}
-<link href="{% static "css/bookstyle.css" %}" type="text/css" rel="stylesheet">
-{% endblock %}
-
 {% block content %}
 <h4>Books</h4>
 <table>
@@ -14,7 +10,9 @@
             <th>Book</th>
             <th>Author</th>
             <th>Publisher</th>
-            <th></th>
+            <th>Cost / Price</th>
+            <th>On Hand</th>
+            <th>Ordered</th>
             <th></th>
         </tr>
     </thead>
@@ -23,11 +21,13 @@
             {% csrf_token %}
             {% for book in books %}
             <tr>
-                <td><a href="books/details/{{ book.book_id }}">{{ book.title }}</a></td>  
-                <td>{{book.author.last_name}}, {{book.author.first_name}}</td>
-                <td>{{book.publisher.company_name}}</td>                
-                <td><a id="edit-book" href="books/details/{{ book.bookID }}"><i class="material-icons">edit</i></a></td>
-                <td><button id="submit-link" type="submit" name="delete-book" value="{{ book.bookID }}"><i class="material-icons">delete</i></button></td>
+                <td>{{ book.title }}</td>  
+                <td>{{ book.author.last_name }}, {{ book.author.first_name }}</td>
+                <td>{{ book.publisher.company_name }}</td>                                
+                <td>${{ book.inventory.cost }} / ${{ book.inventory.retail_price }}</td>
+                <td>{{ book.inventory.quantity_on_hand }}</td>
+                <td>{{ book.inventory.quantity_ordered }}</td>
+                <td><a href="books/details/{{ book.book_id }}"><i class="material-icons">edit</i></a></td>
             </tr>
             {% endfor %}
         </form>           
@@ -47,7 +47,7 @@
         {{ book_form.non_field_errors }}            
         <div class="modal-content">
             <h4>Add Book</h4>
-            <div class="row">            
+            <div class="row section">            
                 <div class="row">
                     <div class="input-field col s6">
                         {{ book_form.title.errors }}
@@ -115,6 +115,25 @@
                         <a href="#addgenre" class="addbtn btn-floating btn-small waves-effect modal-trigger"><i class="material-icons">add</i></a>
                     </div>
                 </div>                                
+            </div>            
+            <h6>Inventory Information</h6>
+            <div class="divider"></div>
+            <div class="row section">
+                <div class="input-field col s4">
+                    {{ book_form.quantity_on_hand.errors }}
+                    <label for="{{ book_form.quantity_on_hand.id_for_label }}">Quantity On Hand</label>
+                    {{ book_form.quantity_on_hand }}
+                </div>
+                <div class="input-field col s4">
+                    {{ book_form.cost.errors }}
+                    <label for="{{ book_form.cost.id_for_label }}">Cost</label>
+                    {{ book_form.cost }}
+                </div>                    
+                <div class="input-field col s4">
+                    {{ book_form.retail_price.errors }}
+                    <label for="{{ book_form.retail_price.id_for_label }}">Retail Price</label>
+                    {{ book_form.retail_price }}
+                </div>
             </div>
         </div>
         <div class="modal-footer">            

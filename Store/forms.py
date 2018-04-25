@@ -7,31 +7,13 @@ from Store.Model.publisher_dao import PublisherDao
 from Store.Model.genre_dao import GenreDao
 from Store.Model.author_dao import AuthorDao
 
-publisher_dao = PublisherDao()
-genre_dao = GenreDao()
-author_dao = AuthorDao()
-
 # This gets all of the choices for the select elements
 # It also adds a default option which is disabled
-authors = []
-authors.append(("default", {'label': "Choose an author", 'disabled': True}))
-for author in author_dao.get_all():
-    author_val = (str(author.author_id), str(author.last_name) + ", " + str(author.first_name))
-    authors.append(author_val)
-publishers = []
-publishers.append(("default", {'label': "Choose a publisher", 'disabled': True}))
-for publisher in publisher_dao.get_all():
-    publisher_val = (str(publisher.publisher_id), str(publisher.company_name))
-    publishers.append(publisher_val)
-genres = []
-genres.append(("default", {'label': "Choose a genre", 'disabled': True}))
-for genre in genre_dao.get_all():
-    genre_val = (str(genre.genre_id), str(genre.genre))
-    genres.append(genre_val)
 states = []
 states.append(("default", {'label': "Choose a state", 'disabled': True}))
 for state in CONTIGUOUS_STATES:
     states.append(state)
+
 address_types = []
 address_types.append(("default", {'label': "Choose an address type", 'disabled': True}))
 address_types.append(('Billing','Billing'))
@@ -57,17 +39,28 @@ class SelectWithDisabled(Select):
 
 
 class BookForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        author_choices = kwargs.pop('author_choices')
+        publisher_choices = kwargs.pop('publisher_choices')
+        genre_choices = kwargs.pop('genre_choices')
+        super(BookForm, self).__init__(*args, **kwargs)
+        self.fields['authors'] = forms.ChoiceField(choices=author_choices, initial="default", widget=SelectWithDisabled())
+        self.fields['publishers'] = forms.ChoiceField(choices=publisher_choices, initial="default", widget=SelectWithDisabled())
+        self.fields['genres'] = forms.ChoiceField(choices=genre_choices, initial="default", widget=SelectWithDisabled())
+
     title = forms.CharField()
-    authors = forms.ChoiceField(choices=authors, initial="default", widget=SelectWithDisabled())
+    authors = forms.ChoiceField()
     isbn10 = forms.CharField(max_length="10", min_length="10")
     isbn13 = forms.CharField(max_length="13", min_length="13")
     copyright_date = forms.DateField()
     edition = forms.DecimalField()
-    publishers = forms.ChoiceField(choices=publishers, initial="default", widget=SelectWithDisabled())
+    publishers = forms.ChoiceField()
     book_type = forms.CharField()
     num_pages = forms.IntegerField()
-    genres = forms.ChoiceField(choices=genres, initial="default", widget=SelectWithDisabled())
-
+    genres = forms.ChoiceField()
+    quantity_on_hand = forms.IntegerField()
+    cost = forms.DecimalField(help_text="In US dollars")
+    retail_price = forms.DecimalField(help_text="In US dollars")
 
 class BookImageForm(forms.Form):
     image = forms.ImageField()

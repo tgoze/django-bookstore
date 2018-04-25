@@ -18,66 +18,74 @@
 </nav>
 
 <div class="section"></div>
-<div class="row">
-    <div class="col s6">        
-        <div class="card">
-            <div class="card-content">
-                <span class="card-title"><i class="material-icons small">credit_card</i> Payment Option</span>
-                <input type="hidden" name="payment_choice" value="{{ payment_choice.card_id }}">
-                <h6>Credit Card</h6>
-                <div class="section grey-text">                    
-                    <p>"{{ payment_choice.card_issuer }}" card ending in {{ payment_choice.last_four }}</p>
-                </div>
-                <h6>Billing Address</h6>
-                <div class="section grey-text">
-                    <p> 
-                        {{ payment_choice.billing_address.street }}<br>
-                        {{ payment_choice.billing_address.city }}, {{ payment_choice.billing_address.state_code }} 
-                        {{ payment_choice.billing_address.zip_code }}
-                    </p>
-                </div>
-            </div>      
-        </div>
-        <div class="card">
-            <div class="card-content">
-                <span class="card-title"><i class="material-icons small">local_shipping</i> Shipping Address</span>
-                <input type="hidden" name="shipping_choice" value="{{ shipping_choice.address_id }}">
-                <div class="section grey-text">
-                    <p> 
-                        {{ shipping_choice.street }}<br>
-                        {{ shipping_choice.city }}, {{ shipping_choice.state_code }} 
-                        {{ shipping_choice.zip_code }}
-                    </p>
-                </div>
-            </div>      
+<form method="POST">
+    {% csrf_token %}
+    <div class="row">    
+        <div class="col s6">              
+            <div class="card">
+                <div class="card-content">
+                    <span class="card-title"><i class="material-icons small">credit_card</i> Payment Option</span>
+                    <input type="hidden" name="payment_choice" value="{{ payment_choice.card_id }}">
+                    <h6>Credit Card</h6>
+                    <div class="section grey-text">                    
+                        <p>"{{ payment_choice.card_issuer }}" card ending in {{ payment_choice.last_four }}</p>
+                    </div>
+                    <input type="hidden" name="billing_choice" value="{{ payment_choice.billing_address.address_id }}">
+                    <h6>Billing Address</h6>
+                    <div class="section grey-text">
+                        <p> 
+                            {{ payment_choice.billing_address.street }}<br>
+                            {{ payment_choice.billing_address.city }}, {{ payment_choice.billing_address.state_code }} 
+                            {{ payment_choice.billing_address.zip_code }}
+                        </p>
+                    </div>
+                </div>      
+            </div>
+            <div class="card">
+                <div class="card-content">
+                    <span class="card-title"><i class="material-icons small">local_shipping</i> Shipping Address</span>
+                    <input type="hidden" name="shipping_choice" value="{{ shipping_choice.address_id }}">
+                    <div class="section grey-text">
+                        <p> 
+                            {{ shipping_choice.street }}<br>
+                            {{ shipping_choice.city }}, {{ shipping_choice.state_code }} 
+                            {{ shipping_choice.zip_code }}
+                        </p>
+                    </div>
+                </div>      
+            </div>
+        </div>        
+        <div class="col s6">
+            <div class="section">
+                <h5><i class="material-icons small">book</i> Books</h5>
+            </div>
+            <table>                
+                <tbody>               
+                    {% for item in cart_items %}
+                    <tr>
+                        <td><a href="{% url 'customer_book' book_id=item.book.book_id %}">{{ item.book.title }}</a></td>
+                        <td>({{ item.quantity_ordered }})</td>
+                        <td>${{ item.book.inventory.retail_price }}</td>                
+                    </tr>                                                                                                                                     
+                    {% endfor %}
+                    <tr>
+                        <td>Subtotal:</td>
+                        <td><h6>${{ cart_total }}</h6></td>
+                    </tr>            
+                </tbody>                                   
+            </table>
         </div>
     </div>
-    <div class="col s6">
-        <div class="section">
-            <h5><i class="material-icons small">book</i> Books</h5>
+    <div class="row">
+        <div class="col s2 offset-s10">        
+            <button class="btn-large tooltipped" data-position="left" data-tooltip="Place order" type="submit" name="place-order">
+                <i class="large material-icons">shopping_basket</i>
+            </button>        
         </div>
-        <table>                
-            <tbody>               
-                {% for item in cart_items %}
-                <tr>
-                    <td><a href="{% url 'customer_book' book_id=item.book.book_id %}">{{ item.book.title }}</a></td>
-                    <td>${{ item.book.inventory.retail_price }}</td>                
-                </tr>                                                                                                                                     
-                {% endfor %}
-                <tr>
-                    <td>Subtotal:</td>
-                    <td><h6>${{ cart_total }}</h6></td>
-                </tr>            
-            </tbody>                                   
-        </table>
     </div>
-</div>
-<div class="fixed-action-btn">
-    <button class="btn-floating btn-large modal-trigger tooltipped" data-position="left" data-tooltip="Place order" type="submit" name="place-order">
-        <i class="large material-icons">shopping_basket</i>
-    </button>
-</div>
+</form>
 
+{{ notification }}
 <script type="text/javascript" src="{% static "js/jquery-3.3.1.js" %}"></script>
 <script type="text/javascript" src="{% static "js/materialize.min.js" %}"></script>
 <script type="text/javascript" src="{% static "js/orders.js" %}"></script> 

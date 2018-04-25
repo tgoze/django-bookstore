@@ -3,6 +3,7 @@
 {% load widget_tweaks %} 
 
 {% block head %}
+<link href="{% static "css/bookstyle.css" %}" type="text/css" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
@@ -26,7 +27,7 @@
                 </div>
                 <div class="row">
                     <div class="col s12">
-                        ${{ inventory.retail_price }} / ${{ inventory.cost }}
+                        ${{ book.inventory.retail_price }} / ${{ book.inventory.cost }}
                     </div>
                 </div>
                 <p>
@@ -38,12 +39,13 @@
                     {{ book.type }}<br>
                     {{ book.numberOfPages }} pages<br>
                     {{ book.genre.genre }}<br>
-                    <br><b>Quantity on Hand:</b> {{ inventory.quantity_on_hand }}
-                    <br><b>Quantity Ordered:</b> {{ inventory.quantity_ordered }}
+                    <br><b>Quantity on Hand:</b> {{ book.inventory.quantity_on_hand }}
+                    <br><b>Quantity Ordered:</b> {{ book.inventory.quantity_ordered }}
                 </p>
             </div>
             <div class="card-action">
                 <a class="modal-trigger" href="#editbook">Edit</a>
+                <button id="submit-link" type="submit" name="delete-book" value="{{ book.bookID }}">Delete</button>
             </div>
         </div>
     </div>

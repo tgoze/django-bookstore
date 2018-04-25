@@ -12,7 +12,8 @@ class BookDao(AbcDao):
 
         args = (b.get_isbn13(),b.get_isbn10(), b.get_title(),b.get_copyRightDate(),
                 b.get_type(),b.get_edition(),b.get_numberOfPages(),
-                b.get_genre().genre_id,b.get_author().author_id,b.get_publisher().publisher_id)
+                b.get_genre().genre_id,b.get_author().author_id,b.get_publisher().publisher_id,
+                b.inventory.quantity_on_hand, b.inventory.cost, b.inventory.retail_price)
         try:
             db_config = read_db_config()
             conn = MySQLConnection(**db_config)
@@ -83,6 +84,11 @@ class BookDao(AbcDao):
             book.set_author(author)
             book.set_publisher(publisher)
 
+            book.inventory.quantity_on_hand = book_row[15]
+            book.inventory.quantity_ordered = book_row[16]
+            book.inventory.cost = book_row[17]
+            book.inventory.retail_price = book_row[18]
+
             cursor.close()
             conn.close()
         except Error as error:
@@ -130,6 +136,11 @@ class BookDao(AbcDao):
                 currentbook.set_genre(genre)
                 currentbook.set_author(author)
                 currentbook.set_publisher(publisher)
+
+                currentbook.inventory.quantity_on_hand = x[15]
+                currentbook.inventory.quantity_ordered = x[16]
+                currentbook.inventory.cost = x[17]
+                currentbook.inventory.retail_price = x[18]
 
                 allBooks.append(currentbook)
 
