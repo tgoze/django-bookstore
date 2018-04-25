@@ -9,6 +9,7 @@
     <link href="{% static "css/materialize.min.css" %}" type="text/css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="{% static "css/mainstyle.css" %}" type="text/css" rel="stylesheet">
+
     {% block head %}
     {% endblock %}
     <title>Bookish</title>
@@ -20,8 +21,9 @@
         {% block nav %}
         {% endblock %}
         {% if user_id %}
+            <li><a href="customer/customeraccount"><i class="material-icons">account_box</i> {{username}}</a></li>
             <li><a href="{% url 'cart' %}"><i class="material-icons">shopping_cart</i></a></li>
-            <li><a href="">Logout</a></li>
+            <li><a href="{% url 'login' %}">Logout</a></li>
         {% else %}
             <li><a href="login">Login</a></li>            
         {% endif %}              

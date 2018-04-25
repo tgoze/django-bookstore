@@ -1,12 +1,23 @@
 {% extends 'Store/layout.html' %}
 {% load staticfiles %}
 {% load widget_tweaks %}
-
+{% block nav %}
+  {% if user_id is none %}
+    <li>You are currently logged out</li>
+  {% else %}
+    <li><b>Greetings, {{username}}</li>
+  {% endif %}
+{% endblock %} 
 {% block head %}
 <link href="{% static "css/bookstyle.css" %}" type="text/css" rel="stylesheet">
 {% endblock %}
-
 {% block content %}
+<form method="POST" name='go-back'>
+    {% csrf_token %} 
+<button type="submit" class="modal-action waves-effect waves-green btn-flat" name="return">
+    <i class=" material-icons medium">keyboard_return</i>
+    Return to Admin Management Page</button>
+</form>
 <h4>Books</h4>
 <table>
     <thead>

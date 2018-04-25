@@ -22,6 +22,7 @@ from django.core.files.storage import FileSystemStorage
 
 class AdminBookView(TemplateView):
     template_name = 'Store/admin/books/books.html'
+    template_admin= 'Store/admin/index.html'
     book_dao = BookDao()
     
     def get(self, request):
@@ -39,10 +40,15 @@ class AdminBookView(TemplateView):
             'author_form': author_form,
             'genre_form': genre_form
         }
-
+        user_id =  request.session['user_id'] 
+        username = request.session['username'] 
+        context['user_id'] = request.session['user_id'],
+        context['username'] = request.session['username'] 
         return render(request, self.template_name, context)
 
-    def post(self, request):    
+    def post(self, request):  
+        user_id =  request.session['user_id'] 
+        username = request.session['username']    
         book_form = BookForm(request.POST)
         books = self.book_dao.get_all()
         book = Book()
@@ -149,7 +155,10 @@ class AdminBookView(TemplateView):
                     'notification': "Not a valid submission.",
                     'book_form': book_form
                 }
-            
+        elif 'return' in request.POST:
+            context['user_id'] = request.session['user_id'],
+            context['username'] = request.session['username']
+            return render(request, self.template_admin, context )
         return render(request, self.template_name, context)
 
 
