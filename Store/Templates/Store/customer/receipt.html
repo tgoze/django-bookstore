@@ -1,0 +1,11 @@
+{% extends 'Store/layout.html' %} 
+{% load staticfiles %} 
+{% load widget_tweaks %} 
+
+{% block head %}
+<link href="{% static "css/checkout.css" %}" type="text/css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<h5>{{ notification }}</h5>
+{% endblock %}

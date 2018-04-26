@@ -12,7 +12,8 @@ class BookDao(AbcDao):
 
         args = (b.get_isbn13(),b.get_isbn10(), b.get_title(),b.get_copyRightDate(),
                 b.get_type(),b.get_edition(),b.get_numberOfPages(),
-                b.get_genre().genre_id,b.get_author().author_id,b.get_publisher().publisher_id)
+                b.get_genre().genre_id,b.get_author().author_id,b.get_publisher().publisher_id,
+                b.inventory.quantity_on_hand, b.inventory.cost, b.inventory.retail_price)
         try:
             db_config = read_db_config()
             conn = MySQLConnection(**db_config)
@@ -83,6 +84,11 @@ class BookDao(AbcDao):
             book.set_author(author)
             book.set_publisher(publisher)
 
+            book.inventory.quantity_on_hand = book_row[15]
+            book.inventory.quantity_ordered = book_row[16]
+            book.inventory.cost = book_row[17]
+            book.inventory.retail_price = book_row[18]
+
             cursor.close()
             conn.close()
         except Error as error:
@@ -131,6 +137,11 @@ class BookDao(AbcDao):
                 currentbook.set_author(author)
                 currentbook.set_publisher(publisher)
 
+                currentbook.inventory.quantity_on_hand = x[15]
+                currentbook.inventory.quantity_ordered = x[16]
+                currentbook.inventory.cost = x[17]
+                currentbook.inventory.retail_price = x[18]
+
                 allBooks.append(currentbook)
 
             conn.commit()
@@ -143,47 +154,81 @@ class BookDao(AbcDao):
         return allBooks
 
     
-    # def getBooksByGenre(self, b):
-    #     try:
-    #         db_config = read_db_config()
-    #         conn = MySQLConnection(**db_config)
-    #         cursor = conn.cursor()
-    #         args = [b]
-    #         cursor.callproc('getBooksByGenre', args)
-    #         allBooks = []
+    def getBooksByGenreID(self, genre_id):
+        allBooks = []
+        try:
+            db_config = read_db_config()
+            conn = MySQLConnection(**db_config)
+            cursor = conn.cursor()
+            args = [genre_id]
+            cursor.callproc('getBooksByGenreID', args)
+         
 
-    #         for result in cursor.stored_results():
-    #             books = result.fetchall()
+            for result in cursor.stored_results():
+                books = result.fetchall()
 
-    #         for x in books:
+            for x in books:
 
-    #             currentbook = Book()
-    #             currentbook.set_book_id(x[2])
-    #             currentbook.set_isbn13(x[3])
-    #             currentbook.set_isbn10(x[4])
-    #             currentbook.set_title(x[5])
-    #             currentbook.set_copyRightDate(x[6])
-    #             currentbook.set_type(x[7])
-    #             currentbook.set_edition(x[8])
-    #             currentbook.set_numberOfPages(x[9])
-    #             currentbook.set_image(x[10])
-    #             currentbook.set_genre(x[11])
-    #             currentbook.set_authorID(x[12])
-    #             currentbook.set_publisherID(x[13])
-    #             allBooks.append(currentbook)
+                currentbook = Book()
+                currentbook.set_book_id(x[0])
+                currentbook.set_isbn13(x[1])
+                currentbook.set_isbn10(x[2])
+                currentbook.set_title(x[3])
+                currentbook.set_copyRightDate(x[4])
+                currentbook.set_type(x[5])
+                currentbook.set_edition(x[6])
+                currentbook.set_numberOfPages(x[7])
+                currentbook.set_genre(x[8])
+                currentbook.set_author(x[9])
+                currentbook.set_publisher(x[10])
+                allBooks.append(currentbook)
 
+            conn.commit()
+        except Error as error:
+            print(error)
 
+        finally:
+            cursor.close()
+            conn.close()
+        return allBooks
 
-    #         conn.commit()
-    #     except Error as error:
-    #         print(error)
+    def getBooksByPublisherID(self, publisher_id):
+        allBooks = []
+        try:
+            db_config = read_db_config()
+            conn = MySQLConnection(**db_config)
+            cursor = conn.cursor()
+            args = [publisher_id]
+            cursor.callproc('getBooksByPublisherID', args)
+         
 
-    #     finally:
-    #         cursor.close()
-    #         conn.close()
-    #     return allBooks
+            for result in cursor.stored_results():
+                books = result.fetchall()
 
-    
+            for x in books:
+
+                currentbook = Book()
+                currentbook.set_book_id(x[0])
+                currentbook.set_isbn13(x[1])
+                currentbook.set_isbn10(x[2])
+                currentbook.set_title(x[3])
+                currentbook.set_copyRightDate(x[4])
+                currentbook.set_type(x[5])
+                currentbook.set_edition(x[6])
+                currentbook.set_numberOfPages(x[7])
+                currentbook.set_genre(x[8])
+                currentbook.set_author(x[9])
+                currentbook.set_publisher(x[10])
+                allBooks.append(currentbook)
+
+            conn.commit()
+        except Error as error:
+            print(error)
+
+        finally:
+            cursor.close()
+            conn.close()
+        return allBooks
     # def getBooksByAuthor(self, b,c):
     #     try:
     #         db_config = read_db_config()

@@ -1,0 +1,70 @@
+{% extends 'Store/layout.html' %}
+{% load staticfiles %}
+{% load widget_tweaks %}
+{% block nav %}
+  {% if user_id is none %}
+    <li>You are currently logged out</li>
+  {% else %}
+    <li><b>Greetings, {{username}}</li>
+  {% endif %}
+{% endblock %} 
+{% block head %}
+<link href="{%  static "css/bookstyle.css" %}" type="text/css" rel="stylesheet">
+{% endblock %}
+{% block content %}
+<h6>
+    <a href='{% url 'adminindex' %}'><i class=" material-icons medium">keyboard_return</i> Return to Admin Management</a>
+</h6>
+<h4>Genres</h4>
+<table>
+    <thead>
+        <tr>
+            <th>Genre</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <form method="POST">
+            {% csrf_token %}
+            {% for genre in genres %}
+            <tr>
+                <td><a href="genres/details/{{genre.genre_id}}" >{{ genre.genre }}</a></td>              
+            </tr>
+            {% endfor %}
+        </form>           
+    </tbody>
+</table>
+<div class="fixed-action-btn">
+    <a class="btn-floating btn-large modal-trigger" href="#addgenre">
+        <i class="large material-icons">add</i>
+    </a>
+</div>
+<div id="addgenre" class="modal">
+    <form method="POST" class="col s12">
+        {% csrf_token %}
+        {{ agenre.non_field_errors }}            
+        <div class="modal-content">
+            <h4>Add Genre</h4>
+            <div class="row">
+                <div class="row">
+                    <div class="input-field col s6">
+                        {{ agenre.genre.errors }}
+                        <label for="{{ agenre.genre.id_for_label }}">Genre</label>
+                        {{ agenre.genre }}       
+                    </div>                    
+                </div>            
+            </div>
+        </div>        
+        <div class="modal-footer">            
+            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+            <button type="submit" class="modal-action waves-effect waves-green btn-flat" name="create-genre">Submit</button>
+        </div>
+    </form>
+</div>
+
+
+
+<script type="text/javascript" src="{% static "js/jquery-3.3.1.js" %}"></script>
+<script type="text/javascript" src="{% static "js/materialize.min.js" %}"></script>
+<script type="text/javascript" src="{% static "js/books.js" %}"></script>
+{% endblock %}

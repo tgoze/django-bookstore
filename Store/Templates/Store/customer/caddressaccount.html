@@ -10,9 +10,7 @@
 {% endblock %} 
 {% block content %}
 <h6>
-<form method="POST" name='go-back'>
-<a href="{% url 'customeraccount' %}"> Return to Account Overview</a>
-</form>
+<a href='{% url 'customeraccount' %}'><i class=" material-icons medium">keyboard_return</i> Return to Account Overview</a>
 </h6>
 <div class="row">
         <div class="col s12 m6">
@@ -43,7 +41,7 @@
             <table>
                 <tr> 
                     <td>{{p.card_issuer}} ending in {{p.last_four}} </td>
-                    <td><a class="modal-trigger " href='#deleteCard{{ca.address_id}}'><i class=" tiny material-icons">close</i></a></td>
+                    <td><a class="modal-trigger " href='#deleteCard{{p.address_id}}'><i class=" tiny material-icons">close</i></a></td>
                 </tr>
             </table>
             {% endfor %}
@@ -93,8 +91,9 @@
         <button type="submit" class="modal-action waves-effect waves-green btn-flat" name="edit-address">Update</button>
     </div>
     </form>
-</div>
-<div id="deleteAddress{{ca.address_id}}" class="modal">
+</div> 
+
+<div id="deleteAddress{{address.address_id}" class="modal">
     <form method="POST" class="col s6" >
         {% csrf_token %} 
         {{ daddress.non_field_errors }}
@@ -102,16 +101,17 @@
             <h3>Confirm Address Delete</h3>
             <div class="input-field  col s6">
                 {{daddress.address_id.errors}}
-                <input type="hidden" name="address_id" value="{{ca.address_id}}">
+                <input type="hidden" name="address_id" value="{{address.address_id}}">
                 {{daddress.address_id.errors}}
             </div>
                 <h4>
                 <ul>
-                    <li> {{ca.street}}</li>
-                    <li> {{ca.city}}, {{ca.state_code}} {{ca.zip_code}}</li>
-                    <li>Address Type: {{ca.address_type}}</li>
+                    <li> {{address.street}}</li>
+                    <li> {{address.city}}, {{address.state_code}} {{address.zip_code}}</li>
+                    <li>Address Type: {{address.address_type}}</li>
                 </ul>
             </h4>
+            <h6> Notice Cannot Delete Address with Credit Cards on File for Address</h6>
         </div>
     <div class="modal-footer">
         <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
@@ -119,6 +119,7 @@
     </div>
     </form>
 </div>
+
 <div id="addCard" class="modal">
     <form method="POST" class="col s6" >
                 {% csrf_token %} 

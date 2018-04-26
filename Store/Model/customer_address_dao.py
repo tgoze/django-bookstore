@@ -114,6 +114,7 @@ class CustomerAddressDao(AbcDao):
         return all_customer_address
 
     def get_all_addresses_by_customer_id(self, p_customer_id):
+        all_customer_address = []
         try:
             db_config = read_db_config()
             conn = MySQLConnection(**db_config)
@@ -165,9 +166,8 @@ class CustomerAddressDao(AbcDao):
                 currentAddress.zip_code = x[4]
                 currentAddress.customer_id = x[5]
                 currentAddress.address_type = x[6]
-                
 
-                cursor.close()
+            cursor.close()
             conn.close()
         except Error as error:
             print(error)
