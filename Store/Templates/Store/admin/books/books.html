@@ -1,35 +1,29 @@
 {% extends 'Store/layout.html' %}
 {% load staticfiles %}
-{% load widget_tweaks %}
-{% block nav %}
-  {% if user_id is none %}
-    <li>You are currently logged out</li>
-  {% else %}
-    <li><b>Greetings, {{username}}</li>
-  {% endif %}
-{% endblock %} 
+{% load widget_tweaks %} 
+
 {% block head %}
 <link href="{% static "css/bookstyle.css" %}" type="text/css" rel="stylesheet">
 {% endblock %}
+
 {% block content %}
-<form method="POST" name='go-back'>
-    {% csrf_token %} 
-<button type="submit" class="modal-action waves-effect waves-green btn-flat" name="return">
-    <i class=" material-icons medium">keyboard_return</i>
-    Return to Admin Management Page</button>
-</form>
-<h4>Books</h4>
+
+<a href="{% url 'adminindex' %}" class="waves-effect waves-green btn-flat">
+    <i class="material-icons medium">keyboard_return</i>Return to Admin Management Page</a>
 <div class="section">
     <div class="row">
-        <div class="col s4 offset-s4">
+        <div class="col s2">
+            <h4><i class="material-icons small">book</i> Books</h4>
+        </div>
+        <div class="col s4">
             <nav>
-                <div class="nav-wrapper">
+                <div class="nav-wrapper grey lighten-2">
                     <form>
-                    <div class="input-field">
-                        <input id="search" type="search" required>
-                        <label class="label-icon" for="search"><i class="material-icons">search</i></label>
-                        <i class="material-icons">close</i>
-                    </div>
+                        <div class="input-field">
+                            <input id="search" type="search" required>
+                            <label class="label-icon" for="search"><i class="material-icons">search</i></label>
+                            <i class="material-icons">close</i>
+                        </div>
                     </form>
                 </div>
             </nav>
@@ -39,9 +33,10 @@
 <table>
     <thead>
         <tr>
-            <th>Book</th>
+            <th>Book ({{ num_books }})</th>
             <th>Author</th>
             <th>Publisher</th>
+            <th>Genre</th>
             <th>Cost / Price</th>
             <th>On Hand</th>
             <th>Ordered</th>
@@ -55,7 +50,8 @@
             <tr>
                 <td>{{ book.title }}</td>  
                 <td>{{ book.author.last_name }}, {{ book.author.first_name }}</td>
-                <td>{{ book.publisher.company_name }}</td>                                
+                <td>{{ book.publisher.company_name }}</td>
+                <td>{{ book.genre.genre }}</td>                                
                 <td>${{ book.inventory.cost }} / ${{ book.inventory.retail_price }}</td>
                 <td>{{ book.inventory.quantity_on_hand }}</td>
                 <td>{{ book.inventory.quantity_ordered }}</td>
@@ -66,6 +62,7 @@
     </tbody>
     {{notification}}
 </table>
+<div class="section"></div>
 
 <div class="fixed-action-btn">
     <a class="btn-floating btn-large modal-trigger" href="#addbook">

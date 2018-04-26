@@ -14,26 +14,51 @@
     {% endblock %}
     <title>Bookish</title>
 </head>
-<nav>
-    <div class="nav-wrapper teal">
-    <a href="{% url 'home' %}" class="brand-logo">Bookish</a>
-    <ul id="nav-mobile" class="right hide-on-med-and-down">
-        {% block nav %}
-        {% endblock %}
-        {% if user_id %}
-            <li><a href="customer/customeraccount"><i class="material-icons">account_box</i> {{username}}</a></li>
-            <li><a href="{% url 'cart' %}"><i class="material-icons">shopping_cart</i></a></li>
-            <li><a href="{% url 'login' %}">Logout</a></li>
-        {% else %}
-            <li><a href="login">Login</a></li>            
-        {% endif %}              
-    </ul>
-    </div>
-</nav>
 <body>
-    <div class="container">
-        {% block content %}
-        {% endblock %}
-    </div>
+    <header>
+        <nav>
+            <div class="nav-wrapper teal">
+            <a href="{% url 'home' %}" class="brand-logo">Bookish</a>
+            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                {% block nav %}
+                {% endblock %}
+                {% if user_id %}
+                    <li><a href="{% url 'customeraccount' %}">{{username}}</a></li>
+                    <li><a href="{% url 'cart' %}"><i class="material-icons">shopping_cart</i></a></li>
+                    <li><a href="{% url 'login' %}">Logout</a></li>
+                {% else %}
+                    <li><a href="login">Login</a></li>            
+                {% endif %}              
+            </ul>
+            </div>
+        </nav>
+    </header>
+    <main>
+        <div class="container">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </main>
+    <footer class="page-footer teal">
+        <div class="container">
+            <div class="row">
+            <div class="col l6 s12">
+                <h5 class="white-text">Feeling bookish?</h5>
+                <p class="grey-text text-lighten-4">Get some high quality books from the best</p>
+            </div>
+            <div class="col l4 offset-l2 s12">
+                <h5 class="white-text">Information</h5>
+                <ul>
+                <li><a class="grey-text text-lighten-3" href="#!">Contact us</a></li>                
+                </ul>
+            </div>
+            </div>
+        </div>
+        <div class="footer-copyright teal darken-1">
+            <div class="container">
+            © 2018 Bookish Books
+            </div>
+        </div>
+    </footer>
 </body>
 </html>

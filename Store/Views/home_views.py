@@ -8,21 +8,26 @@ from Store.Model.customer_address import CustomerAddress
 from django.conf import settings
 from django.contrib.auth.hashers import check_password, BCryptPasswordHasher,make_password
 
+from django.views.decorators.cache import never_cache
+
 from Store.forms import *
 from bcrypt import *
 
 
 class HomeView(TemplateView):
     template_name = 'Store/index.html'
+    @never_cache
     def get(self, request):
-        return render(request, self.template_name)
+        context = {}
+        context['user_id'] = request.session['user_id']
+        return render(request, self.template_name, context)
         
 class LoginView(TemplateView):
     user = User()
     udao = UserDao()
     template_name = 'Store/login.html'
-    cus_loggedin_template = 'Store/customer/index.html' #this html needs made
-    admin_loggedin_template = 'Store/admin/index.html' #this html needs made
+    cus_loggedin_template = 'Store/customer/index.html' 
+    admin_loggedin_template = 'Store/admin/index.html' 
     user.username = 'not logged in'
     customer = CustomerInfo()
     cdao = CustomerInfoDAO()
@@ -47,13 +52,18 @@ class LoginView(TemplateView):
 
         if 'login-user' in request.POST:
             if loginform.is_valid():     
+                # Get user data from database
                 user = User()           
                 user.username = loginform.cleaned_data['username']
                 user = self.udao.get_byusername(user.username)
-                input_password = loginform.cleaned_data['password']                
+                input_password = loginform.cleaned_data['password']
+                # Validate login
                 if check_password(input_password, user.password):
+                    # Store session data
                     request.session['user_id'] = user.id
                     request.session['username'] = user.username
+                    request.session['user_is_staff'] = user.is_staff
+
                     context['text'] = 'Yay password'                
                     context['user_id'] = request.session['user_id']
                     context['username'] = request.session['username']                    
@@ -65,6 +75,7 @@ class LoginView(TemplateView):
                         self.template_name = self.cus_loggedin_template
                     else:
                         self.template_name = self.admin_loggedin_template
+                # Handle if password is bad
                 else:
                     loginform = LoginForm()  
                     registerform = RegisterUserForm()

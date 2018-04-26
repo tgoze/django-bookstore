@@ -145,12 +145,11 @@ class BookDao(AbcDao):
                 allBooks.append(currentbook)
 
             conn.commit()
-        except Error as error:
-            print(error)
-
-        finally:
             cursor.close()
             conn.close()
+        except Error as error:
+            print(error)
+            
         return allBooks
 
     

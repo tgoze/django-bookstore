@@ -3,7 +3,7 @@
   {% if user_id is none %}
     <li>You are currently logged out</li>
   {% else %}
-    <li><b>Greetings, {{username}}</li>
+    <li><b>Greetings, {{username}}</b></li>
   {% endif %}
 {% endblock %} 
 
@@ -15,15 +15,15 @@
   </tr>
   <tr>
     <td>
-        <a href="admin/books"> BOOKS</a>
+        <a href="{% url 'adminbookindex' %}"> BOOKS</a>
     </td>
     <td> 
-        <a href="admin/customers"> CUSTOMERS</a>
+        <a href="{% url 'admincustomerindex' %}"> CUSTOMERS</a>
     </td>
   </tr>
   <tr>
     <td>
-        <a href="admin/orders"> ORDERS</a>
+        <a href="{% url 'admincustomerindex' %}"> ORDERS</a>
       </td>
     <td>
         <a href="admin/inventory"> INVENTORY</a>
@@ -31,10 +31,10 @@
   </tr>
   <tr>
     <td>
-      <a href='{% url 'admingenreindex' %}'> GENRES </a>
+      <a href="{% url 'admingenreindex' %}"> GENRES </a>
     </td>
     <td>
-        <a href='{% url 'adminpublisherindex' %}'>PUBLISHERS</a>
+        <a href="{% url 'adminpublisherindex' %}">PUBLISHERS</a>
     </td>
   </tr>
   <tr>
