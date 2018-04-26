@@ -12,12 +12,9 @@
 <link href="{%  static "css/bookstyle.css" %}" type="text/css" rel="stylesheet">
 {% endblock %}
 {% block content %}
-<form method="POST" name='go-back'>
-    {% csrf_token %} 
-<button type="submit" class="modal-action waves-effect waves-green btn-flat" name="return">
-    <i class=" material-icons medium">keyboard_return</i>
-    Return to Admin Management Page</button>
-</form>
+<h6>
+    <a href='{% url 'adminindex' %}'><i class=" material-icons medium">keyboard_return</i> Return to Admin Management</a>
+</h6>
 <h4>Genres</h4>
 <table>
     <thead>
@@ -31,9 +28,7 @@
             {% csrf_token %}
             {% for genre in genres %}
             <tr>
-                <td><a href="genre/details/{{ genre.genre_id }}">{{ genre.genre }}</a></td>              
-                <td><a id="edit-genre" href="genre/details/{{ genre.genre_id}}"><i class="material-icons">edit</i></a></td>
-                <td><button id="submit-link" type="submit" name="delete-genre"><i class="material-icons">delete</i></button></td>
+                <td><a href="genres/details/{{genre.genre_id}}" >{{ genre.genre }}</a></td>              
             </tr>
             {% endfor %}
         </form>           
@@ -66,6 +61,9 @@
         </div>
     </form>
 </div>
+
+
+
 <script type="text/javascript" src="{% static "js/jquery-3.3.1.js" %}"></script>
 <script type="text/javascript" src="{% static "js/materialize.min.js" %}"></script>
 <script type="text/javascript" src="{% static "js/books.js" %}"></script>

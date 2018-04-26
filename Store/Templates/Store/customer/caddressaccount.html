@@ -10,12 +10,7 @@
 {% endblock %} 
 {% block content %}
 <h6>
-<form method="POST" name='go-back'>
-        {% csrf_token %} 
-    <button type="submit" class="modal-action waves-effect waves-green btn-flat" name="go-back">
-        <i class=" material-icons medium">keyboard_return</i>
-        Return to Account Overview</button>
-</form>
+<a href='{% url 'customeraccount' %}'><i class=" material-icons medium">keyboard_return</i> Return to Account Overview</a>
 </h6>
 <div class="row">
         <div class="col s12 m6">

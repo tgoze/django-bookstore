@@ -49,7 +49,32 @@ class GenreDao(AbcDao):
             cursor.close()
             conn.close()
     def get_byid(self, genre_id):
-        raise NotImplementedError
+        currentgenre = None
+        try:
+            db_config = read_db_config()
+            conn = MySQLConnection(**db_config)
+            cursor = conn.cursor()
+            args = [genre_id]
+
+            cursor.callproc('getGenreByGenreID',args)
+
+
+            for result in cursor.stored_results():
+                genres = result.fetchall()
+
+            for x in genres:
+                currentgenre = Genre()
+                currentgenre.genre_id = x[0]
+                currentgenre.genre = x[1]
+
+                cursor.close()
+            conn.close()
+        except Error as error:
+            print(error)
+        except Exception as e:
+            print(e)
+
+        return currentgenre
     def get_all(self):
         all_genres = []
         try:

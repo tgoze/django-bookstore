@@ -5,3 +5,5 @@ class Publisher:
         self.city = None
         self.state_code = None
         self.zip_code = None
+        self.phone_number = None
+        self.contact_name = None

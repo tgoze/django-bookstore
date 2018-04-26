@@ -8,33 +8,26 @@
     <li><b>Greetings, {{username}}</li>
   {% endif %}
 {% endblock %} 
-
 {% block head %}
-<link href="{% static "css/bookstyle.css" %}" type="text/css" rel="stylesheet">
+<link href="{%  static "css/bookstyle.css" %}" type="text/css" rel="stylesheet">
 {% endblock %}
 {% block content %}
-<form method="POST" name='go-back'>
-    {% csrf_token %} 
-<button type="submit" class="modal-action waves-effect waves-green btn-flat" name="return">
-    <i class=" material-icons medium">keyboard_return</i>
-    Return to Admin Management Page</button>
-</form>
+<h6>
+    <a href='{% url 'adminindex' %}'><i class=" material-icons medium">keyboard_return</i> Return to Admin Management</a>
+</h6>
 <h4>Publishers</h4>
 <table>
     <thead>
         <tr>
-            <th>Publisher</th>
+            <th>Company Name</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        <form method="POST">
-            {% csrf_token %}
+
             {% for publisher in publishers %}
             <tr>
-                <td><a href="publisher/details/{{ publisher.publisher_id }}">{{ publisher.company_name }}</a></td>              
-                <td><a id="edit-genre" href="publisher/details/{{ publisher.publisher_id}}"><i class="material-icons">edit</i></a></td>
-                <td><button id="submit-link" type="submit" name="delete-publisher"><i class="material-icons">delete</i></button></td>
+                <td><a href="publishers/details/{{publisher.publisher_id}}" >{{ publisher.company_name }}</a></td>              
             </tr>
             {% endfor %}
         </form>           
@@ -45,6 +38,58 @@
         <i class="large material-icons">add</i>
     </a>
 </div>
+<div id="addpublisher" class="modal">
+    <form method="POST" class="col s12">
+        {% csrf_token %}
+        {{ apublisher.non_field_errors }}            
+        <div class="modal-content">
+            <h4>Add Publisher</h4>
+            <div class="row">
+                    <div class="row">
+                        <div class="input-field col s6">
+                            {{ apublisher.company_name.errors }}
+                            <label for="{{ apublisher.company_name.id_for_label }}">Company Name</label>
+                            {{ apublisher.company_name }}       
+                        </div>
+                        <div class="input-field col s6">
+                            {{ apublisher.city.errors }}
+                            <label for="{{ apublisher.city.id_for_label }}">City</label>
+                            {{ apublisher.city }}       
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s6">
+                            {{ apublisher.state_code.errors }}                        
+                            {{ apublisher.state_code }}
+                            <label>State</label>       
+                        </div>
+                        <div class="input-field col s6">
+                            {{ apublisher.zip_code.errors }}
+                            <label for="{{ apublisher.zip_code.id_for_label }}">Zip Code</label>
+                            {{ apublisher.zip_code }}       
+                        </div>
+                        <div class="input-field col s6">
+                            {{ apublisher.phone_number.errors }}
+                            <label for="{{ apublisher.phone_number.id_for_label }}">Phone Number</label>
+                            {{ apublisher.phone_number }}       
+                        </div>
+                        <div class="input-field col s6">
+                            {{ apublisher.contact_name.errors }}
+                            <label for="{{ apublisher.contact_name.id_for_label }}">Contact Name</label>
+                            {{ apublisher.contact_name }}       
+                        </div>
+                    </div>
+            </div>
+        </div>        
+        <div class="modal-footer">            
+            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+            <button type="submit" class="modal-action waves-effect waves-green btn-flat" name="create-publisher">Add</button>
+        </div>
+    </form>
+</div>
+
+
+
 <script type="text/javascript" src="{% static "js/jquery-3.3.1.js" %}"></script>
 <script type="text/javascript" src="{% static "js/materialize.min.js" %}"></script>
 <script type="text/javascript" src="{% static "js/books.js" %}"></script>

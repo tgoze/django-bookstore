@@ -137,13 +137,16 @@ class PaymentInfoDao(AbcDao):
             for x in payments:
                 currentpayment = PaymentInfo()
                 currentpayment.card_id = x[0]
-                currentpayment.last_four = x[2]
-                currentpayment.expir_date = x[3]    
-                currentpayment.card_issuer = x[4]            
-                currentpayment.customer_id = x[5]
-                currentpayment.billing_address.address_id = x[6]
-                
-
+                currentpayment.last_four = x[1]
+                currentpayment.expir_date = x[2]    
+                currentpayment.card_issuer = x[3]            
+                currentpayment.customer_id = x[4]
+                currentpayment.billing_address.address_id = x[5]
+                currentpayment.billing_address.street = x[6]
+                currentpayment.billing_address.city = x[7]
+                currentpayment.billing_address.state_code = x[8]
+                currentpayment.billing_address.zip_code = x[9]
+                currentpayment.billing_address.address_type = x[10]
                 cursor.close()
             conn.close()
         except Error as error:

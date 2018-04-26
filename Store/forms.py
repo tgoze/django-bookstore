@@ -84,12 +84,15 @@ class PublisherForm(forms.Form):
     city = forms.CharField()
     state_code = forms.ChoiceField(choices=states, initial="default", widget=SelectWithDisabled())
     zip_code = USZipCodeField()
-
+    phone_number = forms.CharField(max_length="10", min_length="10")
+    contact_name = forms.CharField()
 
 class GenreForm(forms.Form):
     genre = forms.CharField()
 
-
+class GenreForm2(forms.Form):
+    genre_id = forms.CharField()
+    genre = forms.CharField()
 class LoginForm(forms.Form):
     username = forms.CharField()
     password = forms.CharField(max_length=32, widget=forms.PasswordInput)

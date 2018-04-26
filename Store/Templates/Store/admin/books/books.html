@@ -193,6 +193,16 @@
                         <label for="{{ pubilsher_form.zip_code.id_for_label }}">Zip Code</label>
                         {{ publisher_form.zip_code }}       
                     </div>
+                    <div class="input-field col s6">
+                        {{ publisher_form.phone_number.errors }}
+                        <label for="{{ publisher_form.phone_number.id_for_label }}">Phone Number</label>
+                        {{ publisher_form.phone_number }}       
+                    </div>
+                    <div class="input-field col s6">
+                        {{ publisher_form.contact_name.errors }}
+                        <label for="{{ publisher_form.contact_name.id_for_label }}">Contact Name</label>
+                        {{ publisher_form.contact_name }}       
+                    </div>
                 </div>
             </div>
         </div>        

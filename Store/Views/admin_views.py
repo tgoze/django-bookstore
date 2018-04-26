@@ -22,17 +22,33 @@ from django.conf import settings
 from django.contrib.auth.hashers import check_password, BCryptPasswordHasher,make_password
 from Store.forms import *
 from bcrypt import *
-
+from django.views.decorators.cache import never_cache
 
 class AdminIndexView(TemplateView):
     template_name = 'Store/admin/index.html'
+    @never_cache
     def get(self,request):
-        return render(request,self.template_name,context=None)
+        context = {}
+        user_id =  request.session['user_id'] 
+        username = request.session['username'] 
+        context['user_id'] = request.session['user_id'],
+        context['username'] = request.session['username'] 
+        return render(request,self.template_name,context)
+        
+    @never_cache
+    def post(self,request):
+        context = {}
+        user_id =  request.session['user_id'] 
+        username = request.session['username'] 
+        context['user_id'] = request.session['user_id'],
+        context['username'] = request.session['username'] 
+        return render(request,self.template_name,context)
+
 
 
 class AdminCustomerView(TemplateView):
     template_name = 'Store/admin/customers/customers.html'
-    
+    @never_cache
     def get(self,request):
         cdao = CustomerInfoDAO()
 

@@ -110,7 +110,8 @@ class AdminBookView(TemplateView):
                 publisher.city = publisher_form.cleaned_data['city']
                 publisher.state_code = publisher_form.cleaned_data['state_code']
                 publisher.zip_code = publisher_form.cleaned_data['zip_code']
-
+                publisher.phone_number = publisher_form.cleaned_data['phone_number']
+                publisher.contact_name = publisher_form.cleaned_data['contact_name']
                 publisher_dao.create(publisher)
                 
                 context = {
