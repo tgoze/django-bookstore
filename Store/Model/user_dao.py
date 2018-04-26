@@ -106,6 +106,7 @@ class UserDao(AbcDao):
             print(e)
         return users
     def get_byid(self, id):
+        u = None
         try:
             
             db_config = read_db_config()        
@@ -190,3 +191,70 @@ class UserDao(AbcDao):
             print(error)
         except Exception as e:
             print(e)
+    def deactivateUser(self,id):
+        try:
+            db_config = read_db_config()        
+            conn = MySQLConnection(**db_config)
+            cursor = conn.cursor()
+
+            args = [id]
+            cursor.callproc('deactivateUser', args)
+            conn.commit()
+
+            cursor.close()
+            conn.close()
+        except Error as error:
+            print(error)
+        except Exception as e:
+            print(e)
+    def activateUser(self,id):
+        try:
+            db_config = read_db_config()        
+            conn = MySQLConnection(**db_config)
+            cursor = conn.cursor()
+
+            args = [id]
+            cursor.callproc('activateUser', args)
+            conn.commit()
+
+            cursor.close()
+            conn.close()
+        except Error as error:
+            print(error)
+        except Exception as e:
+            print(e)
+    
+    def getAllNonStaffUsers(self):
+        try:
+            
+            db_config = read_db_config()        
+            conn = MySQLConnection(**db_config)
+            cursor = conn.cursor()
+            
+            
+            cursor.callproc('getAllNonStaffUsers')
+            for result in cursor.stored_results():
+                user = result.fetchall()
+            users = []
+            for x in user:
+                u = User()
+                u.id = x[0]
+                u.password = x[1]
+                u.last_login = x[2]
+                u.is_superuser = x[3]
+                u.username = x[4]
+                u.first_name = x[5]
+                u.last_name = x[6]
+                u.email = x[7]
+                u.is_staff = x[8]
+                u.is_active = x[9]
+                u.date_joined = x[10]
+                users.append(u)
+            conn.commit()
+            cursor.close()
+            conn.close()
+        except Error as error:
+            print(error)
+        except Exception as e:
+            print(e)
+        return users

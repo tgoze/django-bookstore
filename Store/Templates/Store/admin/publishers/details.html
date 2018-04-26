@@ -1,0 +1,130 @@
+{% extends 'Store/layout.html' %}
+{% load staticfiles %}
+{% load widget_tweaks %}
+{% block head %}
+<link href="{% static "css/checkout.css" %}" type="text/css" rel="stylesheet">
+{% endblock %}
+{% block nav %}
+  {% if user_id is none %}
+    <li>You are currently logged out</li>
+  {% else %}
+    <li><b>Greetings, {{ username }}!</b></li>
+  {% endif %}
+{% endblock %} 
+
+{% block content %}
+
+<h3>{{publisher.company_name}} </h3>
+<div class="row">
+<div class="col s12 m5">
+    <div class="card">
+        <div class="card-content">
+            <span class="card-title"><b>Publisher Information</b> 
+                <a class="modal-trigger " href="#updatepublisher"><i class=" material-icons">edit</i></a></span>
+            <ul>
+                <li><b>Company Name:</b>{{publisher.company_name}}</li>
+                <li><b>City/State:</b>  {{publisher.city}}, {{publisher.state_code}} {{publisher.zip_code}}</li>
+                <li><b>Phone Number:</b> {{publisher.phone_number}}</li>
+                <li><b>Contact Name:</b> {{publisher.contact_name}}</li>
+            </ul>
+        </div>  
+          
+    </div>
+</div>
+<div class="col s12 m5">
+        <div class="card">
+            <div class="card-content">
+                <span class="card-title"><b>Books from Publisher</b> </span>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Book Title</th>
+                            <th> Copies Sold</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for b in books %}
+                    <tr>
+                        <td> {{b.title}} </td>
+                        <td> Copies Sold</td>
+                   </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>         
+            </div>  
+              
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col s12 m5">
+        <div class="card">
+            <div class="card-content">
+                <span class="card-title"><b>TBD</b></span>
+                
+            </div>       
+        </div>
+    </div>
+<div class="col s12 m5">
+        <div class="card">
+            <div class="card-content">
+                <span class="card-title"><b>TBD</b></span>
+                
+                
+            </div>       
+        </div>
+    </div>
+</div>
+<div id="updatepublisher" class="modal">
+        <form method="POST" class="col s12">
+            {% csrf_token %}
+            {{ epublisher.non_field_errors }}            
+            <div class="modal-content">
+                <h4>Update Publisher</h4>
+                <div class="row">
+                        <div class="row">
+                            <div class="input-field col s6">
+                                {{ epublisher.company_name.errors }}
+                                <label for="{{ epublisher.company_name.id_for_label }}">Company Name</label>
+                                {{ epublisher.company_name }}       
+                            </div>
+                            <div class="input-field col s6">
+                                {{ epublisher.city.errors }}
+                                <label for="{{ epublisher.city.id_for_label }}">City</label>
+                                {{ epublisher.city }}       
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s6">
+                                {{ epublisher.state_code.errors }}                        
+                                {{ epublisher.state_code }}
+                                <label>State</label>       
+                            </div>
+                            <div class="input-field col s6">
+                                {{ epublisher.zip_code.errors }}
+                                <label for="{{ epublisher.zip_code.id_for_label }}">Zip Code</label>
+                                {{ epublisher.zip_code }}       
+                            </div>
+                            <div class="input-field col s6">
+                                {{ epublisher.phone_number.errors }}
+                                <label for="{{ epublisher.phone_number.id_for_label }}">Phone Number</label>
+                                {{ epublisher.phone_number }}       
+                            </div>
+                            <div class="input-field col s6">
+                                {{ epublisher.contact_name.errors }}
+                                <label for="{{ epublisher.contact_name.id_for_label }}">Contact Name</label>
+                                {{ epublisher.contact_name }}       
+                            </div>
+                        </div>
+                </div>
+            </div>        
+            <div class="modal-footer">            
+                <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+                <button type="submit" class="modal-action waves-effect waves-green btn-flat" name="update-publisher">Update</button>
+            </div>
+        </form>
+    </div>
+<script type="text/javascript" src="{% static "js/jquery-3.3.1.js" %}"></script>
+<script type="text/javascript" src="{% static "js/materialize.min.js" %}"></script>
+<script type="text/javascript" src="{% static "js/books.js" %}"></script>
+{% endblock %}

@@ -58,7 +58,10 @@ class LoginView(TemplateView):
                     context['user_id'] = request.session['user_id']
                     context['username'] = request.session['username']                    
                     self.udao.updateLastLogin(user.id)
-                    if user.is_staff == 0:
+                    if user.is_staff == 0 and user.is_active == 1:
+                        self.template_name = self.cus_loggedin_template
+                    elif user.is_active == 0 and user.is_staff == 0:
+                        self.udao.activateUser(user.id)
                         self.template_name = self.cus_loggedin_template
                     else:
                         self.template_name = self.admin_loggedin_template
@@ -93,5 +96,11 @@ class LoginView(TemplateView):
                 customer.work_phone = registerform.cleaned_data['work_phone']
                 customer.home_phone = registerform.cleaned_data['home_phone']
                 self.cdao.create(customer)
+                loginform = LoginForm()  
+                registerform = RegisterUserForm()
+                context = {
+                    'loginform': loginform,
+                    'registerform': registerform           
+                }
                        
         return render(request, self.template_name, context)

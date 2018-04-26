@@ -22,6 +22,7 @@ from django.core.files.storage import FileSystemStorage
 
 class AdminBookView(TemplateView):
     template_name = 'Store/admin/books/books.html'
+    template_admin= 'Store/admin/index.html'
     book_dao = BookDao()
     publisher_dao = PublisherDao()
     genre_dao = GenreDao()
@@ -59,7 +60,10 @@ class AdminBookView(TemplateView):
             'author_form': author_form,
             'genre_form': genre_form
         }
-
+        user_id =  request.session['user_id'] 
+        username = request.session['username'] 
+        context['user_id'] = request.session['user_id'],
+        context['username'] = request.session['username'] 
         return render(request, self.template_name, context)
 
     def post(self, request):
@@ -80,9 +84,12 @@ class AdminBookView(TemplateView):
             genre_val = (str(genre.genre_id), str(genre.genre))
             genres.append(genre_val)
 
-        book_form = BookForm(request.POST, author_choices=authors, publisher_choices=publishers, genre_choices=genres)
+        book_form = BookForm(request.POST, author_choices=authors, publisher_choices=publishers, genre_choices=genres) 
         books = self.book_dao.get_all()
         book = Book()
+
+        user_id =  request.session['user_id'] 
+        username = request.session['username']    
 
         publisher_form = PublisherForm(request.POST)
         publisher = Publisher()
@@ -139,7 +146,8 @@ class AdminBookView(TemplateView):
                 publisher.city = publisher_form.cleaned_data['city']
                 publisher.state_code = publisher_form.cleaned_data['state_code']
                 publisher.zip_code = publisher_form.cleaned_data['zip_code']
-
+                publisher.phone_number = publisher_form.cleaned_data['phone_number']
+                publisher.contact_name = publisher_form.cleaned_data['contact_name']
                 publisher_dao.create(publisher)
                 
                 context['notification'] = "Publisher saved successfully!"
@@ -165,8 +173,14 @@ class AdminBookView(TemplateView):
                 
                 context['notification'] = "Genre saved successfully!"
             else:
-                context['notification'] = "Not a valid submission."
-            
+                context = {
+                    'notification': "Not a valid submission.",
+                    'book_form': book_form
+                }
+        elif 'return' in request.POST:
+            context['user_id'] = request.session['user_id'],
+            context['username'] = request.session['username']
+            return render(request, self.template_admin, context )
         return render(request, self.template_name, context)
 
 

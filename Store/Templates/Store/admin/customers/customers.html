@@ -1,13 +1,25 @@
 {% extends 'Store/layout.html' %}
-{% load staticfiles %}
-{% load widget_tweaks %}
+{% block nav %}
+  {% if user_id is none %}
+    <li>You are currently logged out</li>
+  {% else %}
+    <li><b>Greetings, {{username}}</li>
+  {% endif %}
+{% endblock %} 
 {% block content %}
+<form method="POST" name='go-back'>
+    {% csrf_token %} 
+<button type="submit" class="modal-action waves-effect waves-green btn-flat" name="return">
+    <i class=" material-icons medium">keyboard_return</i>
+    Return to Admin Management Page</button>
+</form>
+<h4>Customers</h4>
 <table>
     <thead>
         <tr>
             <th>Customer ID</th>
             <th>Customer Name</th>
-            
+            <th>Active/Deactive Account</th>
         </tr>
     </thead>
     <tbody>
@@ -15,6 +27,11 @@
         <tr>
             <td><a href="customers/details/{{c.customer_id}}">{{c.customer_id}}</a></td>  
             <td> {{c.user.first_name}} {{c.user.last_name}}</td>
+            {% if c.user.is_active == 1 %}
+            <td> activated</td>
+            {% else %}
+            <td> deactivated</td>
+            {% endif %}
         </tr>
     {% endfor %}
     </tbody>

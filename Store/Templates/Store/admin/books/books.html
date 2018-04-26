@@ -1,12 +1,23 @@
 {% extends 'Store/layout.html' %}
 {% load staticfiles %}
 {% load widget_tweaks %}
-
+{% block nav %}
+  {% if user_id is none %}
+    <li>You are currently logged out</li>
+  {% else %}
+    <li><b>Greetings, {{username}}</li>
+  {% endif %}
+{% endblock %} 
 {% block head %}
 <link href="{% static "css/bookstyle.css" %}" type="text/css" rel="stylesheet">
 {% endblock %}
-
 {% block content %}
+<form method="POST" name='go-back'>
+    {% csrf_token %} 
+<button type="submit" class="modal-action waves-effect waves-green btn-flat" name="return">
+    <i class=" material-icons medium">keyboard_return</i>
+    Return to Admin Management Page</button>
+</form>
 <h4>Books</h4>
 <div class="section">
     <div class="row">
@@ -221,6 +232,16 @@
                         {{ publisher_form.zip_code.errors }}
                         <label for="{{ pubilsher_form.zip_code.id_for_label }}">Zip Code</label>
                         {{ publisher_form.zip_code }}       
+                    </div>
+                    <div class="input-field col s6">
+                        {{ publisher_form.phone_number.errors }}
+                        <label for="{{ publisher_form.phone_number.id_for_label }}">Phone Number</label>
+                        {{ publisher_form.phone_number }}       
+                    </div>
+                    <div class="input-field col s6">
+                        {{ publisher_form.contact_name.errors }}
+                        <label for="{{ publisher_form.contact_name.id_for_label }}">Contact Name</label>
+                        {{ publisher_form.contact_name }}       
                     </div>
                 </div>
             </div>

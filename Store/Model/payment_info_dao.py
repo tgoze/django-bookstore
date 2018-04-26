@@ -54,7 +54,7 @@ class PaymentInfoDao(AbcDao):
             cursor.close()
             conn.close()
         
-    def get_by_address_id(self, p_customer_id, p_address_id):
+    def get_by_address_id(self,p_address_id, p_customer_id,):
         all_payments = []
         try:
             db_config = read_db_config()
@@ -122,38 +122,38 @@ class PaymentInfoDao(AbcDao):
             print(e)
         return all_payments
 
-    def get_byid(self, card_id):       
-        card = PaymentInfo()
+    def get_byid(self,card_id):
         try:
             db_config = read_db_config()
             conn = MySQLConnection(**db_config)
             cursor = conn.cursor()
             args = [card_id]
             cursor.callproc('getPaymentInfoByCardID', args)
+            
 
             for result in cursor.stored_results():
-                cards = result.fetchall()
+                payments = result.fetchall()
 
-            for x in cards:                
-                card.card_id = x[0]
-                card.last_four = x[1]
-                card.expir_date = x[2]
-                card.card_issuer = x[3]                
-                card.customer_id = x[4]
-                card.billing_address.address_id = x[5]
-                card.billing_address.street = x[6]
-                card.billing_address.city = x[7]
-                card.billing_address.state_code = x[8]
-                card.billing_address.zip_code = x[9]
-                card.billing_address.address_type = x[10]
-
-            cursor.close()
+            for x in payments:
+                currentpayment = PaymentInfo()
+                currentpayment.card_id = x[0]
+                currentpayment.last_four = x[1]
+                currentpayment.expir_date = x[2]    
+                currentpayment.card_issuer = x[3]            
+                currentpayment.customer_id = x[4]
+                currentpayment.billing_address.address_id = x[5]
+                currentpayment.billing_address.street = x[6]
+                currentpayment.billing_address.city = x[7]
+                currentpayment.billing_address.state_code = x[8]
+                currentpayment.billing_address.zip_code = x[9]
+                currentpayment.billing_address.address_type = x[10]
+                cursor.close()
             conn.close()
         except Error as error:
             print(error)
         except Exception as e:
             print(e)
-        return card
+        return currentpayment
     
     def get_all(self): 
         raise NotImplementedError

@@ -1,4 +1,6 @@
 {% extends 'Store/layout.html' %}
+{% load staticfiles %}
+{% load widget_tweaks %}
 {% block nav %}
   {% if user_id is none %}
     <li>You are currently logged out</li>
@@ -7,6 +9,12 @@
   {% endif %}
 {% endblock %} 
 {% block content %}
+<form method="POST" name='go-back'>
+    {% csrf_token %} 
+<button type="submit" class="modal-action waves-effect waves-green btn-flat" name="return">
+    <i class=" material-icons medium">keyboard_return</i>
+    Return to Admin Management Page</button>
+</form>
 <h1>INVENTORY</h1>
 <table>
     <thead>

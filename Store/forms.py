@@ -20,6 +20,7 @@ address_types.append(('Billing','Billing'))
 address_types.append(('Shipping','Shipping'))
 
 
+
 # https://djangosnippets.org/snippets/2453/
 class SelectWithDisabled(Select):
     """
@@ -76,12 +77,15 @@ class PublisherForm(forms.Form):
     city = forms.CharField()
     state_code = forms.ChoiceField(choices=states, initial="default", widget=SelectWithDisabled())
     zip_code = USZipCodeField()
-
+    phone_number = forms.CharField(max_length="10", min_length="10")
+    contact_name = forms.CharField()
 
 class GenreForm(forms.Form):
     genre = forms.CharField()
 
-
+class GenreForm2(forms.Form):
+    genre_id = forms.CharField()
+    genre = forms.CharField()
 class LoginForm(forms.Form):
     username = forms.CharField()
     password = forms.CharField(max_length=32, widget=forms.PasswordInput)
@@ -117,6 +121,13 @@ class AddAddressForm(forms.Form):
     address_type = forms.ChoiceField(choices=address_types, initial="default", widget=SelectWithDisabled())
 
 
+class AddAddressForm2(forms.Form):
+    street = forms.CharField()
+    city = forms.CharField()
+    state_code = forms.ChoiceField(choices=states, initial="default", widget=SelectWithDisabled())
+    zip_code = USZipCodeField()
+
+
 class EditAddressForm(forms.Form):
     street = forms.CharField()
     city = forms.CharField()
@@ -125,14 +136,25 @@ class EditAddressForm(forms.Form):
     address_type = forms.ChoiceField(choices=address_types, initial="default", widget=SelectWithDisabled())
     
 class AddPaymentInfoForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        bill_address_choices = kwargs.pop('bill_address_choices')
+        super(AddPaymentInfoForm, self).__init__(*args, **kwargs)
+        self.fields['billing_addresses'] = forms.ChoiceField(widget=forms.RadioSelect, choices=bill_address_choices)
+    
     card_number = forms.CharField(max_length="16", min_length="16")
     cvc = forms.CharField(max_length="3", min_length="3", widget=forms.PasswordInput)
     expir_date = forms.DateField()
     card_issuer = forms.CharField()
+    billing_addresses = forms.ChoiceField()
 
 
-class BillingAddressesForm(forms.Form):
-    address = forms.ChoiceField(label='Choose Billing Address', widget=forms.RadioSelect())
+
+class AddPaymentInfoForm2(forms.Form):
+    card_number = forms.CharField(max_length="16", min_length="16")
+    cvc = forms.CharField(max_length="3", min_length="3", widget=forms.PasswordInput)
+    expir_date = forms.DateField()
+    card_issuer = forms.CharField()
+    
 
 
 class ChangeUsernamePassword(forms.Form):
