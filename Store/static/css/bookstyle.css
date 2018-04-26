@@ -5,3 +5,8 @@
     /*border is optional*/
     /* border-bottom:1px solid #444;  */
 }
+
+.clean {
+    background: none;
+    box-shadow: none;
+}
