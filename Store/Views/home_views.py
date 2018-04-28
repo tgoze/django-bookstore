@@ -69,10 +69,10 @@ class LoginView(TemplateView):
                     context['username'] = request.session['username']                    
                     self.udao.updateLastLogin(user.id)
                     if user.is_staff == 0 and user.is_active == 1:
-                        return redirect(reverse('customer_index'))
+                        return redirect(reverse('customerindex'))
                     elif user.is_active == 0 and user.is_staff == 0:
                         self.udao.activateUser(user.id)
-                        return redirect(reverse('customer_index'))
+                        return redirect(reverse('customerindex'))
                     else:
                         return redirect(reverse('adminindex'))
                                         

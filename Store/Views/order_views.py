@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, reverse
+from django.shortcuts import render, redirect, reverse, HttpResponse
 from django.views.generic import TemplateView
 
 from Store.Model.cart_dao import CartDao
@@ -11,14 +11,28 @@ from Store.Model.retail_order import RetailOrder
 from Store.Model.retail_order_dao import RetailOrderDao
 from Store.Model.customer_info import CustomerInfo
 from Store.Model.customer_info_dao import CustomerInfoDAO
+from Store.Model.inventory_dao import InventoryDao
 
 from django.views.decorators.cache import never_cache
 
-from Store.forms import ShipPayForm
+from Store.forms import ShipPayForm, CartForm
 
+def update_cart_view(request):
+    test = request.POST.get()
+
+    response_data = {}
+    try:
+        response_data['result'] = "Success"
+        response_data['message'] = test
+    except:
+        response_data['result'] = "nope"
+        response_data['message'] = "nope"
+
+    return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 class CartView(TemplateView):
     template_name = 'Store/customer/cart.html'
+    inventory_dao = InventoryDao()
     cart_dao = CartDao() 
 
     @never_cache
@@ -29,13 +43,34 @@ class CartView(TemplateView):
             cart_items = self.cart_dao.get_all(user_id)
             
             cart_total = 0
-            for item in cart_items:
+            # An array of arrays of choices for each book
+            qtys_choices = []
+            # An array of book IDs to pass to the cart form
+            book_ids = []
+            # A dictionary for all of the initial choices
+            initial_data = {}
+            for index, item in enumerate(cart_items):
                 cart_total += (item.book.inventory.retail_price * item.quantity_ordered)
 
+                # Get quantities on hand of each item in cart
+                qty_on_hand = self.inventory_dao.get_byid(item.book.book_id).quantity_on_hand
+                qty_choices = []
+                for i in range(1, (qty_on_hand+1)):
+                    qty_choices.append((i, i))
+                qtys_choices.append(qty_choices)
+
+                # Append initial data for each item to the dictionary
+                initial_data['qty_choice_%s' % index] = item.quantity_ordered
+
+                # Append book ID to list
+                book_ids.append(item.book.book_id)
+            
+            cart_form = CartForm(initial_data, book_ids=book_ids, qtys_choices=qtys_choices)
+
+            context['cart_form'] = cart_form
             context['cart_items'] = cart_items
             context['cart_total'] = cart_total
             context['user_id'] = user_id
-
         else:
             return redirect(reverse('login'))
 
@@ -44,17 +79,50 @@ class CartView(TemplateView):
     def post(self, request):
         context = {}
         user_id = request.session['user_id']
-
-        if 'delete-book' in request.POST:
-            book_id = int(request.POST.get('delete-book'))
-            self.cart_dao.delete_from_cart(book_id, user_id)
+        cart_dao = CartDao()
 
         cart_items = self.cart_dao.get_all(user_id)
-            
+
         cart_total = 0
-        for item in cart_items:
+        # An array of arrays of choices for each book
+        qtys_choices = []
+        # An array of book IDs to pass to the cart form
+        book_ids = []
+        # A dictionary for all of the initial choices
+        initial_data = {}
+        for index, item in enumerate(cart_items):
             cart_total += (item.book.inventory.retail_price * item.quantity_ordered)
 
+            # Get quantities on hand of each item in cart
+            qty_on_hand = self.inventory_dao.get_byid(item.book.book_id).quantity_on_hand
+            qty_choices = []
+            for i in range(1, (qty_on_hand+1)):
+                qty_choices.append((i, i))
+            qtys_choices.append(qty_choices)
+
+            # Append initial data for each item to the dictionary
+            initial_data['qty_choice_%s' % index] = item.quantity_ordered
+
+            # Append book ID to list
+            book_ids.append(item.book.book_id)
+        
+        cart_form = CartForm(initial_data, book_ids=book_ids, qtys_choices=qtys_choices)
+
+        if 'edit-items' in request.POST:
+            cart_form = CartForm(request.POST, book_ids=book_ids, qtys_choices=qtys_choices)
+            if cart_form.is_valid():
+                for i, qty in enumerate(cart_form.item_fields()):
+                    cart = Cart()
+                    cart.book.book_id = cart_form.book_ids[i]
+                    cart.user_id = user_id
+                    cart.quantity_ordered = qty
+                    cart_dao.update(cart)
+
+        if 'delete-item' in request.POST:
+            book_id = int(request.POST.get('delete-item'))
+            self.cart_dao.delete_from_cart(book_id, user_id)
+
+        context['cart_form'] = cart_form
         context['cart_items'] = cart_items
         context['cart_total'] = cart_total
         context['user_id'] = user_id

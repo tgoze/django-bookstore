@@ -1,0 +1,19 @@
+#submit-link {
+    background:none!important;
+    border:none; 
+    padding:0!important;
+    /*border is optional*/
+    /* border-bottom:1px solid #444;  */
+}
+
+#item-row {
+    height: 75px;
+}
+
+#item-row.row {
+    height: inherit;
+}
+
+.input-field {
+    margin: 0px;
+}

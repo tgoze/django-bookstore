@@ -3,6 +3,7 @@ from Store.Views.home_views import *
 from Store.Views.book_views import *
 from Store.Views.customer_views import *
 from Store.Views.order_views import *
+from Store.Views import order_views
 from Store.Views.admin_views import *
 from Store.Views.publisher_views import *
 from Store.Views.genre_views import * 
@@ -25,15 +26,15 @@ urlpatterns = [
     path('admin/publishers/details/<int:publisher_id>/', AdminPublisherDetailView.as_view(), name='adminpublisherdetail'),
     path('admin/inventory', AdminInventoryView.as_view(), name='admininventoryindex'),
     path('admin/genres/details/<int:genre_id>/', AdminGenreDetailsView.as_view(), name='admingenredetail'),
-    
-    path('customer/books', CusBookView.as_view(), name="customer_books"),
     path('admin/authors', AdminAuthorView.as_view(), name='adminauthorindex'),
     path('admin/authors/details/<int:author_id>/', AdminAuthorDetailView.as_view(), name='adminauthordetail'),
     path('admin/orders', AdminOrderView.as_view(), name='adminorderindex'),
     path('admin/orders/details/<int:order_id>/', AdminOrderDetailView.as_view(), name='adminorderdetail'),
 
+    path('customer/books', CusBookView.as_view(), name="customer_books"),
     path('customer/books/details/<int:book_id>/', CusBookDetailView.as_view(), name="customer_book"),   
     path('customer/cart', CartView.as_view(), name="cart"),
+    path('customer/cart/ajax/update', order_views.update_cart_view()),
     path('customer/shippay', ShipPayView.as_view(), name="ship_pay"),
     path('customer/checkout', CheckOutView.as_view(), name="checkout"),  
     path('customer/invoice', InvoiceView.as_view(), name="invoice"),    

@@ -4,68 +4,107 @@
 {% load store_extras %}
 
 {% block head %}
-<link href="{% static "css/bookstyle.css" %}" type="text/css" rel="stylesheet">
+<link href="{% static "css/cartstyle.css" %}" type="text/css" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
 <div class="section"></div>
 <div class="row">
-    <div class="col s6">
+    <div class="col s8">
         <div class="card">
             <div class="card-content">
                 <span class="card-title">
                     <i class="material-icons">shopping_cart</i> Shopping Cart
                 </span>
-                <table> 
-                    <tbody>
-                        {% if cart_items %}
-                        {% for item in cart_items %}
-                        <tr>
-                            <td>
-                                <a href="{% url 'customer_book' book_id=item.book.book_id %}">{{ item.book.title }}</a>
-                                {% if item.quantity_ordered > 1 %}
-                                 ({{ item.quantity_ordered }})
+                <div class="row section">
+                    <div class="col s11">
+                        <table> 
+                            <tbody>
+                                {% if cart_items %}
+                                {% for item in cart_items %}
+                                <tr id="item-row">
+                                    <td>
+                                        <a href="{% url 'customer_book' book_id=item.book.book_id %}">{{ item.book.title }}</a>                               
+                                    </td>                                                
+                                    <td class="grey-text">${{ item.book.inventory.retail_price }}</td>                            
+                                    <td>${% multiply item.quantity_ordered item.book.inventory.retail_price %}</td>
+                                    <td>
+                                        <form method="POST">
+                                            {% csrf_token %}                                    
+                                            <button type="submit" id="submit-link" onclick="return confirm('Are you sure you want to delete this from your cart?')">
+                                                <i class="material-icons">delete</i></button>
+                                            <input type="hidden" value="{{ item.book.book_id }}" name="delete-item"/>
+                                        </form>                            
+                                    </td>                    
+                                </tr>                                                                                                                                     
+                                {% endfor %}
+                                <tr>
+                                    <td></td>                                                
+                                    <td><b>Subtotal:</b></td>
+                                    <td><h6>${{ cart_total }}</h6></td>
+                                    <td></td>
+                                </tr>
+                                {% else %}
+                                <div class="section">
+                                    <h6>It's lonely here</h6>
+                                    <br>
+                                    <a href="{% url 'customer_books'%}">Go shopping bro!</a>
+                                </div>                        
                                 {% endif %}
-                            </td>                            
-                            <td class="grey-text">${{ item.book.inventory.retail_price }}</td>                            
-                            <td>${% multiply item.quantity_ordered item.book.inventory.retail_price %}</td>
-                            <td>
-                                <form method="POST">
-                                    {% csrf_token %}
-                                    <button type="submit" id="submit-link" onclick="return confirm('Are you sure you want to delete this from your cart?')">
-                                        <i class="material-icons">delete</i></button>
-                                    <input type="hidden" value="{{ item.book.book_id }}" name="delete-book"/>
-                                </form>                            
-                            </td>                    
-                        </tr>                                                                                                                                     
-                        {% endfor %}
-                        <tr>
-                            <td></td>                                                
-                            <td>Subtotal:</td>
-                            <td><h6>${{ cart_total }}</h6></td>
-                            <td></td>
-                        </tr>
-                        {% else %}
-                        <div class="section">
-                            <h6>It's lonely here</h6>
-                            <br>
-                            <a href="{% url 'customer_books'%}">Go shopping bro!</a>
-                        </div>                        
+                            </tbody>                                   
+                        </table>
+                    </div>
+                    <div class="col s1">
+                        {% if cart_items %}                                                                            
+                            <ul>
+                                <form method="POST" onsubmit="return false">
+                                    {% csrf_token %}                                 
+                                    {{ cart_form.non_field_errors }}
+                                    {% for qty_choice_field in cart_form %}
+                                    <li id="item-row">                                                                
+                                        <div class="input-field">
+                                            {{ qty_choice_field.errors }}
+                                            {{ qty_choice_field }}
+                                        </div>                                                                                                                                        
+                                    </li>
+                                    {% endfor %}             
+                                </form>                                                                                   
+                            </ul>                                                
                         {% endif %}
-                    </tbody>                                   
-                </table>
+                    </div>
+                </div>                
             </div>
         </div>
     </div>
-    <div class="col s6 section valign-wrapper" style="display: block; height: 100%;">
+    <div class="col s4 section valign-wrapper" style="display: block; height: 100%;">
         {% if cart_items %}
         <div class="row center-align">
             <h5>Thank you for shopping with us!</h5>            
         </div>
         <div class="row center-align">        
-            <a class="orange btn" href="{% url 'ship_pay' %}">Check out</a> or <a href="{% url 'customer_books'%}">Continue shopping</a>
+            <button class="orange btn" href="{% url 'ship_pay'%}">Check out</button> or <a href="{% url 'customer_books'%}">Continue shopping</a>
         </div>
         {% endif %}
     </div>
 </div>
+
+<script type="text/javascript" src="{% static "js/jquery-3.3.1.js" %}"></script>
+<script type="text/javascript" src="{% static "js/materialize.min.js" %}"></script>
+<script>
+    $(document).ready(function(){
+        $('select').formSelect();
+        $("[id^=id_qty_choice_]").on('change', function(e) {
+            $ajax({
+                type: "POST",
+                url: "ajax/update",
+                dataType: "json",
+                async: "true",
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                }
+
+            });
+        });
+    });
+</script>
 {% endblock %}

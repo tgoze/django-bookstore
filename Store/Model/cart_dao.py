@@ -72,8 +72,23 @@ class CartDao(AbcDao):
 
         return cart_items
 
-    def update(self):
-        raise NotImplementedError
+    def update(self, p_cart):
+        try:
+            db_config = read_db_config()        
+            conn = MySQLConnection(**db_config)
+            cursor = conn.cursor()
+
+            args = (p_cart.book.book_id, p_cart.user_id, p_cart.quantity_ordered)
+            cursor.callproc('updateCart', args)
+            conn.commit()
+            print(str(cursor.rowcount) + " row(s) were affected.")
+
+            cursor.close()
+            conn.close()
+        except Error as error:
+            print(error)
+        except Exception as e:
+            print(e)
 
     def delete(self):
         raise NotImplementedError
