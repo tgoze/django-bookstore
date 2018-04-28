@@ -25,8 +25,8 @@ class AuthorDao(AbcDao):
         
     
     def get_all(self):
-        authors = []
         try:
+            authors = []
             # Setup connection to the DB
             db_config = read_db_config()
             conn = MySQLConnection(**db_config)
@@ -37,8 +37,10 @@ class AuthorDao(AbcDao):
             
             # This loop iterates through the resultsets
             for result in cursor.stored_results():
+                
                 # This loop iterates through the rows in each resultset
                 for author_row in result.fetchall():
+                    
                     author = Author()
                     author.author_id = author_row[0]
                     author.first_name = author_row[1]
@@ -57,7 +59,37 @@ class AuthorDao(AbcDao):
 
 
     def get_byid(self, author_id):
-        raise NotImplementedError
+        try:
+            author = None
+            # Setup connection to the DB
+            db_config = read_db_config()
+            conn = MySQLConnection(**db_config)
+            cursor = conn.cursor()
+            args = [author_id]
+            # Calls the stored procedure
+            cursor.callproc('getAuthorByAuthorID', args)         
+            
+            # This loop iterates through the resultsets
+            for result in cursor.stored_results():
+                
+                # This loop iterates through the rows in each resultset
+                for author_row in result.fetchall():
+                    
+                    author = Author()
+                    author.author_id = author_row[0]
+                    author.first_name = author_row[1]
+                    author.last_name = author_row[2]                    
+                    
+
+            # Close the connection to the DB
+            cursor.close()
+            conn.close()
+        except Error as error:
+            print(error)
+        except Exception as e:
+            print(e)
+
+        return author
 
     def update(self, p_author):
         try:
@@ -95,12 +127,3 @@ class AuthorDao(AbcDao):
             print(error)
         except Exception as e:
             print(e)
-
-if __name__ == '__main__':
-
-    aut = Author()
-    aut.first_name = "Clide"
-    aut.last_name = "Staples"
-
-    aut_dao = AuthorDao()
-    aut_dao.create(aut)

@@ -10,5 +10,4 @@ class RetailOrder():
         self.discount = None
         self.customer = CustomerInfo()
         self.shipping_address = CustomerAddress()
-        self.billing_address = CustomerAddress()
         self.card = PaymentInfo()

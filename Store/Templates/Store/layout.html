@@ -21,7 +21,8 @@
         {% block nav %}
         {% endblock %}
         {% if user_id %}
-            <li><a href="customer/customeraccount"><i class="material-icons">account_box</i> {{username}}</a></li>
+            <li><a href="{% url 'customerindex' %}"><i class="material-icons">home</i></a></li>
+            <li><a href="{% url 'customeraccount' %}"><i class="material-icons">account_box</i> {{username}}</a></li>
             <li><a href="{% url 'cart' %}"><i class="material-icons">shopping_cart</i></a></li>
             <li><a href="{% url 'login' %}">Logout</a></li>
         {% else %}

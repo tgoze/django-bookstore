@@ -9,58 +9,60 @@
   {% endif %}
 {% endblock %} 
 {% block head %}
-<link href="{%  static "css/bookstyle.css" %}" type="text/css" rel="stylesheet">
+
 {% endblock %}
 {% block content %}
 <h6>
     <a href='{% url 'adminindex' %}'><i class=" material-icons medium">keyboard_return</i> Return to Admin Management</a>
 </h6>
-<h4>Genres</h4>
+<h4>Authors</h4>
 <table>
     <thead>
         <tr>
-            <th>Genre</th>
+            <th>Authors</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-            {% for genre in genres %}
-            <tr>
-                <td><a href="genres/details/{{genre.genre_id}}" >{{ genre.genre }}</a></td>              
-            </tr>
-            {% endfor %}
-          
+       {% for author in authors %}
+       <tr>
+            <td><a href="authors/details/{{author.author_id}}" >{{author.first_name}} {{author.last_name}}</a></td>   
+       </tr>
+       {% endfor %}
     </tbody>
 </table>
 <div class="fixed-action-btn">
-    <a class="btn-floating btn-large modal-trigger" href="#addgenre">
+    <a class="btn-floating btn-large modal-trigger" href="#addauthor">
         <i class="large material-icons">add</i>
     </a>
 </div>
-<div id="addgenre" class="modal">
+<div id="addauthor" class="modal">
     <form method="POST" class="col s12">
         {% csrf_token %}
-        {{ agenre.non_field_errors }}            
+        {{ aauthor.non_field_errors }}            
         <div class="modal-content">
-            <h4>Add Genre</h4>
+            <h4>Add Author</h4>
             <div class="row">
                 <div class="row">
                     <div class="input-field col s6">
-                        {{ agenre.genre.errors }}
-                        <label for="{{ agenre.genre.id_for_label }}">Genre</label>
-                        {{ agenre.genre }}       
-                    </div>                    
+                        {{ aauthor.first_name.errors }}
+                        <label for="{{ aauthor.first_name.id_for_label }}">First Name</label>
+                        {{ aauthor.first_name }}       
+                    </div> 
+                    <div class="input-field col s6">
+                        {{ aauthor.last_name.errors }}
+                        <label for="{{ aauthor.last_name.id_for_label }}">Last Name</label>
+                        {{ aauthor.last_name }}       
+                    </div>                      
                 </div>            
             </div>
         </div>        
         <div class="modal-footer">            
             <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
-            <button type="submit" class="modal-action waves-effect waves-green btn-flat" name="create-genre">Submit</button>
+            <button type="submit" class="modal-action waves-effect waves-green btn-flat" name="create-author">Add</button>
         </div>
     </form>
 </div>
-
-
 
 <script type="text/javascript" src="{% static "js/jquery-3.3.1.js" %}"></script>
 <script type="text/javascript" src="{% static "js/materialize.min.js" %}"></script>

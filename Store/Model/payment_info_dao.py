@@ -124,6 +124,7 @@ class PaymentInfoDao(AbcDao):
 
     def get_byid(self,card_id):
         try:
+            currentpayment = []
             db_config = read_db_config()
             conn = MySQLConnection(**db_config)
             cursor = conn.cursor()

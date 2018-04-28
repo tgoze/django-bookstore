@@ -135,6 +135,13 @@ class EditAddressForm(forms.Form):
     zip_code = USZipCodeField()
     address_type = forms.ChoiceField(choices=address_types, initial="default", widget=SelectWithDisabled())
     
+class ExisitingAddressForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        bill_address_choices = kwargs.pop('bill_address_choices')
+        super(ExisitingAddressForm, self).__init__(*args, **kwargs)
+        self.fields['billing_addresses'] = forms.ChoiceField(widget=forms.RadioSelect, choices=bill_address_choices)
+    billing_addresses = forms.ChoiceField()
+
 class AddPaymentInfoForm(forms.Form):
     def __init__(self, *args, **kwargs):
         bill_address_choices = kwargs.pop('bill_address_choices')

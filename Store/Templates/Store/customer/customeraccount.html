@@ -71,18 +71,24 @@
             <div class="card-content">
                 <span class="card-title"><b>Order History</b></span>
                 <table>
-                    <tr>
                         <thead>
-                              <td>Order Number</td>
-                              <td> Order Date</td>
-                        </thead> 
-                      </tr>
-                    </tr>
-                          <tr>
-                             <td> Order Number </td>
-                             <td>Order Date</td>
-                          </tr>
-                  </table>    
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Total Price</th>
+                                <th> Date Ordered </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                                {% for order in orders %}
+                                <tr>
+                                        <td><a href="corder/{{order.order_id}}" >{{ order.order_id }}</a></td>       
+                                    <td>{{ order.total_price}}</td> 
+                                    <td>{{ order.date_ordered}}</td>           
+                                </tr>
+                                {% endfor %}
+                            </form>           
+                        </tbody>
+                    </table>
             </div>       
         </div>
     </div>

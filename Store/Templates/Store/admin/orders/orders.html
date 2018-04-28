@@ -1,0 +1,43 @@
+{% extends 'Store/layout.html' %}
+{% load staticfiles %}
+{% load widget_tweaks %}
+{% block nav %}
+  {% if user_id is none %}
+    <li>You are currently logged out</li>
+  {% else %}
+    <li><b>Greetings, {{username}}</li>
+  {% endif %}
+{% endblock %} 
+{% block head %}
+<link href="{%  static "css/bookstyle.css" %}" type="text/css" rel="stylesheet">
+{% endblock %}
+{% block content %}
+<h6>
+    <a href='{% url 'adminindex' %}'><i class=" material-icons medium">keyboard_return</i> Return to Admin Management</a>
+</h6>
+<h4>Orders</h4>
+<table>
+    <thead>
+        <tr>
+            <th>Order ID</th>
+            <th> Customer ID</th>
+            <th> Date Ordered </th>
+        </tr>
+    </thead>
+    <tbody>
+            {% for order in orders %}
+            <tr>
+                    <td><a href="orders/details/{{order.order_id}}" >{{ order.order_id }}</a></td>       
+                <td>{{ order.customer}}</td> 
+                <td>{{ order.date_ordered}}</td>           
+            </tr>
+            {% endfor %}
+        </form>           
+    </tbody>
+</table>
+
+
+<script type="text/javascript" src="{% static "js/jquery-3.3.1.js" %}"></script>
+<script type="text/javascript" src="{% static "js/materialize.min.js" %}"></script>
+<script type="text/javascript" src="{% static "js/books.js" %}"></script>
+{% endblock %}
