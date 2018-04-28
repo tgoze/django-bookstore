@@ -1,4 +1,6 @@
 {% extends 'Store/layout.html' %}
+{% load staticfiles %}
+{% load widget_tweaks %}
 {% block nav %}
   {% if user_id is none %}
     <li>You are currently logged out</li>
@@ -6,7 +8,9 @@
     <li><b>Greetings, {{username}}</b></li>
   {% endif %}
 {% endblock %} 
-
+{% block head %}
+<link href="{%  static "css/bookstyle.css" %}" type="text/css" rel="stylesheet">
+{% endblock %}
 {% block content %}
 <h1 align="middle">Admin Management Page</h1>
 <table>
@@ -23,10 +27,10 @@
   </tr>
   <tr>
     <td>
-        <a href="{% url 'admincustomerindex' %}"> ORDERS</a>
+        <a href="{% url 'adminorderindex' %}"> ORDERS</a>
       </td>
     <td>
-        <a href="admin/inventory"> INVENTORY</a>
+        <a href="{% url 'admininventoryindex' %}"> INVENTORY</a>
     </td>
   </tr>
   <tr>
@@ -39,9 +43,14 @@
   </tr>
   <tr>
     <td>
-      AUTHORS
+        <a href="{% url 'adminauthorindex' %}">AUTHORS</a>
+    </td>
+    <td>
+      MONTHLY REPORTS
     </td>
   </tr>
 </table>
-
+<script type="text/javascript" src="{% static "js/jquery-3.3.1.js" %}"></script>
+<script type="text/javascript" src="{% static "js/materialize.min.js" %}"></script>
+<script type="text/javascript" src="{% static "js/books.js" %}"></script>
 {% endblock %}

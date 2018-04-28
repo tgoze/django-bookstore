@@ -1,8 +1,18 @@
-{% extends 'Store/layout.html' %} 
-{% load staticfiles %} 
+{% extends 'Store/layout.html' %}
+{% load staticfiles %}
 {% load widget_tweaks %}
-
+{% block nav %}
+  {% if user_id is none %}
+    <li>You are currently logged out</li>
+  {% else %}
+    <li><b>Greetings, {{username}}</li>
+  {% endif %}
+{% endblock %} 
+{% block head %}
+<link href="{%  static "css/bookstyle.css" %}" type="text/css" rel="stylesheet">
+{% endblock %}
 {% block content %}
+
 <div class="row banner valign-wrapper">
   <form method="POST" class="col s12">
     {% csrf_token %} {{ loginform.non_field_errors }}
@@ -28,7 +38,7 @@
           </div>
         </div>
         <div class="card-action">          
-          <button type="submit" class="modal-action waves-effect waves-green btn-flat" name="login-user">Submit</button>
+          <button type="submit" class="modal-action waves-effect waves-green btn-flat" name="login-user">Login</button>
         </div>
       </div>
     </div>

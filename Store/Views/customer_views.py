@@ -18,18 +18,22 @@ from Store.Model.payment_info import PaymentInfo
 from Store.Model.payment_info_dao import PaymentInfoDao
 from Store.Model.inventory import Inventory
 from Store.Model.inventory_dao import InventoryDao
+from Store.Model.retail_order import RetailOrder
+from Store.Model.retail_order_dao  import RetailOrderDao
+from Store.Model.book_order import BookOrder
+from Store.Model.book_order_dao import BookOrderDao
 from django.conf import settings
 from django.contrib.auth.hashers import check_password, BCryptPasswordHasher,make_password
 from Store.forms import *
 from bcrypt import *
-from django.views.decorators.cache import never_cache
+from django.views.decorators.cache import never_cache 
 
 
 
 
 class CustomerIndexView(TemplateView):
     template_name = 'Store/customer/index.html'
-    cus_account = 'Store/customer/customeraccount.hmtl'
+
     user = User()
     udao = UserDao()
 
@@ -43,20 +47,17 @@ class CustomerIndexView(TemplateView):
         else:
             return redirect(reverse('login'))
 
+    @never_cache
     def post(self,request):
         context = {}
-        user_id =  request.session['user_id'] 
-        user = self.udao.get_byid(user_id)
-        request.session['user_id'] = user.id
-        request.session['username'] = user.username
         context['user_id'] = request.session['user_id'],
         context['username'] = request.session['username'] 
-        return render(request, self.cus_account,context) 
+        return render(request, self.template_name,context) 
 
   
 class CustomerAccountView(TemplateView):
     template_name = 'Store/customer/customeraccount.html'
-    template_name2 = 'Store/customer/caddressaccount.html'
+    
     user = User()
     udao = UserDao()
     customer = CustomerInfo()
@@ -65,6 +66,7 @@ class CustomerAccountView(TemplateView):
     cadao = CustomerAddressDao()
     payment = PaymentInfo()
     pdao = PaymentInfoDao()
+    odao = RetailOrderDao()
     @never_cache 
     def get(self,request):
         user_id = request.session['user_id']
@@ -73,6 +75,7 @@ class CustomerAccountView(TemplateView):
         customer = self.cdao.get_byid(user_id)
         caddress = self.cadao.get_all_addresses_by_customer_id(user_id)
         payment = self.pdao.get_by_customer_id(user_id)
+        orders = self.odao.getOrdersByCustomerID(user_id)
         initial_data = {
             'first_name': customer.user.first_name,
             'last_name': customer.user.last_name,
@@ -94,14 +97,15 @@ class CustomerAccountView(TemplateView):
             'aaddress': aaddress,
             'eaddress': eaddress,
             'payment': payment,
-            'Cuserpass': Cuserpass 
+            'Cuserpass': Cuserpass,
+            'orders': orders 
         }
-        user = self.udao.get_byid(user_id)
-        
+
         context['user_id'] = request.session['user_id'],
         context['username'] = request.session['username']
         
         return render(request,self.template_name,context)
+
     @never_cache
     def post(self,request):
         user_id = request.session['user_id']
@@ -111,6 +115,7 @@ class CustomerAccountView(TemplateView):
         aaddress = AddAddressForm(request.POST)
         Cuserpass = ChangeUsernamePassword(request.POST)
         context = {}
+
         if 'edit-info' in request.POST:
             if info_form.is_valid():
                 updateinfo = CustomerInfo()
@@ -126,9 +131,9 @@ class CustomerAccountView(TemplateView):
 
                 context['user_id'] = request.session['user_id'],
                 context['username'] = request.session['username']
-                return render(request, self.template_name, context)
+            return redirect(reverse('customeraccount'))
   
-        if 'add-address' in request.POST:
+        elif 'add-address' in request.POST:
             if aaddress.is_valid():
                 a = CustomerAddress()
                 a.customer_id = user_id
@@ -141,14 +146,9 @@ class CustomerAccountView(TemplateView):
 
                 context['user_id'] = request.session['user_id'],
                 context['username'] = request.session['username'] 
-                return render(request, self.template_name, context)
+                return redirect(reverse('customeraccount'))
         
-        if 'address-detail' in request.POST:
-            context['user_id'] = request.session['user_id'],
-            context['username'] = request.session['username'] 
-            return render(request,self.template_name2, context)
-        
-        if 'changeusernamepassword' in request.POST:
+        elif 'changeusernamepassword' in request.POST:
             if Cuserpass.is_valid():
                 u = self.udao.get_byid(user_id)
                 u.id = user_id
@@ -161,11 +161,12 @@ class CustomerAccountView(TemplateView):
 
                     context['user_id'] = request.session['user_id'],
                     context['username'] = request.session['username'] 
-                    return render(request, self.template_name, context)
+                    return redirect(reverse('customeraccount'))
         elif 'deactivate' in request.POST:
             self.udao.deactivateUser(user_id)
             return redirect(reverse('login'))
-        return redirect('customeraccount')
+        else:
+            return redirect(reverse('customeraccount'))
 
 
 class CAddressAccountView(TemplateView):
@@ -175,7 +176,6 @@ class CAddressAccountView(TemplateView):
     customer = CustomerAddress()
     padao = PaymentInfoDao()
     template_name = 'Store/customer/caddressaccount.html' 
-    cus_account = 'Store/customer/customeraccount.html'
     @never_cache
     def get(self,request,address_id):
         user_id = request.session['user_id']
@@ -201,12 +201,15 @@ class CAddressAccountView(TemplateView):
             'apayment': apayment,
             'daddress': daddress
         }
-        user = self.udao.get_byid(user_id)
-        context['username'] = user.username
-        context['user_id'] = user.id
+
+        context['user_id'] = request.session['user_id'],
+        context['username'] = request.session['username'] 
         return render(request,self.template_name,context) 
 
+    @never_cache
     def post(self,request,address_id):
+        user_id = request.session['user_id']
+        username = request.session['username'] 
         eaddress = EditAddressForm(request.POST)
         apayment = AddPaymentInfoForm2(request.POST)
         daddress = DeleteAddressForm(request.POST)
@@ -224,10 +227,9 @@ class CAddressAccountView(TemplateView):
                 a.zip_code = eaddress.cleaned_data['zip_code']
                 a.address_type = eaddress.cleaned_data['address_type']
                 self.cadao.update(a)
-                user = self.udao.get_byid(user_id)
-                context['username'] = user.username
-                context['user_id'] = user.id
-            return render(request,self.template_name,context)
+                context['user_id'] = request.session['user_id'],
+                context['username'] = request.session['username'] 
+            return redirect(reverse(('customeraddress'), kwargs={'address_id': address_id}))
 
         elif 'add-card' in request.POST:
             if apayment.is_valid():
@@ -239,10 +241,10 @@ class CAddressAccountView(TemplateView):
                 p.customer_id = user_id
                 p.billing_address.address_id = address_id
                 self.padao.create(p)
-                user = self.udao.get_byid(user_id)
-                context['username'] = user.username
-                context['user_id'] = user.id
-            return render(request,self.template_name,context)
+                
+                context['user_id'] = request.session['user_id'],
+                context['username'] = request.session['username'] 
+            return redirect(reverse(('customeraddress'), kwargs={'address_id': address_id}))
 
         elif 'delete-address' in request.POST: 
             if daddress.is_valid():
@@ -250,32 +252,71 @@ class CAddressAccountView(TemplateView):
                 a.address_id = daddress.cleaned_data['address_id']
                 a.customer_id = user_id
                 self.cadao.delete(a)
-                user = self.udao.get_byid(user_id)
-                context['username'] = user.username
-                context['user_id'] = user.id
+                
+                context['user_id'] = request.session['user_id'],
+                context['username'] = request.session['username'] 
             return redirect(reverse('customeraccount')) 
         else:
-            return render(request,self.template_name, context) 
+            return redirect(reverse(('customeraddress'), kwargs={'address_id': address_id}))
 
 class CustomerCardView(TemplateView):
     template_name = 'Store/customer/ccard.html'
     udao = UserDao()
     pdao = PaymentInfoDao()
-    cadao = CustomerAddressDao
+    cadao = CustomerAddressDao()
+
     @never_cache
     def get(self,request,card_id):
         user_id = request.session['user_id']
         username = request.session['username'] 
-        user = self.udao.get_byid(user_id)
+
         card = self.pdao.get_byid(card_id)
-        eaddress = EditAddressForm()
+
+        intitial_data = {
+            'street': card.billing_address.street,
+            'city': card.billing_address.city,
+            'state_code': card.billing_address.state_code,
+            'zip_code': card.billing_address.zip_code
+        }
+        eaddress = AddAddressForm2(intitial_data)
+    
         context = {
             'card': card,
             'eaddress': eaddress
         }
-        context['username'] = user.username
-        context['user_id'] = user.id
+
+        context['username'] = username
+        context['user_id'] = user_id
         return render(request, self.template_name, context)
+
+    @never_cache
+    def post(self,request,card_id):
+        user_id = request.session['user_id']
+        username = request.session['username'] 
+        card = self.pdao.get_byid(card_id)
+        context={}
+        eaddress = AddAddressForm2(request.POST)
+    
+        if 'update-address' in request.POST:
+            if eaddress.is_valid():
+                a = CustomerAddress()
+                a.address_id = card.billing_address.address_id
+                a.customer_id = user_id
+                a.street = eaddress.cleaned_data['street']
+                a.city = eaddress.cleaned_data['city']
+                a.state_code = eaddress.cleaned_data['state_code']
+                a.zip_code = eaddress.cleaned_data['zip_code']
+                a.address_type = 'Billing'
+                self.cadao.update(a)
+                context['user_id'] = request.session['user_id'],
+                context['username'] = request.session['username'] 
+            return redirect(reverse(('customercard'),kwargs={'card_id':card_id}))
+        else:
+            context['user_id'] = request.session['user_id'],
+            context['username'] = request.session['username'] 
+            return redirect(reverse(('customercard'),kwargs={'card_id':card_id}))
+
+
 
 class CustomerAddCardView(TemplateView):
     template_name = 'Store/customer/addcard.html'
@@ -312,6 +353,7 @@ class CustomerAddCardView(TemplateView):
         context['username'] = request.session['username'] 
         return render(request, self.template_name,context)
 
+    @never_cache
     def post(self,request):
         context={}
         user_id = request.session['user_id']
@@ -349,94 +391,31 @@ class CustomerAddCardView(TemplateView):
                 a.zip_code = aaddress.cleaned_data['zip_code']
                 a.address_type = 'Billing'
                 self.cadao.create(a)
-                user = self.udao.get_byid(user_id)
-                customer = self.cdao.get_byid(user_id)
-                cusadd =CustomerAddress()
-                cusadd.customer_id = user_id
-                caddress = self.cadao.get_all_addresses_by_customer_id(user_id)
-                bill_addresses = self.cadao.get_by_customer_and_type(user_id, "Billing")
 
-                bill_address_choices = []
-                for address in bill_addresses:
-                    address_val = (str(address.address_id), str(address.street) + " " + str(address.city) + ", " 
-                            + str(address.state_code) + " " + str(address.zip_code))
-                    bill_address_choices.append(address_val)
-                aaddress = AddAddressForm2()
-                addcard = AddPaymentInfoForm(bill_address_choices=bill_address_choices)
-                context['addcard'] = addcard
-                context['aaddress'] = aaddress
                 context['user_id'] = request.session['user_id']
                 context['username'] = request.session['username'] 
-            return render(request, self.template_name, context)
+                return redirect(reverse('customeraddcard'))
         else:
-            return render(request,self.template_name,context)
-#this method will regenerate the new information from the database from post requests
-def reCaccount(user_id):
-    udao = UserDao()
+            return redirect(reverse('customeraccount'))
+
+class CustomerOrderView(TemplateView):
+    template_name = 'Store/customer/corder.html'
+
+    odao = RetailOrderDao()
     pdao = PaymentInfoDao()
-    cdao = CustomerInfoDAO()
-    cadao = CustomerAddressDao()
-    context = {}
-    
-    user = udao.get_byid(user_id)
-    customer = cdao.get_byid(user_id)
-    caddress = cadao.get_all_addresses_by_customer_id(user_id)
-    p = PaymentInfo()
-    p.customer_id = user_id
-    payment = pdao.get_by_customer_id(user_id)
-    initial_data = {
-        'first_name': customer.user.first_name,
-        'last_name': customer.user.last_name,
-        'email': customer.user.email,
-        'work_phone': customer.work_phone,
-        'home_phone': customer.home_phone
-    }
-    info_form = CustomerInfoForm(initial_data)
-    daddress = DeleteAddressForm()
-    aaddress = AddAddressForm()
-    eaddress = EditAddressForm()
-    Cuserpass = ChangeUsernamePassword()
-    context = {
-        'customer': customer,
-        'info_form': info_form,
-        'caddress': caddress,
-        'daddress': daddress,
-        'aaddress': aaddress,
-        'eaddress': eaddress,
-        'payment': payment,
-        'Cuserpass':Cuserpass 
-    }
-    user = udao.get_byid(user_id)
-    
-    return(context)       
-
-def recaddress( address_id):
-    udao = UserDao()
-    pdao = PaymentInfoDao()
-    cdao = CustomerInfoDAO()
-    cadao = CustomerAddressDao()
-    context = {}
-    address = cadao.get_byid(address_id) 
-    user_id = address.customer_id
-    payment = pdao.get_by_address_id(address_id,user_id)
-
-    initial_data = {
-        'street': address.street,
-        'city': address.city,
-        'state_code': address.state_code,
-        'zip_code': address.zip_code,
-        'address_type': address.address_type
-    }
-
-    eaddress = EditAddressForm(initial_data)
-    apayment = AddPaymentInfoForm2()
-    daddress = DeleteAddressForm()
-    context = {
-        'address':address,
-        'eaddress': eaddress,
-        'payment': payment,
-        'apayment': apayment,
-        'daddress': daddress
-    }
-    user = udao.get_byid(user_id)
-    return(context)
+    bodao = BookOrderDao()
+    bdao = Book()
+    @never_cache
+    def get(self, request, order_id):
+        order = self.odao.get_byid(order_id)
+        bookorder = self.bodao.get_byid(order_id)
+       
+        context = {
+            'order': order,
+            'bookorder':bookorder
+        }
+        user_id =  request.session['user_id'] 
+        username = request.session['username'] 
+        context['user_id'] = request.session['user_id']
+        context['username'] = request.session['username']
+        return render(request, self.template_name, context)

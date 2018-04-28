@@ -84,7 +84,7 @@ class AdminCustomerDetailView(TemplateView):
 class AdminInventoryView(TemplateView):
     template_name = 'Store/admin/inventory/inventory.html'
     idao = InventoryDao()
-
+    @never_cache
     def get(self,request):
         inventory = self.idao.get_all()
         context={

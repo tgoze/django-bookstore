@@ -228,45 +228,44 @@ class BookDao(AbcDao):
             cursor.close()
             conn.close()
         return allBooks
-    # def getBooksByAuthor(self, b,c):
-    #     try:
-    #         db_config = read_db_config()
-    #         conn = MySQLConnection(**db_config)
-    #         cursor = conn.cursor()
-    #         args = [b,c]
-    #         cursor.callproc('getBooksByAuthor', args)
-    #         allBooks = []
+    def getBooksByAuthorID(self, author_id):
+        try:
+            db_config = read_db_config()
+            conn = MySQLConnection(**db_config)
+            cursor = conn.cursor()
+            args = [author_id]
+            cursor.callproc('getBooksByAuthorID', args)
+            allBooks = []
 
-    #         for result in cursor.stored_results():
-    #             books = result.fetchall()
+            for result in cursor.stored_results():
+                books = result.fetchall()
 
-    #         for x in books:
+            for x in books:
 
-    #             currentbook = Book()
-    #             currentbook.set_bookID(x[3])
-    #             currentbook.set_isbn13(x[4])
-    #             currentbook.set_isbn10(x[5])
-    #             currentbook.set_title(x[6])
-    #             currentbook.set_copyRightDate(x[7])
-    #             currentbook.set_type(x[8])
-    #             currentbook.set_edition(x[9])
-    #             currentbook.set_numberOfPages(x[10])
-    #             currentbook.set_image(x[11])
-    #             currentbook.set_genre(x[12])
-    #             currentbook.set_authorID(x[13])
-    #             currentbook.set_publisherID(x[14])
-    #             allBooks.append(currentbook)
-
+                currentbook = Book()
+                currentbook.set_book_id(x[0])
+                currentbook.set_isbn13(x[1])
+                currentbook.set_isbn10(x[2])
+                currentbook.set_title(x[3])
+                currentbook.set_copyRightDate(x[4])
+                currentbook.set_type(x[5])
+                currentbook.set_edition(x[6])
+                currentbook.set_numberOfPages(x[7])
+                currentbook.set_genre(x[8])
+                currentbook.set_author(x[9])
+                currentbook.set_publisher(x[10])
+                allBooks.append(currentbook)
 
 
-    #         conn.commit()
-    #     except Error as error:
-    #         print(error)
 
-    #     finally:
-    #         cursor.close()
-    #         conn.close()
-    #     return allBooks
+            conn.commit()
+        except Error as error:
+            print(error)
+
+        finally:
+            cursor.close()
+            conn.close()
+        return allBooks
 
 
     # def getBookbyTitle(self, title):

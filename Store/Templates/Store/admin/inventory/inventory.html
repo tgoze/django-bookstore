@@ -9,19 +9,18 @@
   {% endif %}
 {% endblock %} 
 {% block content %}
-<form method="POST" name='go-back'>
-    {% csrf_token %} 
-<button type="submit" class="modal-action waves-effect waves-green btn-flat" name="return">
-    <i class=" material-icons medium">keyboard_return</i>
-    Return to Admin Management Page</button>
-</form>
+<h6>
+    <a href='{% url 'adminindex' %}'><i class=" material-icons medium">keyboard_return</i> Return to Admin Management</a>
+</h6>
 <h1>INVENTORY</h1>
 <table>
     <thead>
     <tr>
         <th> Book </th>
         <th> Quantity on Hand </th>
-        <th> Quantity Ordered </the>
+        <th> Quantity Ordered </th>
+        <th>Cost</th>
+        <th>Retail Price</th>
     </tr>
     </thead>
     {% for i in inventory %}
@@ -29,7 +28,8 @@
         <td>{{i.book.title}}</td>
         <td>{{i.quantity_on_hand}}</td>
         <td>{{i.quantity_ordered}}</td>
-        <td><a class="modal-trigger " href='#order{{i.book_id}}'><i class=" tiny material-icons">add_circle_outline</i></a></td>
+        <td> {{i.cost}}</td>
+        <td>{{i.retail_price}}</td>
     </tr>
     {% endfor %}
 </table>

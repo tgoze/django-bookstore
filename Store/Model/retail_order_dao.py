@@ -1,4 +1,7 @@
 from Store.Model.retail_order import RetailOrder
+from Store.Model.user_dao import UserDao
+from Store.Model.customer_address_dao import CustomerAddressDao
+from Store.Model.payment_info_dao import PaymentInfoDao
 from Store.Model.dbconfig import read_db_config
 from Store.Model.abc_dao import AbcDao
 from mysql.connector import MySQLConnection, Error
@@ -25,14 +28,121 @@ class RetailOrderDao(AbcDao):
         except Exception as e:
             print(e)
 
-    def get_byid(self):
-        raise NotImplementedError
+    def get_byid(self,order_id):
+        try:
+            # Setup connection to the DB
+            db_config = read_db_config()
+            conn = MySQLConnection(**db_config)
+            cursor = conn.cursor()
+            order = None
+            args = [order_id]
+            udao = UserDao()
+            cadao = CustomerAddressDao()
+            pdao = PaymentInfoDao()
+            # Calls the stored procedure
+            cursor.callproc('getRetailOrderByOrderID', args)         
+            
+            # This loop iterates through the resultsets
+            for result in cursor.stored_results():
+                # This loop iterates through the rows in each resultset
+                for x in result.fetchall():
+                    order = RetailOrder()
+                    order.order_id = x[0]
+                    order.date_ordered =x[1]
+                    order.total_price = x[2]
+                    order.discount = x[3]
+                    order.customer = udao.get_byid(x[4])
+                    order.shipping_address = cadao.get_byid(x[5])
+                    order.card = pdao.get_byid(x[6])
+                    
+
+            # Close the connection to the DB
+            cursor.close()
+            conn.close()
+        except Error as error:
+            print(error)
+        except Exception as e:
+            print(e)
+
+        return order
 
     def get_all(self):
-        raise NotImplementedError
+        orders = []
+        try:
+            # Setup connection to the DB
+            db_config = read_db_config()
+            conn = MySQLConnection(**db_config)
+            cursor = conn.cursor()
+
+            # Calls the stored procedure
+            cursor.callproc('getAllRetailOrders')         
+            
+            # This loop iterates through the resultsets
+            for result in cursor.stored_results():
+                # This loop iterates through the rows in each resultset
+                for x in result.fetchall():
+                    order = RetailOrder()
+                    order.order_id = x[0]
+                    order.date_ordered =x[1]
+                    order.total_price = x[2]
+                    order.discount = x[3]
+                    order.customer = x[4]
+                    order.shipping_address = x[5]
+                    order.billing_address = x[6]
+                    order.card = x[7]
+                    orders.append(order)
+
+            # Close the connection to the DB
+            cursor.close()
+            conn.close()
+        except Error as error:
+            print(error)
+        except Exception as e:
+            print(e)
+
+        return orders
+
+    def getOrdersByCustomerID(self, customer_id):
+        orders = []
+        try:
+            # Setup connection to the DB
+            db_config = read_db_config()
+            conn = MySQLConnection(**db_config)
+            cursor = conn.cursor()
+
+            args = [customer_id]
+            # Calls the stored procedure
+            cursor.callproc('getRetailOrderByCustomerID', args)         
+            
+            # This loop iterates through the resultsets
+            for result in cursor.stored_results():
+                # This loop iterates through the rows in each resultset
+                for x in result.fetchall():
+                    order = RetailOrder()
+                    order.order_id = x[0]
+                    order.date_ordered =x[1]
+                    order.total_price = x[2]
+                    order.discount = x[3]
+                    order.customer = x[4]
+                    order.shipping_address = x[5]
+                    order.billing_address = x[6]
+                    order.card = x[7]
+                    orders.append(order)
+
+            # Close the connection to the DB
+            cursor.close()
+            conn.close()
+        except Error as error:
+            print(error)
+        except Exception as e:
+            print(e)
+
+        return orders
 
     def update(self):
         raise NotImplementedError
 
     def delete(self):
         raise NotImplementedError
+    
+    
