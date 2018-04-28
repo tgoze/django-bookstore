@@ -24,13 +24,14 @@ urlpatterns = [
     path('admin/inventory', AdminInventoryView.as_view(), name='admininventoryindex'),
     path('admin/genres/details/<int:genre_id>/', AdminGenreDetailsView.as_view(), name='admingenredetail'),
     
-    path('customer/books', CusBookView.as_view()),
+    path('customer/books', CusBookView.as_view(), name="customer_books"),
     path('customer/books/details/<int:book_id>/', CusBookDetailView.as_view(), name="customer_book"),   
     path('customer/cart', CartView.as_view(), name="cart"),
     path('customer/shippay', ShipPayView.as_view(), name="ship_pay"),
-    path('customer/checkout', CheckOutView.as_view(), name="checkout"),    
+    path('customer/checkout', CheckOutView.as_view(), name="checkout"),  
+    path('customer/invoice', InvoiceView.as_view(), name="invoice"),    
     path('customer/customeraccount', CustomerAccountView.as_view(), name='customeraccount'),
-    path('customer/index', CustomerIndexView.as_view()),
+    path('customer/index', CustomerIndexView.as_view(), name='customer_index'),
     path('customer/caddressaccount/<int:address_id>',CAddressAccountView.as_view()),
     path('customer/ccard/<int:card_id>/', CustomerCardView.as_view()),
     path('customer/addcard', CustomerAddCardView.as_view())

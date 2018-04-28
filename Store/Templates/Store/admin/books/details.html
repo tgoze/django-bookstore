@@ -81,7 +81,7 @@
         {{ book_form.non_field_errors }}
         <div class="modal-content">
             <h4>Edit Book</h4>
-            <div class="row">
+            <div class="row section">
                 <div class="row">
                     <div class="input-field col s6">
                         {{ book_form.title.errors }}
@@ -135,6 +135,25 @@
                     <div class="input-field col s4">
                         {{ book_form.genres.errors }} {{ book_form.genres }}
                         <label>Genre</label>
+                    </div>
+                </div>
+                <h6>Inventory Information</h6>
+                <div class="divider"></div>
+                <div class="row section">
+                    <div class="input-field col s4">
+                        {{ book_form.quantity_on_hand.errors }}
+                        <label for="{{ book_form.quantity_on_hand.id_for_label }}">Quantity On Hand</label>
+                        {{ book_form.quantity_on_hand }}
+                    </div>
+                    <div class="input-field col s4">
+                        {{ book_form.cost.errors }}
+                        <label for="{{ book_form.cost.id_for_label }}">Cost</label>
+                        {{ book_form.cost }}
+                    </div>                    
+                    <div class="input-field col s4">
+                        {{ book_form.retail_price.errors }}
+                        <label for="{{ book_form.retail_price.id_for_label }}">Retail Price</label>
+                        {{ book_form.retail_price }}
                     </div>
                 </div>
             </div>

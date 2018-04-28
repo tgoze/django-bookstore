@@ -300,14 +300,19 @@ class CusBookView(TemplateView):
     template_name = 'Store/customer/books/books.html'
     book_dao = BookDao()
     
+    @never_cache
     def get(self, request):
-        books = self.book_dao.get_all()
+        if 'user_id' in request.session:
+            books = self.book_dao.get_all()
 
-        context = {            
-            'books': books
-        }
+            context = {            
+                'user_id': request.session['user_id'],
+                'books': books
+            }
 
-        return render(request, self.template_name, context)
+            return render(request, self.template_name, context)
+        else:
+            return redirect(reverse('login'))
 
 
 class CusBookDetailView(TemplateView):
@@ -317,37 +322,33 @@ class CusBookDetailView(TemplateView):
     image_dao = ImageDao()
     inventory_dao = InventoryDao()
 
+    @never_cache
     def get(self, request, book_id):
-        book = self.book_dao.get_byid(book_id)
-        images = self.image_dao.get_byid(book_id)
-        inventory  = self.inventory_dao.get_byid(book_id)
-        max_quantity = self.inventory_dao.get_byid(book_id).quantity_on_hand        
-        cart_form = CartForm(max_quantity)
+        if 'user_id' in request.session:
+            book = self.book_dao.get_byid(book_id)
+            images = self.image_dao.get_byid(book_id)
+            max_quantity = self.inventory_dao.get_byid(book_id).quantity_on_hand
+            cart_form = CartForm(max_quantity=max_quantity)
 
-        context = {
-            'book': book, 
-            'images': images,
-            'inventory': inventory,
-            'cart_form': cart_form   
-        }
+            context = {
+                'user_id': request.session['user_id'],
+                'book': book, 
+                'images': images,
+                'cart_form': cart_form   
+            }
 
-        return render(request, self.template_name, context)
+            return render(request, self.template_name, context)
+        else:
+            return redirect(reverse('login'))
 
     def post(self, request, book_id):
-        book = self.book_dao.get_byid(book_id)
-        images = self.image_dao.get_byid(book_id)
-
-        context = {
-            'book': book,
-            'images': images        
-        }
-
-        cart = Cart()
-        cart.book.book_id = book_id
-        cart.user_id = request.session['user_id']
-        cart_form = CartForm(request.POST)        
+        max_quantity = self.inventory_dao.get_byid(book_id).quantity_on_hand
+        cart_item = Cart()
+        cart_item.book.book_id = book_id
+        cart_item.user_id = request.session['user_id']
+        cart_form = CartForm(request.POST, max_quantity=max_quantity)        
         if cart_form.is_valid():
-            cart.quantity_ordered = cart_form.cleaned_data['quantity_ordered']
-            self.cart_dao.create(cart)
+            cart_item.quantity_ordered = cart_form.cleaned_data['quantity_ordered']
+            self.cart_dao.create(cart_item)
 
-        return render(request, self.template_name, context)
+        return redirect(reverse('cart'))

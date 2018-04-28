@@ -6,6 +6,18 @@
 <link href="{% static "css/bookstyle.css" %}" type="text/css" rel="stylesheet">
 {% endblock %}
 
+{% block nav %}
+<div class="nav-wrapper teal">
+    <form action="">
+        <div class="input-field">
+            <input id="search" type="search" required>
+            <label class="label-icon" for="search"><i class="material-icons">search</i></label>
+            <i class="material-icons">close</i>
+        </div>            
+    </form>
+</div>
+{% endblock %}
+
 {% block content %}
 <h4>Books</h4>
 <table>
@@ -16,18 +28,17 @@
             <th>Publisher</th>                        
         </tr>
     </thead>
-    <tbody>
-        <form method="POST">
-            {% csrf_token %}
-            {% for book in books %}
-            <tr>
-                <td><a href="books/details/{{ book.book_id }}">{{ book.title }}</a></td>  
-                <td>{{book.author.last_name}}, {{book.author.first_name}}</td>
-                <td>{{book.publisher.company_name}}</td>                                
-            </tr>
-            {% endfor %}
-        </form>           
-    </tbody>
-    {{notification}}
+    <tbody>                
+        {% for book in books %}
+        <tr>
+            <td><a href="books/details/{{ book.book_id }}">{{ book.title }}</a></td>  
+            <td>{{book.author.last_name}}, {{book.author.first_name}}</td>
+            <td>{{book.publisher.company_name}}</td>                                
+        </tr>
+        {% endfor %}          
+    </tbody>    
 </table>
+<div class="section">    
+</div>
+
 {% endblock %}

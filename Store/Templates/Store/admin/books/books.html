@@ -43,22 +43,19 @@
             <th></th>
         </tr>
     </thead>
-    <tbody>
-        <form method="POST">
-            {% csrf_token %}
-            {% for book in books %}
-            <tr>
-                <td>{{ book.title }}</td>  
-                <td>{{ book.author.last_name }}, {{ book.author.first_name }}</td>
-                <td>{{ book.publisher.company_name }}</td>
-                <td>{{ book.genre.genre }}</td>                                
-                <td>${{ book.inventory.cost }} / ${{ book.inventory.retail_price }}</td>
-                <td>{{ book.inventory.quantity_on_hand }}</td>
-                <td>{{ book.inventory.quantity_ordered }}</td>
-                <td><a href="books/details/{{ book.book_id }}"><i class="material-icons">edit</i></a></td>
-            </tr>
-            {% endfor %}
-        </form>           
+    <tbody>                
+        {% for book in books %}
+        <tr>
+            <td>{{ book.title }}</td>  
+            <td>{{ book.author.last_name }}, {{ book.author.first_name }}</td>
+            <td>{{ book.publisher.company_name }}</td>
+            <td>{{ book.genre.genre }}</td>                                
+            <td>${{ book.inventory.cost }} / ${{ book.inventory.retail_price }}</td>
+            <td>{{ book.inventory.quantity_on_hand }}</td>
+            <td>{{ book.inventory.quantity_ordered }}</td>
+            <td><a href="books/details/{{ book.book_id }}"><i class="material-icons">edit</i></a></td>
+        </tr>
+        {% endfor %}                   
     </tbody>
     {{notification}}
 </table>

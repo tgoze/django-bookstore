@@ -4,8 +4,11 @@
 {% endblock %} 
 
 {% block content %}
-<h1 align="middle">Let's Get Some Books</h1>
-<h1>Welcome {{username}}</h1>
-{{user_id}}
+
+<div class="row">
+    <div class="col s4">
+        <a href="{% url 'customer_books' %}">Go to books...</a>
+    </div>
+</div>
 
 {% endblock %}

@@ -13,7 +13,7 @@ class RetailOrderDao(AbcDao):
             
             # Create an order in the retail order table of the DB
             args = (p_retail_order.customer.customer_id, 
-                    p_retail_order.shipping_address.address_id, p_retail_order.billing_address.address_id, 
+                    p_retail_order.shipping_address.address_id, 
                     p_retail_order.card.card_id)
             cursor.callproc('createOrder', args)
             conn.commit()

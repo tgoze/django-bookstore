@@ -77,3 +77,21 @@ class CartDao(AbcDao):
 
     def delete(self):
         raise NotImplementedError
+
+    def delete_from_cart(self, p_book_id, p_user_id):    
+        try:
+            db_config = read_db_config()        
+            conn = MySQLConnection(**db_config)
+            cursor = conn.cursor()
+
+            args= (p_book_id, p_user_id)
+            cursor.callproc('deleteFromCart', args)
+            conn.commit()
+            print(str(cursor.rowcount) + " row(s) were affected.")
+
+            cursor.close()
+            conn.close()
+        except Error as error:
+            print(error)
+        except Exception as e:
+            print(e)

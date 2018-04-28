@@ -63,6 +63,7 @@ class BookForm(forms.Form):
     cost = forms.DecimalField(help_text="In US dollars")
     retail_price = forms.DecimalField(help_text="In US dollars")
 
+
 class BookImageForm(forms.Form):
     image = forms.ImageField()
 
@@ -80,12 +81,16 @@ class PublisherForm(forms.Form):
     phone_number = forms.CharField(max_length="10", min_length="10")
     contact_name = forms.CharField()
 
+
 class GenreForm(forms.Form):
     genre = forms.CharField()
+
 
 class GenreForm2(forms.Form):
     genre_id = forms.CharField()
     genre = forms.CharField()
+
+
 class LoginForm(forms.Form):
     username = forms.CharField()
     password = forms.CharField(max_length=32, widget=forms.PasswordInput)
@@ -134,7 +139,8 @@ class EditAddressForm(forms.Form):
     state_code = forms.ChoiceField(choices=states, initial="default", widget=SelectWithDisabled())
     zip_code = USZipCodeField()
     address_type = forms.ChoiceField(choices=address_types, initial="default", widget=SelectWithDisabled())
-    
+
+
 class AddPaymentInfoForm(forms.Form):
     def __init__(self, *args, **kwargs):
         bill_address_choices = kwargs.pop('bill_address_choices')
@@ -168,11 +174,12 @@ class OrderForm(forms.Form):
 
 
 class CartForm(forms.Form):
-    def __init__(self, max_quantity, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
+        max_quantity = kwargs.pop('max_quantity')
         super(CartForm, self).__init__(*args, **kwargs)
-        self.fields['quantity_ordered'] = forms.IntegerField(max_value=max_quantity)
+        self.fields['quantity_ordered'] = forms.IntegerField(min_value=1, max_value=max_quantity)
 
-    quantity_ordered = forms.IntegerField(max_value=None)
+    quantity_ordered = forms.IntegerField(min_value=1)
 
 
 class ShipPayForm(forms.Form):

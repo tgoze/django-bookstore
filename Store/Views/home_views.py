@@ -69,24 +69,27 @@ class LoginView(TemplateView):
                     context['username'] = request.session['username']                    
                     self.udao.updateLastLogin(user.id)
                     if user.is_staff == 0 and user.is_active == 1:
-                        self.template_name = self.cus_loggedin_template
+                        return redirect(reverse('customer_index'))
                     elif user.is_active == 0 and user.is_staff == 0:
                         self.udao.activateUser(user.id)
-                        self.template_name = self.cus_loggedin_template
+                        return redirect(reverse('customer_index'))
                     else:
-                        self.template_name = self.admin_loggedin_template
+                        return redirect(reverse('adminindex'))
+                                        
                 # Handle if password is bad
                 else:
                     loginform = LoginForm()  
                     registerform = RegisterUserForm()
                     context = {
-                    'loginform': loginform,
-                    'registerform': registerform,   
-                    'text': 'Either username or password is incorrect'        
+                        'loginform': loginform,
+                        'registerform': registerform,   
+                        'text': 'Either username or password is incorrect'        
                     }          
-                        
+                    return render(request, self.template_name, context)
+                
             else:
                 context['text'] = 'try again'
+                return render(request, self.template_name, context)
 
         if 'create-user' in request.POST:        
             if registerform.is_valid():
@@ -112,6 +115,6 @@ class LoginView(TemplateView):
                 context = {
                     'loginform': loginform,
                     'registerform': registerform           
-                }
-                       
-        return render(request, self.template_name, context)
+                }           
+
+                return render(request, self.template_name, context)

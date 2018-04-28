@@ -16,12 +16,10 @@
 </head>
 <body>
     <header>
-        <nav>
+        <nav class="extended">
             <div class="nav-wrapper teal">
             <a href="{% url 'home' %}" class="brand-logo">Bookish</a>
-            <ul id="nav-mobile" class="right hide-on-med-and-down">
-                {% block nav %}
-                {% endblock %}
+            <ul id="nav-mobile" class="right hide-on-med-and-down">                        
                 {% if user_id %}
                     <li><a href="{% url 'customeraccount' %}">{{username}}</a></li>
                     <li><a href="{% url 'cart' %}"><i class="material-icons">shopping_cart</i></a></li>
@@ -31,6 +29,8 @@
                 {% endif %}              
             </ul>
             </div>
+            {% block nav %}
+            {% endblock %}
         </nav>
     </header>
     <main>

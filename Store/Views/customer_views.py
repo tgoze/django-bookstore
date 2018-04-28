@@ -33,11 +33,15 @@ class CustomerIndexView(TemplateView):
     user = User()
     udao = UserDao()
 
+    @never_cache
     def get(self,request):
-        context = {}
-        context['user_id'] = request.session['user_id'],
-        context['username'] = request.session['username'] 
-        return render(request, self.template_name,context)
+        if 'user_id' in request.session:
+            context = {}
+            context['user_id'] = request.session['user_id'],
+            context['username'] = request.session['username'] 
+            return render(request, self.template_name,context)
+        else:
+            return redirect(reverse('login'))
 
     def post(self,request):
         context = {}
@@ -142,7 +146,7 @@ class CustomerAccountView(TemplateView):
         if 'address-detail' in request.POST:
             context['user_id'] = request.session['user_id'],
             context['username'] = request.session['username'] 
-            return rendr(request,self.template_name2, context)
+            return render(request,self.template_name2, context)
         
         if 'changeusernamepassword' in request.POST:
             if Cuserpass.is_valid():
