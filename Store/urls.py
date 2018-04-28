@@ -25,35 +25,24 @@ urlpatterns = [
     path('admin/publishers/details/<int:publisher_id>/', AdminPublisherDetailView.as_view(), name='adminpublisherdetail'),
     path('admin/inventory', AdminInventoryView.as_view(), name='admininventoryindex'),
     path('admin/genres/details/<int:genre_id>/', AdminGenreDetailsView.as_view(), name='admingenredetail'),
-<<<<<<< HEAD
     
     path('customer/books', CusBookView.as_view(), name="customer_books"),
-=======
     path('admin/authors', AdminAuthorView.as_view(), name='adminauthorindex'),
     path('admin/authors/details/<int:author_id>/', AdminAuthorDetailView.as_view(), name='adminauthordetail'),
     path('admin/orders', AdminOrderView.as_view(), name='adminorderindex'),
     path('admin/orders/details/<int:order_id>/', AdminOrderDetailView.as_view(), name='adminorderdetail'),
 
-    path('customer/books', CusBookView.as_view()),
->>>>>>> kara_line
     path('customer/books/details/<int:book_id>/', CusBookDetailView.as_view(), name="customer_book"),   
     path('customer/cart', CartView.as_view(), name="cart"),
     path('customer/shippay', ShipPayView.as_view(), name="ship_pay"),
     path('customer/checkout', CheckOutView.as_view(), name="checkout"),  
     path('customer/invoice', InvoiceView.as_view(), name="invoice"),    
     path('customer/customeraccount', CustomerAccountView.as_view(), name='customeraccount'),
-<<<<<<< HEAD
-    path('customer/index', CustomerIndexView.as_view(), name='customer_index'),
-    path('customer/caddressaccount/<int:address_id>',CAddressAccountView.as_view()),
-    path('customer/ccard/<int:card_id>/', CustomerCardView.as_view()),
-    path('customer/addcard', CustomerAddCardView.as_view())
-=======
     path('customer/index', CustomerIndexView.as_view(), name='customerindex'),
     path('customer/caddressaccount/<int:address_id>',CAddressAccountView.as_view(), name='customeraddress'),
     path('customer/ccard/<int:card_id>/', CustomerCardView.as_view(), name='customercard' ),
     path('customer/addcard', CustomerAddCardView.as_view(), name='customeraddcard'),
     path('customer/corder/<int:order_id>/', CustomerOrderView.as_view(), name='customerorder')
->>>>>>> kara_line
 ]
 
 if settings.DEBUG:
