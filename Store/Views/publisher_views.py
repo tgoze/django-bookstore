@@ -109,4 +109,8 @@ class AdminPublisherDetailView(TemplateView):
                 context['user_id'] = request.session['user_id'],
                 context['username'] = request.session['username'] 
             return redirect(reverse(('adminpublisherdetail'),kwargs={ 'publisher_id': publisher_id }))
-
+        if 'delete-publisher' in request.POST:
+            self.pdao.delete(publisher_id)
+            context['user_id'] = request.session['user_id'],
+            context['username'] = request.session['username'] 
+            return redirect(reverse('adminpublisherindex'))

@@ -1,6 +1,7 @@
 {% extends 'Store/layout.html' %} 
 {% load staticfiles %} 
 {% load widget_tweaks %} 
+{% load store_extras %}
 
 {% block head %}
 <link href="{% static "css/checkout.css" %}" type="text/css" rel="stylesheet">
@@ -63,23 +64,29 @@
                 <tbody>               
                     {% for item in cart_items %}
                     <tr>
-                        <td><a href="{% url 'customer_book' book_id=item.book.book_id %}">{{ item.book.title }}</a></td>
-                        <td>({{ item.quantity_ordered }})</td>
-                        <td>${{ item.book.inventory.retail_price }}</td>                
-                    </tr>                                                                                                                                     
+                        <td>
+                            <a href="{% url 'customer_book' book_id=item.book.book_id %}">{{ item.book.title }}</a>
+                            {% if item.quantity_ordered > 1 %}
+                                ({{ item.quantity_ordered }})
+                            {% endif %}
+                        </td>                            
+                        <td class="grey-text">${{ item.book.inventory.retail_price }}</td>                            
+                        <td>${% multiply item.quantity_ordered item.book.inventory.retail_price %}</td>                                          
+                    </tr>                                                                                                                                          
                     {% endfor %}
                     <tr>
+                        <td></td>                                                
                         <td>Subtotal:</td>
-                        <td><h6>${{ cart_total }}</h6></td>
-                    </tr>            
+                        <td><h6>${{ cart_total }}</h6></td>                        
+                    </tr>
                 </tbody>                                   
             </table>
         </div>
     </div>
     <div class="row">
-        <div class="col s2 offset-s10">        
-            <button class="btn-large tooltipped" data-position="left" data-tooltip="Place order" type="submit" name="place-order">
-                <i class="large material-icons">shopping_basket</i>
+        <div class="col s2 offset-s10 right-align">        
+            <button class="orange btn" type="submit" name="place-order">
+                Place Order
             </button>        
         </div>
     </div>
