@@ -5,3 +5,4 @@ class Cart():
         self.user_id = None
         self.book = Book()
         self.quantity_ordered = None
+        self.total_item_price = None

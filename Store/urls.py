@@ -34,7 +34,7 @@ urlpatterns = [
     path('customer/books', CusBookView.as_view(), name="customer_books"),
     path('customer/books/details/<int:book_id>/', CusBookDetailView.as_view(), name="customer_book"),   
     path('customer/cart', CartView.as_view(), name="cart"),
-    path('customer/cart/ajax/update', order_views.update_cart_view()),
+    path('customer/cart/ajax/update/', update_cart_view, name="cart_update"),
     path('customer/shippay', ShipPayView.as_view(), name="ship_pay"),
     path('customer/checkout', CheckOutView.as_view(), name="checkout"),  
     path('customer/invoice', InvoiceView.as_view(), name="invoice"),    

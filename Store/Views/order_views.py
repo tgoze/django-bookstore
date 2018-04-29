@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect, reverse, HttpResponse
+from django.shortcuts import render, redirect, reverse
+from django.http import JsonResponse
 from django.views.generic import TemplateView
 
 from Store.Model.cart_dao import CartDao
@@ -18,17 +19,56 @@ from django.views.decorators.cache import never_cache
 from Store.forms import ShipPayForm, CartForm
 
 def update_cart_view(request):
-    test = request.POST.get()
+    # Set up the cart form to receive data 
+    cart_dao = CartDao() 
+    user_id = request.session['user_id']
+    cart_items = cart_dao.get_all(user_id)
+    # An array of arrays of choices for each book
+    qtys_choices = []
+    # An array of book IDs to pass to the cart form
+    book_ids = []
+    for item in cart_items:
+        # Get quantities on hand of each item in cart
+        qty_on_hand = item.book.inventory.quantity_on_hand
+        qty_choices = []
+        for i in range(1, (qty_on_hand+1)):
+            qty_choices.append((i, i))
+        qtys_choices.append(qty_choices)    
 
-    response_data = {}
-    try:
-        response_data['result'] = "Success"
-        response_data['message'] = test
-    except:
-        response_data['result'] = "nope"
-        response_data['message'] = "nope"
+        # Append book ID to list
+        book_ids.append(item.book.book_id)
+    
+    cart_form = CartForm(request.POST, book_ids=book_ids, qtys_choices=qtys_choices)
 
-    return HttpResponse(json.dumps(response_data), content_type="application/json")
+    # Process data and update any cart items
+    if cart_form.is_valid():
+        response_data = {}  
+        try:      
+            for i, qty in enumerate(cart_form.item_fields()):
+                cart = Cart()
+                cart.book.book_id = cart_form.book_ids[i]
+                cart.user_id = user_id
+                cart.quantity_ordered = qty
+                # Check whether or not the particluar item was changed and update if so                 
+                if qty != str(cart_items[i].quantity_ordered):
+                    updated_cart = cart_dao.update(cart)
+            
+            # Update prices of items
+            cart_total = 0
+            item_prices = []
+            for item in updated_cart:            
+                cart_total += item.total_item_price
+                item_prices.append(item.total_item_price)
+
+            response_data['cart_total'] = str(cart_total)
+            response_data['item_prices'] = item_prices
+        except:
+            response_data['message'] = "There was an error communicating with the database!" 
+
+        return JsonResponse(response_data)
+    else:
+        return redirect(reverse('cart'))
+
 
 class CartView(TemplateView):
     template_name = 'Store/customer/cart.html'

@@ -27,7 +27,7 @@
                                         <a href="{% url 'customer_book' book_id=item.book.book_id %}">{{ item.book.title }}</a>                               
                                     </td>                                                
                                     <td class="grey-text">${{ item.book.inventory.retail_price }}</td>                            
-                                    <td>${% multiply item.quantity_ordered item.book.inventory.retail_price %}</td>
+                                    <td><p id="item-total-price">${% multiply item.quantity_ordered item.book.inventory.retail_price %}</p></td>
                                     <td>
                                         <form method="POST">
                                             {% csrf_token %}                                    
@@ -41,7 +41,7 @@
                                 <tr>
                                     <td></td>                                                
                                     <td><b>Subtotal:</b></td>
-                                    <td><h6>${{ cart_total }}</h6></td>
+                                    <td><h6 id="cart-total">${{ cart_total }}</h6></td>
                                     <td></td>
                                 </tr>
                                 {% else %}
@@ -57,7 +57,7 @@
                     <div class="col s1">
                         {% if cart_items %}                                                                            
                             <ul>
-                                <form method="POST" onsubmit="return false">
+                                <form method="POST" id="cart_qtys">
                                     {% csrf_token %}                                 
                                     {{ cart_form.non_field_errors }}
                                     {% for qty_choice_field in cart_form %}
@@ -70,7 +70,7 @@
                                     {% endfor %}             
                                 </form>                                                                                   
                             </ul>                                                
-                        {% endif %}
+                        {% endif %}                        
                     </div>
                 </div>                
             </div>
@@ -82,7 +82,7 @@
             <h5>Thank you for shopping with us!</h5>            
         </div>
         <div class="row center-align">        
-            <button class="orange btn" href="{% url 'ship_pay'%}">Check out</button> or <a href="{% url 'customer_books'%}">Continue shopping</a>
+            <a class="orange btn" href="{% url 'ship_pay'%}">Check out</a> or <a href="{% url 'customer_books'%}">Continue shopping</a>
         </div>
         {% endif %}
     </div>
@@ -90,20 +90,32 @@
 
 <script type="text/javascript" src="{% static "js/jquery-3.3.1.js" %}"></script>
 <script type="text/javascript" src="{% static "js/materialize.min.js" %}"></script>
+<script type="text/javascript" src="{% static "js/orders.js" %}"></script>
 <script>
     $(document).ready(function(){
-        $('select').formSelect();
-        $("[id^=id_qty_choice_]").on('change', function(e) {
-            $ajax({
-                type: "POST",
-                url: "ajax/update",
-                dataType: "json",
-                async: "true",
-                data: {
-                    csrfmiddlewaretoken: '{{ csrf_token }}'
-                }
+        $('select').formSelect();    
+    });
 
-            });
+    $("[id^=id_qty_choice_]").on('change', function(e) {    
+        $('#cart_qtys').submit();     
+    });
+
+    $('#cart_qtys').on('submit', function(event) {
+        event.preventDefault();
+        var formData = $(this).serialize()
+        $.ajax({                
+            url: "{% url 'cart_update' %}",
+            data: formData,
+            type: "POST",
+            dataType: "json",            
+            success: function (response_data) {
+                $('#cart-total').text("$" + response_data.cart_total);
+                var index = 0
+                $('*[id=item-total-price]').each( function() {
+                    $(this).text("$" + response_data.item_prices[index]);
+                    index++;
+                });            
+            }
         });
     });
 </script>
