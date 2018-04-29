@@ -5,7 +5,7 @@
   {% if user_id is none %}
     <li>You are currently logged out</li>
   {% else %}
-    <li><b>Greetings, {{username}}</li>
+    <li>Greetings, {{username}}</li>
   {% endif %}
 {% endblock %} 
 {% block head %}
@@ -18,10 +18,14 @@
 <h4>
     {{genre.genre}} 
     <a class='modal-trigger' href='#updategenre'><i class="material-icons">edit</i></a>
-    <a class='modal-trigger' href='#deletegenre'><i class="material-icons">delete</i></a>
+    <a class='modal-trigger' href='#deletegenre'><i class="material-icons">delete</i></a> <br>
+   
 </h4> 
+<h6> Total Revenue for Genre: ${{sum}} <br>
+    Total Number of Books for Genre: {{sum_inventory}}
+</h6>
 <div class="row">
-        <div class="col s12 m5">
+        <div class="col s12">
             <div class="card">
                 <div class="card-content">
                     <span class="card-title"><b>Books in Genre</b></span>
@@ -29,14 +33,16 @@
                         <thead>
                             <tr>
                                 <th>Book Title</th>
-                                <th> Copies Sold</th>
+                                <th> Quantity on Hand </th>
+                                <th>Copies Sold </th>
                             </tr>
                         </thead>
                         <tbody>
                         {% for b in books %}
                         <tr>
-                            <td> {{b.title}} </td>
-                            <td> Copies Sold</td>
+                            <td> {{b.book_id.title}} </td>
+                            <td> {{b.quantity_on_hand}}</td>
+                            <td>{{b.quantity_ordered}}</td>
                         </tr>
                         {% endfor %}
                         </tbody>
@@ -44,7 +50,9 @@
                 </div>       
             </div>
         </div>
-    <div class="col s12 m5">
+    </div>
+    <div class="row">
+    <div class="col s12 ">
             <div class="card">
                 <div class="card-content">
                     <span class="card-title"><b>TBD</b></span>

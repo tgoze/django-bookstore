@@ -27,11 +27,12 @@ from django.views.decorators.cache import never_cache
 class AdminAuthorView(TemplateView):
     template_name = 'Store/admin/authors/authors.html'
     adao = AuthorDao()
-
+   
     @never_cache
     def get(self,request):
         authors = self.adao.get_all()
         aauthor = AuthorForm()
+        
         context = {
             'authors': authors,
             'aauthor': aauthor
@@ -63,11 +64,11 @@ class AdminAuthorDetailView(TemplateView):
     template_name = 'Store/admin/authors/details.html'
     adao = AuthorDao()
     bdao = BookDao()
-
+    idao = InventoryDao()
     @never_cache
     def get(self,request,author_id):
         author = self.adao.get_byid(author_id)
-        books = self.bdao.getBooksByAuthorID(author_id)
+        books = self.idao.getInventoryByAuthor(author_id)
         initial_data = {
             'first_name': author.first_name,
             'last_name': author.last_name
@@ -76,7 +77,9 @@ class AdminAuthorDetailView(TemplateView):
         context = {
             'author': author,
             'books': books,
-            'eauthor': eauthor
+            'eauthor': eauthor,
+            'sum': self.adao.getTotalAuthorRevenueByAuthorID(author_id),
+            'sum_inventory': self.adao.getTotalInventoryByAuthorID(author_id)
         }
         user_id =  request.session['user_id'] 
         username = request.session['username'] 

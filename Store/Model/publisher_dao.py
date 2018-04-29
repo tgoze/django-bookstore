@@ -162,3 +162,57 @@ class PublisherDao(AbcDao):
             print(error)
         except Exception as e:
             print(e)
+
+    def getTotalPublisherRevenueByPublisherID(self, publisher_id):
+        try:
+            totalSum = None
+            # Setup connection to the DB
+            db_config = read_db_config()
+            conn = MySQLConnection(**db_config)
+            cursor = conn.cursor()
+            args = [publisher_id]
+            # Calls the stored procedure
+            cursor.callproc('getTotalPublisherRevenueByPublisherID',args)         
+            
+            # This loop iterates through the resultsets
+            for result in cursor.stored_results():
+                # This loop iterates through the rows in each resultset
+                for x in result.fetchall():
+                    totalSum = x[0]
+
+            # Close the connection to the DB
+            cursor.close()
+            conn.close()
+        except Error as error:
+            print(error)
+        except Exception as e:
+            print(e)
+
+        return totalSum
+    
+    def getTotalInventoryByPublisherID(self, publisher_id):
+        try:
+            totalSum = None
+            # Setup connection to the DB
+            db_config = read_db_config()
+            conn = MySQLConnection(**db_config)
+            cursor = conn.cursor()
+            args = [publisher_id]
+            # Calls the stored procedure
+            cursor.callproc('getTotalInventoryByPublisherID',args)         
+            
+            # This loop iterates through the resultsets
+            for result in cursor.stored_results():
+                # This loop iterates through the rows in each resultset
+                for x in result.fetchall():
+                    totalSum = x[0]
+
+            # Close the connection to the DB
+            cursor.close()
+            conn.close()
+        except Error as error:
+            print(error)
+        except Exception as e:
+            print(e)
+
+        return totalSum

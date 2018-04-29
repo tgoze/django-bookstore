@@ -5,13 +5,16 @@
   {% if user_id is none %}
     <li>You are currently logged out</li>
   {% else %}
-    <li><b>Greetings, {{username}}</li>
+    <li>Greetings, {{username}}</li>
   {% endif %}
 {% endblock %} 
 {% block head %}
 <link href="{%  static "css/bookstyle.css" %}" type="text/css" rel="stylesheet">
 {% endblock %}
 {% block content %}
+<h6>
+  <a href='{% url 'adminindex' %}'><i class=" material-icons medium">keyboard_return</i> Return to Admin Management</a>
+</h6>
 <h3>{{customer.user.first_name}} {{customer.user.last_name}}</h3>
 <div class="row">
     <div class="col s12 m6">
@@ -33,7 +36,25 @@
       <div class="card">
         <div class="card-content">
           <span class="card-title">Customer Orders </span>
-
+          <table>
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Total Price</th>
+                    <th> Date Ordered </th>
+                </tr>
+            </thead>
+            <tbody>
+                    {% for order in orders %}
+                    <tr>
+                        <td><a href="{% url 'adminorderdetail' order.order_id %}" >{{ order.order_id }}</a></td>       
+                        <td>{{ order.total_price}}</td> 
+                        <td>{{ order.date_ordered}}</td>           
+                    </tr>
+                    {% endfor %}
+                </form>           
+            </tbody>
+        </table>
         </div>
       </div>
     </div>

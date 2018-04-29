@@ -63,21 +63,26 @@ class AdminGenreDetailsView(TemplateView):
     gdao = GenreDao()
     udao = UserDao()
     bdao = BookDao()
-
+    idao = InventoryDao()
     @never_cache
     def get(self,request,genre_id):
+
         genre = self.gdao.get_byid(genre_id)
-        books = self.bdao.getBooksByGenreID(genre_id)
+        books = self.idao.getInventoryByGenre(genre_id)
+        sum_inventory = self.gdao.getTotalInventoryByGenreID(genre_id)
 
         initial_data = {
-            'genre':genre.genre
+            'genre':genre.genre 
         }
         egenre = GenreForm(initial_data)
         context = {
             'genre':genre,
             'books': books,
-            'egenre': egenre
+            'egenre': egenre,
+            'sum': self.gdao.getTotalGenreRevenueByGenreID(genre_id),
+            'sum_inventory':sum_inventory
         }
+        
         user_id =  request.session['user_id'] 
         username = request.session['username'] 
         context['user_id'] = request.session['user_id'],

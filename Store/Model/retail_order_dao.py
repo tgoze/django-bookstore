@@ -73,7 +73,10 @@ class RetailOrderDao(AbcDao):
             db_config = read_db_config()
             conn = MySQLConnection(**db_config)
             cursor = conn.cursor()
-
+            
+            udao = UserDao()
+            cadao = CustomerAddressDao()
+            pdao = PaymentInfoDao()
             # Calls the stored procedure
             cursor.callproc('getAllRetailOrders')         
             
@@ -86,10 +89,9 @@ class RetailOrderDao(AbcDao):
                     order.date_ordered =x[1]
                     order.total_price = x[2]
                     order.discount = x[3]
-                    order.customer = x[4]
-                    order.shipping_address = x[5]
-                    order.billing_address = x[6]
-                    order.card = x[7]
+                    order.customer = udao.get_byid(x[4])
+                    order.shipping_address = cadao.get_byid(x[5])
+                    order.card = pdao.get_byid(x[6])
                     orders.append(order)
 
             # Close the connection to the DB
@@ -113,7 +115,9 @@ class RetailOrderDao(AbcDao):
             args = [customer_id]
             # Calls the stored procedure
             cursor.callproc('getRetailOrderByCustomerID', args)         
-            
+            udao = UserDao()
+            cadao = CustomerAddressDao()
+            pdao = PaymentInfoDao()
             # This loop iterates through the resultsets
             for result in cursor.stored_results():
                 # This loop iterates through the rows in each resultset
@@ -123,12 +127,10 @@ class RetailOrderDao(AbcDao):
                     order.date_ordered =x[1]
                     order.total_price = x[2]
                     order.discount = x[3]
-                    order.customer = x[4]
-                    order.shipping_address = x[5]
-                    order.billing_address = x[6]
-                    order.card = x[7]
+                    order.customer = udao.get_byid(x[4])
+                    order.shipping_address = cadao.get_byid(x[5])
+                    order.card = pdao.get_byid(x[6])
                     orders.append(order)
-
             # Close the connection to the DB
             cursor.close()
             conn.close()

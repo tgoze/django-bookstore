@@ -1,0 +1,51 @@
+{% extends 'Store/layout.html' %}
+{% load staticfiles %}
+{% load widget_tweaks %}
+{% block nav %}
+  {% if user_id is none %}
+    <li>You are currently logged out</li>
+  {% else %}
+    <li>Greetings, {{username}}</li>
+  {% endif %}
+{% endblock %} 
+{% block head %}
+{% endblock %}
+
+{% block content %}
+<h6>
+        <a href='{% url 'adminreportindex' %}'><i class=" material-icons medium">keyboard_return</i> Return to Reports</a>
+</h6>
+<h4>April</h4>
+<div class="row">
+    <div class="col s12 m5">
+            <div class="card">
+                <div class="card-content">
+                    <span class="card-title">
+                        Total Revenue: ${{apr_revenue}} <br>
+                        Number of Orders: {{num}}
+                    </span>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Order Number</th>
+                                <th> Total Price </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in orders %}
+                            <tr>
+                                <td>{{order.order_id}}</td>
+                                <td>${{order.total_price}}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    </div>
+                </div>       
+            </div>
+        </div>
+</div>
+    <script type="text/javascript" src="{% static "js/jquery-3.3.1.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/materialize.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/books.js" %}"></script>
+    {% endblock %}

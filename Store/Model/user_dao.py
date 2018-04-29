@@ -258,3 +258,39 @@ class UserDao(AbcDao):
         except Exception as e:
             print(e)
         return users
+    
+    def getUsersByState(self):
+        try:
+
+            db_config = read_db_config()        
+            conn = MySQLConnection(**db_config)
+            cursor = conn.cursor()
+            
+            
+            cursor.callproc('getCustomersByState')
+            for result in cursor.stored_results():
+                user = result.fetchall()
+            users = []
+            for x in user:
+                u = User()
+                u.id = x[0]
+                u.password = x[1]
+                u.last_login = x[2]
+                u.is_superuser = x[3]
+                u.username = x[4]
+                u.first_name = x[5]
+                u.last_name = x[6]
+                u.email = x[7]
+                u.is_staff = x[8]
+                u.is_active = x[9]
+                u.date_joined = x[10]
+                u.state_code = x[11]
+                users.append(u)
+            conn.commit()
+            cursor.close()
+            conn.close()
+        except Error as error:
+            print(error)
+        except Exception as e:
+            print(e)
+        return users

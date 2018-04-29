@@ -102,3 +102,57 @@ class GenreDao(AbcDao):
             print(e)
 
         return all_genres
+    
+    def getTotalGenreRevenueByGenreID(self, genre_id):
+        try:
+            totalSum = None
+            # Setup connection to the DB
+            db_config = read_db_config()
+            conn = MySQLConnection(**db_config)
+            cursor = conn.cursor()
+            args = [genre_id]
+            # Calls the stored procedure
+            cursor.callproc('getTotalGenreRevenueByGenreID',args)         
+            
+            # This loop iterates through the resultsets
+            for result in cursor.stored_results():
+                # This loop iterates through the rows in each resultset
+                for x in result.fetchall():
+                    totalSum = x[0]
+
+            # Close the connection to the DB
+            cursor.close()
+            conn.close()
+        except Error as error:
+            print(error)
+        except Exception as e:
+            print(e)
+
+        return totalSum
+    
+    def getTotalInventoryByGenreID(self, genre_id):
+        try:
+            totalSum = None
+            # Setup connection to the DB
+            db_config = read_db_config()
+            conn = MySQLConnection(**db_config)
+            cursor = conn.cursor()
+            args = [genre_id]
+            # Calls the stored procedure
+            cursor.callproc('getTotalInventoryByGenreID',args)         
+            
+            # This loop iterates through the resultsets
+            for result in cursor.stored_results():
+                # This loop iterates through the rows in each resultset
+                for x in result.fetchall():
+                    totalSum = x[0]
+
+            # Close the connection to the DB
+            cursor.close()
+            conn.close()
+        except Error as error:
+            print(error)
+        except Exception as e:
+            print(e)
+
+        return totalSum

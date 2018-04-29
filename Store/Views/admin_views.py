@@ -18,6 +18,7 @@ from Store.Model.payment_info import PaymentInfo
 from Store.Model.payment_info_dao import PaymentInfoDao
 from Store.Model.inventory import Inventory
 from Store.Model.inventory_dao import InventoryDao
+from Store.Model.retail_order_dao import RetailOrderDao
 from django.conf import settings
 from django.contrib.auth.hashers import check_password, BCryptPasswordHasher,make_password
 from Store.forms import *
@@ -66,13 +67,53 @@ class AdminCustomerView(TemplateView):
 class AdminCustomerDetailView(TemplateView):
     template_name = 'Store/admin/customers/details.html'
     cdao = CustomerInfoDAO()
+    rdao = RetailOrderDao()
     
+    @never_cache
     def get(self, request, customer_id):
         customer = self.cdao.get_byid(customer_id)
         customer_address = self.cdao.get_addressbyid(customer_id)
+        orders = self.rdao.getOrdersByCustomerID(customer_id)
         context = {
             'customer': customer,
-            'caddress': customer_address
+            'caddress': customer_address,
+            'orders': orders
+        }
+        user_id =  request.session['user_id'] 
+        username = request.session['username'] 
+        context['user_id'] = request.session['user_id'],
+        context['username'] = request.session['username'] 
+        return render(request, self.template_name, context)
+    
+class AdminCustomerRepeatView(TemplateView):
+    template_name = 'Store/admin/customers/repeats.html'
+    cdao = CustomerInfoDAO()
+    
+    @never_cache
+    def get(self, request):
+        customers = self.cdao.getRepeatCustomers()
+        
+        context = {
+            'customers': customers
+        }
+
+        user_id =  request.session['user_id'] 
+        username = request.session['username'] 
+        context['user_id'] = request.session['user_id'],
+        context['username'] = request.session['username'] 
+        return render(request, self.template_name, context)
+
+class AdminCustomerByStateView(TemplateView):
+    template_name = 'Store/admin/customers/states.html'
+    udao = UserDao() 
+
+    @never_cache
+    def get(self, request):
+        customers = self.udao.getUsersByState()
+        
+            
+        context = {
+            'customers': customers
         }
         user_id =  request.session['user_id'] 
         username = request.session['username'] 
@@ -80,10 +121,10 @@ class AdminCustomerDetailView(TemplateView):
         context['username'] = request.session['username'] 
         return render(request, self.template_name, context)
 
-
 class AdminInventoryView(TemplateView):
     template_name = 'Store/admin/inventory/inventory.html'
     idao = InventoryDao()
+
     @never_cache
     def get(self,request):
         inventory = self.idao.get_all()

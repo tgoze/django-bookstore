@@ -25,21 +25,13 @@
     </thead>
     {% for i in inventory %}
     <tr>
-        <td>{{i.book.title}}</td>
+        <td> {{i.book.title}}</td>
         <td>{{i.quantity_on_hand}}</td>
         <td>{{i.quantity_ordered}}</td>
         <td> {{i.cost}}</td>
         <td>{{i.retail_price}}</td>
+        <td><a href="{%url 'adminbookdetail' i.book_id %}"><i class=" material-icons tiny">edit</i></a></td>
     </tr>
     {% endfor %}
 </table>
-<div id='order{{i.book_id' class='modal'>
-<form method="POST" class="col s6" >
-       
-    <div class="modal-footer">
-        <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
-        <button type="submit" class="modal-action waves-effect waves-green btn-flat" name="order">Order</button>
-    </div>
-</form>
-</div>
 {% endblock %}
