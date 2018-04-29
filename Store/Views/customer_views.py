@@ -416,6 +416,6 @@ class CustomerOrderView(TemplateView):
         }
         user_id =  request.session['user_id'] 
         username = request.session['username'] 
-        context['user_id'] = request.session['user_id']
-        context['username'] = request.session['username']
+        context['user_id'] = user_id
+        context['username'] = username
         return render(request, self.template_name, context)

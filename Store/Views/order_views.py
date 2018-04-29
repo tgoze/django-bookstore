@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect, reverse
 from django.http import JsonResponse
 from django.views.generic import TemplateView
 
+from decimal import Decimal
+
 from Store.Model.cart_dao import CartDao
 from Store.Model.cart import Cart
 from Store.Model.payment_info import PaymentInfo
@@ -13,6 +15,8 @@ from Store.Model.retail_order_dao import RetailOrderDao
 from Store.Model.customer_info import CustomerInfo
 from Store.Model.customer_info_dao import CustomerInfoDAO
 from Store.Model.inventory_dao import InventoryDao
+from Store.Model.book_order import BookOrder
+from Store.Model.book_order_dao import BookOrderDao
 
 from django.views.decorators.cache import never_cache
 
@@ -61,6 +65,8 @@ def update_cart_view(request):
                 item_prices.append(item.total_item_price)
 
             response_data['cart_total'] = str(cart_total)
+            if cart_total >= 75:
+                response_data['discount_price'] = round((cart_total * Decimal(0.9)), 2)
             response_data['item_prices'] = item_prices
         except:
             response_data['message'] = "There was an error communicating with the database!" 
@@ -110,8 +116,10 @@ class CartView(TemplateView):
             context['cart_form'] = cart_form
             context['cart_items'] = cart_items
             context['cart_total'] = cart_total
+            if cart_total >= 75:
+                context['discount_price'] = round((cart_total * Decimal(0.9)), 2)
             context['user_id'] = user_id
-            context['username'] = request.session['username']
+            context['username'] = username
         else:
             return redirect(reverse('login'))
 
@@ -149,19 +157,10 @@ class CartView(TemplateView):
         
         cart_form = CartForm(initial_data, book_ids=book_ids, qtys_choices=qtys_choices)
 
-        if 'edit-items' in request.POST:
-            cart_form = CartForm(request.POST, book_ids=book_ids, qtys_choices=qtys_choices)
-            if cart_form.is_valid():
-                for i, qty in enumerate(cart_form.item_fields()):
-                    cart = Cart()
-                    cart.book.book_id = cart_form.book_ids[i]
-                    cart.user_id = user_id
-                    cart.quantity_ordered = qty
-                    cart_dao.update(cart)
-
         if 'delete-item' in request.POST:
             book_id = int(request.POST.get('delete-item'))
             self.cart_dao.delete_from_cart(book_id, user_id)
+            self.cart_items = self.cart_dao.get_all(user_id)
 
         context['cart_form'] = cart_form
         context['cart_items'] = cart_items
@@ -197,11 +196,17 @@ class ShipPayView(TemplateView):
                     + str(address.state_code) + " " + str(address.zip_code))
                 shipping_choices.append(address_val)
 
-            shippay_form = ShipPayForm(card_choices=card_choices, shipping_choices=shipping_choices)
-            context['shippay_form'] = shippay_form
+            if not card_choices:
+                context['notification'] = "Fill out your card information!"
+            elif not shipping_choices:
+                context['notification'] = "Fill out your shipping information!"
+            else: 
+                shippay_form = ShipPayForm(card_choices=card_choices, shipping_choices=shipping_choices)
+                context['shippay_form'] = shippay_form
+            
             context['cards'] = cards            
             context['user_id'] = user_id
-            context['username'] = request.session['username']
+            context['username'] = username
         else:
             return redirect(reverse('login'))
 
@@ -261,16 +266,23 @@ class CheckOutView(TemplateView):
 
                 cart_total = 0
                 for item in cart_items:
-                    cart_total += (item.book.inventory.retail_price * item.quantity_ordered)
+                    cart_total += (item.total_item_price)
                 
                 context = {
                     'payment_choice': payment_choice,
                     'shipping_choice': shipping_choice,
                     'cart_items': cart_items,
                     'cart_total': cart_total,
-                    'user_id': request.session['user_id']
+                    'user_id': request.session['user_id'],
+                    'username': username
                 }
-                context['username'] = request.session['username']
+               
+                if cart_total >= 75:
+                    context['discount_price'] = round((cart_total * Decimal(0.9)), 2)
+                    request.session['discount'] = 0.1
+                else:
+                    request.session['discount'] = 0.0
+
             else:
                 return redirect(reverse('ship_pay'))
         else:
@@ -288,56 +300,44 @@ class CheckOutView(TemplateView):
                 retail_order.customer.customer_id = request.session['user_id']
                 retail_order.shipping_address.address_id = request.POST['shipping_choice']                
                 retail_order.card.card_id = request.POST['payment_choice']
+                retail_order.discount = request.session['discount']
 
                 # Submit order information to server
-                self.retail_order_dao.create(retail_order)
+                order_id = self.retail_order_dao.create(retail_order)
 
                 context['notification'] = "Order made!"
             except:
                 print("Error occured")
                 context['notification'] = "Error!"
         
-        return redirect(reverse('invoice'))
+        return redirect(reverse('invoice', kwargs={ 'order_id': order_id }))
 
 
 class InvoiceView(TemplateView):
     template_name = 'Store/customer/invoice.html'
     retail_order_dao = RetailOrderDao() 
-    payment_dao = PaymentInfoDao()
-    customer_address_dao = CustomerAddressDao()
-    customer_dao = CustomerInfoDAO()
-    cart_dao = CartDao()
+    book_order_dao = BookOrderDao()
 
     @never_cache
-    def get(self, request):
+    def get(self, request, order_id):
         if 'user_id' in request.session:
             if 'payment_choice' in request.session:
                 # Get data from db to show order summary
-                user_id = request.session['user_id']
-                payment_choice = self.payment_dao.get_byid(request.session['payment_choice'])
-                shipping_choice = self.customer_address_dao.get_byid(request.session['shipping_choice'])
-                cart_items = self.cart_dao.get_all(user_id)
-                customer_info = self.customer_dao.get_byid(user_id)
-
-                cart_total = 0
-                for item in cart_items:
-                    cart_total += (item.book.inventory.retail_price * item.quantity_ordered)
+                user_id = request.session['user_id']                
+                order = self.retail_order_dao.get_byid(order_id)                
+                books = self.book_order_dao.get_byid(order_id)
 
                 context = {
-                    'payment_choice': payment_choice,
-                    'shipping_choice': shipping_choice,
-                    'cart_items': cart_items,
-                    'cart_total': cart_total,
-                    'customer_info': customer_info,
-                    'user_id': user_id
+                    'order': order,
+                    'books': books,
+                    'user_id': user_id,
+                    'username': request.session['username']
                 }
-                context['username'] = request.session['username']
+                if order.discount > 0:
+                    context['discount_price'] = round((order.total_price * Decimal((1 - order.discount))), 2)
             else:
                 return redirect(reverse('ship_pay'))
         else: 
             return redirect(reverse('login'))
 
         return render(request, self.template_name, context)
-
-    def post(self, request):
-        return render(request, self.template_name)

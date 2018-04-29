@@ -9,6 +9,7 @@ from mysql.connector import MySQLConnection, Error
 class RetailOrderDao(AbcDao):
 
     def create(self, p_retail_order):
+        order_id = 0
         try:
             db_config = read_db_config()        
             conn = MySQLConnection(**db_config)
@@ -16,10 +17,17 @@ class RetailOrderDao(AbcDao):
             
             # Create an order in the retail order table of the DB
             args = (p_retail_order.customer.customer_id, 
-                    p_retail_order.shipping_address.address_id, 
-                    p_retail_order.card.card_id)
+                    p_retail_order.shipping_address.address_id,                     
+                    p_retail_order.card.card_id,
+                    p_retail_order.discount)
             cursor.callproc('createOrder', args)
+            order_id = cursor.lastrowid
             conn.commit()
+
+            # Get the order ID of the order just created
+            result = next(cursor.stored_results())
+            order_id_row = result.fetchone()
+            order_id = order_id_row[0]
 
             cursor.close()
             conn.close()
@@ -27,6 +35,9 @@ class RetailOrderDao(AbcDao):
             print(error)
         except Exception as e:
             print(e)
+            
+        return order_id
+        
 
     def get_byid(self,order_id):
         try:

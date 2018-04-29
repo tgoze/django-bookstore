@@ -17,3 +17,7 @@
 .input-field {
     margin: 0px;
 }
+
+.strike {
+    text-decoration: line-through;
+}

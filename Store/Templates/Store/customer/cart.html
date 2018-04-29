@@ -6,13 +6,15 @@
 {% block head %}
 <link href="{% static "css/cartstyle.css" %}" type="text/css" rel="stylesheet">
 {% endblock %}
+
 {% block nav %}
   {% if user_id is none %}
     <li>You are currently logged out</li>
   {% else %}
-    <li><b>Greetings, {{username}}</li>
+    <li>Greetings, {{username}}</li>
   {% endif %}
 {% endblock %} 
+
 {% block content %}
 <div class="section"></div>
 <div class="row">
@@ -43,13 +45,34 @@
                                         </form>                            
                                     </td>                    
                                 </tr>                                                                                                                                     
-                                {% endfor %}
-                                <tr>
-                                    <td></td>                                                
-                                    <td><b>Subtotal:</b></td>
-                                    <td><h6 id="cart-total">${{ cart_total }}</h6></td>
-                                    <td></td>
-                                </tr>
+                                {% endfor %}                    
+                                    {% if discount_price %}
+                                    <tr>
+                                        <td></td>                                                
+                                        <td><b>Subtotal:</b></td>
+                                        <td><h6 class="grey-text strike" id="cart-total">${{ cart_total }}</h6></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr id="discount-row">
+                                        <td></td>                                                
+                                        <td><b>Discounted Price:</b></td>
+                                        <td><h6 id="discount-price">${{ discount_price }}</h6></td>
+                                        <td></td>
+                                    </tr>
+                                    {% else %}
+                                    <tr>
+                                        <td></td>                                                
+                                        <td><b>Subtotal:</b></td>
+                                        <td><h6 id="cart-total">${{ cart_total }}</h6></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr id="discount-row" style="display: none;">
+                                        <td></td>                                                
+                                        <td><b>Discounted Price:</b></td>
+                                        <td><h6 id="discount-price"></h6></td>
+                                        <td></td>
+                                    </tr>
+                                    {% endif %}
                                 {% else %}
                                 <div class="section">
                                     <h6>It's lonely here</h6>
@@ -87,6 +110,9 @@
         <div class="row center-align">
             <h5>Thank you for shopping with us!</h5>            
         </div>
+        <div class="row section center-align">
+            <h5>Get 10% off for orders over $75.00!</h5>
+        </div>
         <div class="row center-align">        
             <a class="orange btn" href="{% url 'ship_pay'%}">Check out</a> or <a href="{% url 'customer_books'%}">Continue shopping</a>
         </div>
@@ -116,6 +142,14 @@
             dataType: "json",            
             success: function (response_data) {
                 $('#cart-total').text("$" + response_data.cart_total);
+                if(response_data.discount_price) {
+                    $('#discount-row').show();
+                    $('#discount-price').text("$" + response_data.discount_price);
+                    $('#cart-total').addClass("strike grey-text");            
+                } else {
+                    $('#discount-row').hide();
+                    $('#cart-total').removeClass("strike grey-text");
+                }                
                 var index = 0
                 $('*[id=item-total-price]').each( function() {
                     $(this).text("$" + response_data.item_prices[index]);

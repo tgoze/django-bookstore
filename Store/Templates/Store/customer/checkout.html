@@ -15,8 +15,7 @@
   {% endblock %} 
 {% block content %}
 <nav class="clean">
-    <div class="nav-wrapper">
-            <a href="{% url 'customeraccount' %}">{{username}}</a>
+    <div class="nav-wrapper">            
         <div class="col s12">
             <a href="{% url 'cart' %}" class="breadcrumb">Cart</a>
             <a href="{% url 'ship_pay' %}" class="breadcrumb">Shipping & Payment</a> 
@@ -81,11 +80,27 @@
                         <td>${% multiply item.quantity_ordered item.book.inventory.retail_price %}</td>                                          
                     </tr>                                                                                                                                          
                     {% endfor %}
+                    {% if discount_price %}
                     <tr>
                         <td></td>                                                
-                        <td>Subtotal:</td>
-                        <td><h6>${{ cart_total }}</h6></td>                        
+                        <td><b>Subtotal:</b></td>
+                        <td><h6 class="grey-text strike">${{ cart_total }}</h6></td>
+                        <td></td>
                     </tr>
+                    <tr>
+                        <td></td>                                                
+                        <td><b>Discounted Price:</b></td>
+                        <td><h6 id="discount-price">${{ discount_price }}</h6></td>
+                        <td></td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td></td>                                                
+                        <td><b>Subtotal:</b></td>
+                        <td><h6 id="cart-total">${{ cart_total }}</h6></td>
+                        <td></td>
+                    </tr>                
+                    {% endif %}
                 </tbody>                                   
             </table>
         </div>
