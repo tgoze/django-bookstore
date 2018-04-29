@@ -13,10 +13,9 @@
 {% endblock %}
 {% block content %}
 <ul id="dropdown2" class="dropdown-content">
-        <li><a href="{%  url 'admincancelledorders' %}">  Cancelled Orders</a></li>
+        <li><a href="{%  url 'adminorderindex' %}">  Orders</a></li>
       </ul>
-<h4><a style="color: black" class="dropdown-trigger" href="#!" data-target="dropdown2"> Orders</a></h4>
-
+<h4><a style="color: black" class="dropdown-trigger" href="#!" data-target="dropdown2">Cancelled Orders</a></h4>
 <table>
     <thead>
         <tr>
@@ -36,8 +35,6 @@
         </form>           
     </tbody>
 </table>
-
-
 <script type="text/javascript" src="{% static "js/jquery-3.3.1.js" %}"></script>
 <script type="text/javascript" src="{% static "js/materialize.min.js" %}"></script>
 <script type="text/javascript" src="{% static "js/books.js" %}"></script>

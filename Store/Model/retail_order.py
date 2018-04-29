@@ -11,3 +11,4 @@ class RetailOrder():
         self.customer = CustomerInfo()
         self.shipping_address = CustomerAddress()
         self.card = PaymentInfo()
+        self.status = None

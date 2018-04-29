@@ -76,14 +76,16 @@
                                 <th>Order ID</th>
                                 <th>Total Price</th>
                                 <th> Date Ordered </th>
+                                <th>Order Status</th>
                             </tr>
                         </thead>
                         <tbody>
                                 {% for order in orders %}
                                 <tr>
-                                    <td><a href="corder/{{order.order_id}}" >{{ order.order_id }}</a></td>       
+                                    <td><a href="{% url 'customerorder' order.order_id %}"> {{ order.order_id }}</a></td>       
                                     <td>{{ order.total_price}}</td> 
-                                    <td>{{ order.date_ordered}}</td>           
+                                    <td>{{ order.date_ordered}}</td>
+                                    <td>{{order.status}} </td>           
                                 </tr>
                                 {% endfor %}
                             </form>           

@@ -41,6 +41,7 @@ urlpatterns = [
     path('admin/authors/details/<int:author_id>/', AdminAuthorDetailView.as_view(), name='adminauthordetail'),
 
     path('admin/orders', AdminOrderView.as_view(), name='adminorderindex'),
+    path('admin/orders/cancelled', AdminCancelledOrderView.as_view(), name='admincancelledorders'),
     path('admin/orders/details/<int:order_id>/', AdminOrderDetailView.as_view(), name='adminorderdetail'),
 
     path('admin/reports', AdminReportIndex.as_view(), name='adminreportindex'),

@@ -76,6 +76,7 @@ class CustomerAccountView(TemplateView):
         caddress = self.cadao.get_all_addresses_by_customer_id(user_id)
         payment = self.pdao.get_by_customer_id(user_id)
         orders = self.odao.getOrdersByCustomerID(user_id)
+        
         initial_data = {
             'first_name': customer.user.first_name,
             'last_name': customer.user.last_name,
@@ -412,7 +413,7 @@ class CustomerOrderView(TemplateView):
     def get(self, request, order_id):
         order = self.odao.get_byid(order_id)
         bookorder = self.bodao.get_byid(order_id)
-       
+        
         context = {
             'order': order,
             'bookorder':bookorder
@@ -422,3 +423,19 @@ class CustomerOrderView(TemplateView):
         context['user_id'] = request.session['user_id']
         context['username'] = request.session['username']
         return render(request, self.template_name, context)
+    
+    @never_cache
+    def post(self,request, order_id):
+        user_id =  request.session['user_id'] 
+        username = request.session['username'] 
+        context = {}
+        if 'cancel-order' in request.POST:
+            self.odao.update(order_id)
+            context['user_id'] = request.session['user_id']
+            context['username'] = request.session['username']
+            return redirect(reverse('customeraccount'))
+        else:
+            context['user_id'] = request.session['user_id']
+            context['username'] = request.session['username']
+            return redirect(reverse('customeraccount'))
+            
