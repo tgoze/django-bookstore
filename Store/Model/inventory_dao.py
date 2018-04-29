@@ -10,7 +10,7 @@ class InventoryDao(AbcDao):
             db_config = read_db_config()
             conn = MySQLConnection(**db_config)
             cursor = conn.cursor()
-            args = [p_inventory.book_id, p_inventory.quantity_on_hand, p_inventory.quantity_ordered, p_inventory.cost, p_inventory.price]
+            args = [p_inventory.book_id, p_inventory.quantity_on_hand, p_inventory.quantity_ordered, p_inventory.cost, p_inventory.retail_price]
             cursor.callproc('createInventory',args)
 
             conn.commit()
@@ -24,7 +24,7 @@ class InventoryDao(AbcDao):
             db_config = read_db_config()
             conn = MySQLConnection(**db_config)
             cursor = conn.cursor()
-            args = [p_inventory.book_id, p_inventory.quantity_on_hand, p_inventory.quantity_ordered, p_inventory.cost, p_inventory.price]
+            args = [p_inventory.book_id, p_inventory.quantity_on_hand, p_inventory.quantity_ordered, p_inventory.cost, p_inventory.retail_price]
             cursor.callproc('updateInventory',args)
 
             conn.commit()
@@ -108,3 +108,96 @@ class InventoryDao(AbcDao):
             print(e)
 
         return inventory
+    
+    def getInventoryByGenre(self,genre_id):
+        try:
+            db_config = read_db_config()
+            conn = MySQLConnection(**db_config)
+            cursor = conn.cursor()
+
+            args = [genre_id]
+
+            cursor.callproc('getInventoryByGenre',args)
+            all_inventory = []
+            bdao = BookDao()
+            for result in cursor.stored_results():
+                inventories = result.fetchall()
+
+            for x in inventories:
+                currentinventory = Inventory()
+
+                currentinventory.book_id = bdao.get_byid(x[0])
+                currentinventory.quantity_on_hand = x[1]
+                currentinventory.quantity_ordered = x[2]
+                all_inventory.append(currentinventory)
+
+                cursor.close()
+            conn.close()
+        except Error as error:
+            print(error)
+        except Exception as e:
+            print(e)
+
+        return all_inventory
+    
+    def getInventoryByPublisher(self,publisher_id):
+        try:
+            db_config = read_db_config()
+            conn = MySQLConnection(**db_config)
+            cursor = conn.cursor()
+
+            args = [publisher_id]
+
+            cursor.callproc('getInventoryByPublisher',args)
+            all_inventory = []
+            bdao = BookDao()
+            for result in cursor.stored_results():
+                inventories = result.fetchall()
+
+            for x in inventories:
+                currentinventory = Inventory()
+
+                currentinventory.book_id = bdao.get_byid(x[0])
+                currentinventory.quantity_on_hand = x[1]
+                currentinventory.quantity_ordered = x[2]
+                all_inventory.append(currentinventory)
+
+                cursor.close()
+            conn.close()
+        except Error as error:
+            print(error)
+        except Exception as e:
+            print(e)
+
+        return all_inventory
+    
+    def getInventoryByAuthor(self,author_id):
+        try:
+            db_config = read_db_config()
+            conn = MySQLConnection(**db_config)
+            cursor = conn.cursor()
+
+            args = [author_id]
+
+            cursor.callproc('getInventoryByAuthor',args)
+            all_inventory = []
+            bdao = BookDao()
+            for result in cursor.stored_results():
+                inventories = result.fetchall()
+
+            for x in inventories:
+                currentinventory = Inventory()
+
+                currentinventory.book_id = bdao.get_byid(x[0])
+                currentinventory.quantity_on_hand = x[1]
+                currentinventory.quantity_ordered = x[2]
+                all_inventory.append(currentinventory)
+
+                cursor.close()
+            conn.close()
+        except Error as error:
+            print(error)
+        except Exception as e:
+            print(e)
+
+        return all_inventory

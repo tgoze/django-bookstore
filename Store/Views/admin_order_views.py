@@ -35,6 +35,7 @@ class AdminOrderView(TemplateView):
     @never_cache
     def get(self,request):
         orders = self.odao.get_all()
+        
         context = {
             'orders': orders
         }

@@ -183,3 +183,30 @@ class CustomerInfoDAO(AbcDao):
             print(e)
 
         return all_customer
+    
+    def getRepeatCustomers(self):
+        currentinfos = []
+        try:
+            db_config = read_db_config()
+            conn = MySQLConnection(**db_config)
+            cursor = conn.cursor()
+            
+            cursor.callproc('getRepeatCustomers')
+            print('hit')
+
+            for result in cursor.stored_results():
+                customers = result.fetchall()
+
+            for x in customers:
+                currentinfo = CustomerInfo()
+                currentinfo.customer_id = x[0]
+                currentinfo.number_of_orders = x[1]
+                currentinfos.append(currentinfo)
+                
+            cursor.close()
+            conn.close()
+        except Error as error:
+            print(error)
+        except Exception as e:
+            print(e)
+        return currentinfos

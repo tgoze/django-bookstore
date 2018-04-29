@@ -5,7 +5,7 @@
   {% if user_id is none %}
     <li>You are currently logged out</li>
   {% else %}
-    <li><b>Greetings, {{username}}</li>
+    <li>Greetings, {{username}}</li>
   {% endif %}
 {% endblock %} 
 {% block head %}
@@ -34,10 +34,14 @@
             {% else %}
             <td> deactivated</td>
             {% endif %}
+            
         </tr>
     {% endfor %}
     </tbody>
-</table>
+</table> <br>
+<a href="{%  url 'admincustomerstates' %}"><i class=" material-icons small">map</i> View Customers By State </a> &nbsp; &nbsp; &nbsp; &nbsp;
+<a href="{%  url 'admincustomerrepeat' %}"><i class=" material-icons small">repeat</i> View Repeat Customers </a>
+
 <script type="text/javascript" src="{% static "js/jquery-3.3.1.js" %}"></script>
 <script type="text/javascript" src="{% static "js/materialize.min.js" %}"></script>
 <script type="text/javascript" src="{% static "js/books.js" %}"></script> 

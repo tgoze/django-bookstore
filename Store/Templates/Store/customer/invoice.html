@@ -6,9 +6,15 @@
 {% block head %}
 <link href="{% static "css/checkout.css" %}" type="text/css" rel="stylesheet">
 {% endblock %}
-
+{% block nav %}
+  {% if user_id is none %}
+    <li>You are currently logged out</li>
+  {% else %}
+    <li><b>Greetings, {{username}}</li>
+  {% endif %}
+{% endblock %} 
 {% block content %}
-
+<a href="{% url 'customeraccount' %}">{{username}}</a>
 <div id="invoice">
     <div class="invoice-header">
         <div class="row section">

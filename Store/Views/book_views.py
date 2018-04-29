@@ -304,12 +304,12 @@ class CusBookView(TemplateView):
     def get(self, request):
         if 'user_id' in request.session:
             books = self.book_dao.get_all()
-
+            username = request.session['username'] 
             context = {            
                 'user_id': request.session['user_id'],
                 'books': books
             }
-
+            context['username'] = request.session['username']
             return render(request, self.template_name, context)
         else:
             return redirect(reverse('login'))

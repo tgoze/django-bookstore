@@ -7,6 +7,9 @@
 {% endblock %}
 
 {% block content %}
+<h6>
+    <a href='{% url 'adminbookindex' %}'><i class=" material-icons medium">keyboard_return</i> Return to Books</a>
+</h6>
 <div class="section"></div>
 <div class="row">
     <div class="col s6">
@@ -160,7 +163,7 @@
         </div>
         <div class="modal-footer">
             <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
-            <button type="submit" class="modal-action waves-effect waves-green btn-flat" name="update-book" value="{{ book.bookID }}">Submit</button>
+            <button type="submit" class="modal-action waves-effect waves-green btn-flat" name="update-book" value="{{ book.bookID }}">Update</button>
         </div>
     </form>
 </div>

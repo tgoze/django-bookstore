@@ -27,7 +27,7 @@ class CartView(TemplateView):
         if 'user_id' in request.session:
             user_id = request.session['user_id']
             cart_items = self.cart_dao.get_all(user_id)
-            
+            username = request.session['username'] 
             cart_total = 0
             for item in cart_items:
                 cart_total += (item.book.inventory.retail_price * item.quantity_ordered)
@@ -35,7 +35,8 @@ class CartView(TemplateView):
             context['cart_items'] = cart_items
             context['cart_total'] = cart_total
             context['user_id'] = user_id
-
+            context['username'] = request.session['username']
+            context['username'] = request.session['username']
         else:
             return redirect(reverse('login'))
 
@@ -72,6 +73,7 @@ class ShipPayView(TemplateView):
         context = {}
         if 'user_id' in request.session:
             user_id = request.session['user_id']
+            username = request.session['username'] 
             cards =  self.payment_dao.get_by_customer_id(user_id)
             ship_addresses = self.customer_address_dao.get_by_customer_and_type(user_id, "Shipping")
 
@@ -91,6 +93,7 @@ class ShipPayView(TemplateView):
             context['shippay_form'] = shippay_form
             context['cards'] = cards            
             context['user_id'] = user_id
+            context['username'] = request.session['username']
         else:
             return redirect(reverse('login'))
 
@@ -98,7 +101,9 @@ class ShipPayView(TemplateView):
 
     def post(self, request):
         # Gets form data
+        context = {}
         user_id = request.session['user_id']
+        username = request.session['username'] 
         cards = self.payment_dao.get_by_customer_id(user_id)
         ship_addresses = self.customer_address_dao.get_by_customer_and_type(user_id, "Shipping")
 
@@ -125,7 +130,7 @@ class ShipPayView(TemplateView):
 
                 request.session['payment_choice'] = payment_choice_id
                 request.session['shipping_choice'] = shipping_choice_id                
-                        
+                context['username'] = request.session['username']
         return redirect(reverse('checkout'))
 
 
@@ -144,11 +149,12 @@ class CheckOutView(TemplateView):
                 payment_choice = self.payment_dao.get_byid(request.session['payment_choice'])
                 shipping_choice = self.customer_address_dao.get_byid(request.session['shipping_choice'])
                 cart_items = self.cart_dao.get_all(request.session['user_id'])
+                username = request.session['username'] 
 
                 cart_total = 0
                 for item in cart_items:
                     cart_total += (item.book.inventory.retail_price * item.quantity_ordered)
-
+                
                 context = {
                     'payment_choice': payment_choice,
                     'shipping_choice': shipping_choice,
@@ -156,6 +162,7 @@ class CheckOutView(TemplateView):
                     'cart_total': cart_total,
                     'user_id': request.session['user_id']
                 }
+                context['username'] = request.session['username']
             else:
                 return redirect(reverse('ship_pay'))
         else:
@@ -216,7 +223,7 @@ class InvoiceView(TemplateView):
                     'customer_info': customer_info,
                     'user_id': user_id
                 }
-
+                context['username'] = request.session['username']
             else:
                 return redirect(reverse('ship_pay'))
         else: 

@@ -6,9 +6,16 @@
 <link href="{% static "css/checkout.css" %}" type="text/css" rel="stylesheet">
 {% endblock %}
 
+{% extends 'Store/layout.html' %}
+{% load staticfiles %}
+{% load widget_tweaks %}
 {% block nav %}
-{% endblock %} 
-
+  {% if user_id is none %}
+    <li>You are currently logged out</li>
+  {% else %}
+    <li><b>Greetings, {{ username }}!</b></li>
+  {% endif %}
+  {% endblock %} 
 {% block content %}
 <h1 align="middle">Sup gets some books people</h1>
 <h1>  {{user_id}} </h1>

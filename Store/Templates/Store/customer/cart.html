@@ -6,7 +6,13 @@
 {% block head %}
 <link href="{% static "css/bookstyle.css" %}" type="text/css" rel="stylesheet">
 {% endblock %}
-
+{% block nav %}
+  {% if user_id is none %}
+    <li>You are currently logged out</li>
+  {% else %}
+    <li><b>Greetings, {{username}}</li>
+  {% endif %}
+{% endblock %} 
 {% block content %}
 <div class="section"></div>
 <div class="row">

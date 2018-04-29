@@ -11,5 +11,5 @@ class User:
         self.is_staff = None
         self.is_active = None
         self.date_joined = None
-
+        self.state_code = None
     
