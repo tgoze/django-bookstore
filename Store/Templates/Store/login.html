@@ -20,7 +20,7 @@
       <div class="card">
         <div class="card-content black-text">
           <span class="card-title">
-            <b>Sign in</b> {{text}}
+            <b>Sign in</b>
           </span>
           <div class="row">
             <div class="input-field col s8">
@@ -36,7 +36,8 @@
               {{ loginform.password }}
             </div>
           </div>
-        </div>
+          <h6 class="red-text">{{ login_error }}</h6>
+        </div>        
         <div class="card-action">          
           <button type="submit" class="modal-action waves-effect waves-green btn-flat" name="login-user">Login</button>
         </div>

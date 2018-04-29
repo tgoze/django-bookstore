@@ -90,7 +90,7 @@ class LoginView(TemplateView):
                     context = {
                         'loginform': loginform,
                         'registerform': registerform,   
-                        'text': 'Either username or password is incorrect'        
+                        'login_error': 'Either username or password is incorrect'        
                     }          
                     return render(request, self.template_name, context)
                 
