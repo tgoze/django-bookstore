@@ -50,6 +50,7 @@ class AdminGenreIndexView(TemplateView):
         context = {}
         if 'create-genre' in request.POST:
             if agenre.is_valid():
+                genre = Genre()
                 genre.genre = agenre.cleaned_data['genre']                
                 self.gdao.create(genre) 
                 context['user_id'] = request.session['user_id'],

@@ -1,4 +1,4 @@
-{% extends 'Store/layout.html' %}
+{% extends 'Store/layoutadmin.html' %}
 {% load staticfiles %}
 {% load widget_tweaks %}
 {% block nav %}
@@ -12,10 +12,11 @@
 <link href="{%  static "css/bookstyle.css" %}" type="text/css" rel="stylesheet">
 {% endblock %}
 {% block content %}
-<h6>
-<a href='{% url 'adminindex' %}'><i class=" material-icons medium">keyboard_return</i> Return to Admin Management</a>
-</h6>
-<h4>Customers</h4>
+<ul id="dropdown2" class="dropdown-content">
+        <li><a href="{%  url 'admincustomerstates' %}">  Customers By State</a></li>
+        <li><a href="{%  url 'admincustomerrepeat' %}">  Repeat Customers </a></li>
+      </ul>
+<h4><a style="color: black" class="dropdown-trigger" href="#!" data-target="dropdown2">All Customers<i class="material-icons right">arrow_drop_down</i></a></h4>
 <table>
     <thead>
         <tr>
@@ -39,8 +40,7 @@
     {% endfor %}
     </tbody>
 </table> <br>
-<a href="{%  url 'admincustomerstates' %}"><i class=" material-icons small">map</i> View Customers By State </a> &nbsp; &nbsp; &nbsp; &nbsp;
-<a href="{%  url 'admincustomerrepeat' %}"><i class=" material-icons small">repeat</i> View Repeat Customers </a>
+
 
 <script type="text/javascript" src="{% static "js/jquery-3.3.1.js" %}"></script>
 <script type="text/javascript" src="{% static "js/materialize.min.js" %}"></script>

@@ -1,4 +1,4 @@
-{% extends 'Store/layout.html' %}
+{% extends 'Store/layoutadmin.html' %}
 {% load staticfiles %}
 {% load widget_tweaks %}
 {% block nav %}
@@ -12,10 +12,12 @@
 <link href="{%  static "css/bookstyle.css" %}" type="text/css" rel="stylesheet">
 {% endblock %}
 {% block content %}
-<h6>
-<a href='{% url 'admincustomerindex' %}'><i class=" material-icons medium">keyboard_return</i> Return to Customers</a>
-</h6>
-<h4>Customers</h4>
+<ul id="dropdown2" class="dropdown-content">
+        <li><a href="{% url 'admincustomerindex' %}"> All Customers</a></li>
+        <li><a href="{%  url 'admincustomerstates' %}">  Customers By State</a></li>
+      </ul>
+<h4><a style="color: black" class="dropdown-trigger" href="#!" data-target="dropdown2">Repeat Customers</a></h4>
+
 <table>
     <thead>
         <tr>

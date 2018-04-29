@@ -188,6 +188,7 @@ class AdminBookDetailView(TemplateView):
                 self.image_dao.create(image)
 
                 context['notification'] = filename
+                return redirect(reverse(('adminbookdetail'), kwargs={'book_id': book_id}))
             else:
                 context['notification'] = "Not a valid submission."
 

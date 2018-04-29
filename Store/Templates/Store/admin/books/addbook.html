@@ -1,4 +1,4 @@
-{% extends 'Store/layout.html' %}
+{% extends 'Store/layoutadmin.html' %}
 {% load staticfiles %}
 {% load widget_tweaks %}
 {% block nav %}
@@ -10,9 +10,7 @@
 {% endblock %} 
 
 {% block content %}
-<h6>
-    <a href='{% url 'adminbookindex' %}'><i class=" material-icons medium">keyboard_return</i> Return to Books</a>
-</h6>
+
 
 <form method="POST" class="col s12">
     {% csrf_token %}

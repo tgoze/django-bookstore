@@ -1,4 +1,4 @@
-{% extends 'Store/layout.html' %}
+{% extends 'Store/layoutadmin.html' %}
 {% load staticfiles %}
 {% load widget_tweaks %}
 {% block head %}
@@ -13,9 +13,7 @@
 {% endblock %} 
 
 {% block content %}
-<h6>
-    <a href='{% url 'adminauthorindex' %}'><i class=" material-icons medium">keyboard_return</i> Return to Authors</a>
-</h6>
+
 <h4>{{author.first_name}} {{author.last_name}} 
 <a class='modal-trigger' href='#updateauthor'><i class="material-icons">edit</i></a>
 <a class='modal-trigger' href='#deleteauthor'><i class="material-icons">delete</i></a>

@@ -65,6 +65,7 @@ class RetailOrderDao(AbcDao):
                     order.customer = udao.get_byid(x[4])
                     order.shipping_address = cadao.get_byid(x[5])
                     order.card = pdao.get_byid(x[6])
+                    order.status = x[7]
                     
 
             # Close the connection to the DB
@@ -103,6 +104,46 @@ class RetailOrderDao(AbcDao):
                     order.customer = udao.get_byid(x[4])
                     order.shipping_address = cadao.get_byid(x[5])
                     order.card = pdao.get_byid(x[6])
+                    order.status = x[7]
+                    orders.append(order)
+
+            # Close the connection to the DB
+            cursor.close()
+            conn.close()
+        except Error as error:
+            print(error)
+        except Exception as e:
+            print(e)
+
+        return orders
+    
+    def getAllCancelledOrders(self):
+        orders = []
+        try:
+            # Setup connection to the DB
+            db_config = read_db_config()
+            conn = MySQLConnection(**db_config)
+            cursor = conn.cursor()
+            
+            udao = UserDao()
+            cadao = CustomerAddressDao()
+            pdao = PaymentInfoDao()
+            # Calls the stored procedure
+            cursor.callproc('getAllCancelledOrders')         
+            
+            # This loop iterates through the resultsets
+            for result in cursor.stored_results():
+                # This loop iterates through the rows in each resultset
+                for x in result.fetchall():
+                    order = RetailOrder()
+                    order.order_id = x[0]
+                    order.date_ordered =x[1]
+                    order.total_price = x[2]
+                    order.discount = x[3]
+                    order.customer = udao.get_byid(x[4])
+                    order.shipping_address = cadao.get_byid(x[5])
+                    order.card = pdao.get_byid(x[6])
+                    order.status = x[7]
                     orders.append(order)
 
             # Close the connection to the DB
@@ -141,6 +182,7 @@ class RetailOrderDao(AbcDao):
                     order.customer = udao.get_byid(x[4])
                     order.shipping_address = cadao.get_byid(x[5])
                     order.card = pdao.get_byid(x[6])
+                    order.status = x[7]
                     orders.append(order)
             # Close the connection to the DB
             cursor.close()
@@ -152,10 +194,102 @@ class RetailOrderDao(AbcDao):
 
         return orders
 
-    def update(self):
-        raise NotImplementedError
+    def update(self, order_id):
+        try:
+            db_config = read_db_config()        
+            conn = MySQLConnection(**db_config)
+            cursor = conn.cursor()
+            
+            # Create an order in the retail order table of the DB
+            args = [order_id]
+                    
+            cursor.callproc('CancelOrder', args)
+            conn.commit()
+
+            cursor.close()
+            conn.close()
+        except Error as error:
+            print(error)
+        except Exception as e:
+            print(e)
 
     def delete(self):
         raise NotImplementedError
     
+    def getOrdersByCardID(self,card_id):
+        orders = []
+        try:
+            # Setup connection to the DB
+            db_config = read_db_config()
+            conn = MySQLConnection(**db_config)
+            cursor = conn.cursor()
+
+            args = [card_id]
+            # Calls the stored procedure
+            cursor.callproc('getOrdersByCardID', args)         
+            udao = UserDao()
+            cadao = CustomerAddressDao()
+            pdao = PaymentInfoDao()
+            # This loop iterates through the resultsets
+            for result in cursor.stored_results():
+                # This loop iterates through the rows in each resultset
+                for x in result.fetchall():
+                    order = RetailOrder()
+                    order.order_id = x[0]
+                    order.date_ordered =x[1]
+                    order.total_price = x[2]
+                    order.discount = x[3]
+                    order.customer = udao.get_byid(x[4])
+                    order.shipping_address = cadao.get_byid(x[5])
+                    order.card = pdao.get_byid(x[6])
+                    order.status = x[7]
+                    orders.append(order)
+            # Close the connection to the DB
+            cursor.close()
+            conn.close()
+        except Error as error:
+            print(error)
+        except Exception as e:
+            print(e)
+
+        return orders
+    
+    def getOrdersByShippingAddressID(self,addresss_id):
+        orders = []
+        try:
+            # Setup connection to the DB
+            db_config = read_db_config()
+            conn = MySQLConnection(**db_config)
+            cursor = conn.cursor()
+
+            args = [addresss_id]
+            # Calls the stored procedure
+            cursor.callproc('getOrdersByShippingAddressID', args)         
+            udao = UserDao()
+            cadao = CustomerAddressDao()
+            pdao = PaymentInfoDao()
+            # This loop iterates through the resultsets
+            for result in cursor.stored_results():
+                # This loop iterates through the rows in each resultset
+                for x in result.fetchall():
+                    order = RetailOrder()
+                    order.order_id = x[0]
+                    order.date_ordered =x[1]
+                    order.total_price = x[2]
+                    order.discount = x[3]
+                    order.customer = udao.get_byid(x[4])
+                    order.shipping_address = cadao.get_byid(x[5])
+                    order.card = pdao.get_byid(x[6])
+                    order.status = x[7]
+                    orders.append(order)
+            # Close the connection to the DB
+            cursor.close()
+            conn.close()
+        except Error as error:
+            print(error)
+        except Exception as e:
+            print(e)
+
+        return orders
+                                
     

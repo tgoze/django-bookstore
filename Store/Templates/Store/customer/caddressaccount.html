@@ -52,8 +52,38 @@
         </div> 
     </div>
     </div>
-    {% endif %}
+    
+    {% elif address.address_type == 'Shipping' %}
+    <div class="col s12 m6">
+        <div class="card">
+          <div class="card-content">
+              <span class="card-title align=center"><h4>Orders Shipped to Address </h4></span>
+              <table>
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Total Price</th>
+                        <th> Date Ordered </th>
+                    </tr>
+                </thead>
+                <tbody>
+                        {% for order in orders %}
+                        <tr>
+                            <td><a href="{% url 'customerorder' order.order_id %}" >{{ order.order_id }}</a></td>       
+                            <td>{{ order.total_price}}</td> 
+                            <td>{{ order.date_ordered}}</td>           
+                        </tr>
+                        {% endfor %}
+                    </form>           
+                </tbody>
+            </table>
+              
+          </div>
+        </div>
+        </div>
+        {% endif %}
 </div>
+
 <div id="editAddress" class="modal">
     <form method="POST" class="col s6" >
     {% csrf_token %} 

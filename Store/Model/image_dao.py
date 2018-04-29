@@ -1,6 +1,7 @@
 from Store.Model.abc_dao import AbcDao
 from Store.Model.image import Image
-
+from Store.Model.book import Book
+from Store.Model.inventory import Inventory
 from Store.Model.dbconfig import read_db_config
 from mysql.connector import MySQLConnection, Error
 
@@ -55,8 +56,39 @@ class ImageDao(AbcDao):
 
         return images
 
-    def get_all(self, book_id):
-        raise NotImplementedError
+    def get_all(self):
+        images = []
+        try:
+            # Setup connection to the DB
+            db_config = read_db_config()
+            conn = MySQLConnection(**db_config)
+            cursor = conn.cursor()
+
+            # Calls the stored procedure
+            cursor.callproc('getAllImages')         
+            
+            # This loop iterates through the resultsets
+            for result in cursor.stored_results():
+                # This loop iterates through the rows in each resultset
+                for image_row in result.fetchall():
+                    image = Image()
+                    image.image_id = image_row[0]
+                    image.image_url = image_row[1]
+                    image.caption = image_row[2]
+                    image.book_id = image_row[3]
+                    image.title = image_row[4]
+                    image.retail_price = image_row[5]
+                    images.append(image)
+
+            # Close the connection to the DB
+            cursor.close()
+            conn.close()
+        except Error as error:
+            print(error)
+        except Exception as e:
+            print(e)
+
+        return images
 
     def update(self):
         raise NotImplementedError

@@ -1,0 +1,82 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="{% static "css/materialize.min.css" %}" type="text/css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="{% static "css/mainstyle.css" %}" type="text/css" rel="stylesheet">
+
+    {% block head %}
+    {% endblock %}
+    <title>Bookish</title>
+</head>
+<body>
+    <header>
+            
+            <ul id="dropdown1" class="dropdown-content">
+                    <li><a href="{% url 'adminbookindex' %}"> BOOKS</a></li>
+                    <li><a href="{% url 'admincustomerindex' %}"> CUSTOMERS</a></li>
+                    <li><a href="{% url 'adminorderindex' %}"> ORDERS</a></li>
+                    <li><a href="{% url 'admininventoryindex' %}"> INVENTORY</a></li>
+                    <li> <a href="{% url 'admingenreindex' %}"> GENRES </a></li>
+                    <li><a href="{% url 'adminpublisherindex' %}">PUBLISHERS</a></li>
+                    <li> <a href="{% url 'adminauthorindex' %}">AUTHORS</a></li>
+                    <li><a href="{% url 'adminreportindex' %}">REPORTS</a></li>
+                  </ul>
+        
+        <nav class="extended">
+            <div class="nav-wrapper teal">
+            <a href="{% url 'home' %}" class="brand-logo">Bookish</a>
+            <ul id="nav-mobile" class="right hide-on-med-and-down">                        
+                {% if user_id %}
+                    <li>{{username}}</li>
+                    <li><a class="dropdown-trigger" href="{% url 'adminindex' %}" data-target="dropdown1">Admin Management</a></li>                
+                    <li><a href="{% url 'login' %}">Logout</a></li>
+                {% else %}
+                    <li><a href="login">Login</a></li>            
+                {% endif %}              
+            </ul>
+            </div>
+            {% block nav %}
+            
+            {% endblock %}
+        </nav>
+       
+    </header>
+    <main>
+        <div class="container">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </main>
+    <footer class="page-footer teal">
+        <div class="container">
+            <div class="row">
+            <div class="col l6 s12">
+            
+                <h5 class="white-text">Feeling bookish?</h5>
+                <p class="grey-text text-lighten-4">Get some high quality books from the best</p>
+            </div>
+            <div class="col l4 offset-l2 s12">
+                <h5 class="white-text">Information</h5>
+                <ul>
+                <li><a class="grey-text text-lighten-3" href="#!">Contact us</a></li>                
+                </ul>
+            </div>
+            </div>
+        </div>
+        <div class="footer-copyright teal darken-1">
+            <div class="container">
+            © 2018 Bookish Books
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
+<script type="text/javascript" src="{% static "js/jquery-3.3.1.js" %}"></script>
+<script type="text/javascript" src="{% static "js/materialize.min.js" %}"></script>
+<script type="text/javascript" src="{% static "js/books.js" %}"></script>

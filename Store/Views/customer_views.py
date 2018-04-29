@@ -76,6 +76,7 @@ class CustomerAccountView(TemplateView):
         caddress = self.cadao.get_all_addresses_by_customer_id(user_id)
         payment = self.pdao.get_by_customer_id(user_id)
         orders = self.odao.getOrdersByCustomerID(user_id)
+        
         initial_data = {
             'first_name': customer.user.first_name,
             'last_name': customer.user.last_name,
@@ -175,6 +176,7 @@ class CAddressAccountView(TemplateView):
     cadao = CustomerAddressDao()
     customer = CustomerAddress()
     padao = PaymentInfoDao()
+    rdao = RetailOrderDao()
     template_name = 'Store/customer/caddressaccount.html' 
     @never_cache
     def get(self,request,address_id):
@@ -182,7 +184,7 @@ class CAddressAccountView(TemplateView):
         username = request.session['username'] 
         address = self.cadao.get_byid(address_id) 
         payment = self.padao.get_by_address_id(address_id,user_id)
-
+        orders = self.rdao.getOrdersByCardID(address_id)
         initial_data = {
             'street': address.street,
             'city': address.city,
@@ -199,7 +201,8 @@ class CAddressAccountView(TemplateView):
             'eaddress': eaddress,
             'payment': payment,
             'apayment': apayment,
-            'daddress': daddress
+            'daddress': daddress,
+            'orders': orders
         }
 
         context['user_id'] = request.session['user_id'],
@@ -264,14 +267,14 @@ class CustomerCardView(TemplateView):
     udao = UserDao()
     pdao = PaymentInfoDao()
     cadao = CustomerAddressDao()
-
+    rdao = RetailOrderDao()
     @never_cache
     def get(self,request,card_id):
         user_id = request.session['user_id']
         username = request.session['username'] 
-
+        
         card = self.pdao.get_byid(card_id)
-
+        orders = self.rdao.getOrdersByCardID(card_id)
         intitial_data = {
             'street': card.billing_address.street,
             'city': card.billing_address.city,
@@ -282,7 +285,8 @@ class CustomerCardView(TemplateView):
     
         context = {
             'card': card,
-            'eaddress': eaddress
+            'eaddress': eaddress,
+            'orders': orders
         }
 
         context['username'] = username
@@ -409,13 +413,29 @@ class CustomerOrderView(TemplateView):
     def get(self, request, order_id):
         order = self.odao.get_byid(order_id)
         bookorder = self.bodao.get_byid(order_id)
-       
+        
         context = {
             'order': order,
             'bookorder':bookorder
         }
         user_id =  request.session['user_id'] 
         username = request.session['username'] 
-        context['user_id'] = user_id
-        context['username'] = username
+        context['user_id'] = request.session['user_id']
+        context['username'] = request.session['username']
         return render(request, self.template_name, context)
+    
+    @never_cache
+    def post(self,request, order_id):
+        user_id =  request.session['user_id'] 
+        username = request.session['username'] 
+        context = {}
+        if 'cancel-order' in request.POST:
+            self.odao.update(order_id)
+            context['user_id'] = request.session['user_id']
+            context['username'] = request.session['username']
+            return redirect(reverse('customeraccount'))
+        else:
+            context['user_id'] = request.session['user_id']
+            context['username'] = request.session['username']
+            return redirect(reverse('customeraccount'))
+            
