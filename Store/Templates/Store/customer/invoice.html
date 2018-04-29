@@ -7,131 +7,138 @@
 <link href="{% static "css/checkout.css" %}" type="text/css" rel="stylesheet">
 {% endblock %}
 
-{% block content %}
+{% block nav %}
+  {% if user_id is none %}
+    <li>You are currently logged out</li>
+  {% else %}
+    <li>Greetings, {{username}}</li>
+  {% endif %}
+{% endblock %} 
 
-<div id="invoice">
+{% block content %}
+<div id="invoice" class="section">
     <div class="invoice-header">
         <div class="row section">
-        <div class="col s12 m6 l6">
-            <h6>Bookish</h6>
-            <p>To,
-            <br/>
-            <span class="strong">{{ customer_info.first_name }} {{ customer_info.last_name }}</span>
-            <br/>
-            <span>{{ payment_choice.billing_address.street }}</span>
-            <br/>
-            <span>{{ payment_choice.billing_address.city }}, {{ payment_choice.billing_address.state_code }} {{ payment_choice.billing_address.zip_code }}</span>
-            <br/>
-            <span>{{ customer_info.work_phone}}</span>
-            </p>
-        </div>
-
-        <div class="col s12 m6 l6">
-            <div class="invoce-company-address right-align">
-            <span class="invoice-icon"><i class="mdi-social-location-city orange-text"></i></span>
-
-            <p><span class="strong">Bookish Company</span>
-                <br/>
-                <span>125, ABC Street,</span>
-                <br/>
-                <span>New Yourk, USA</span>
-                <br/>
-                <span>+91-(444)-(333)-(221)</span>
-            </p>
+            <div class="invoice-lable">
+                <div class="row">
+                    <div class="col s12 m3 l3">
+                        <h4 class="orange-text">Invoice</h4>
+                    </div>                    
+                    <div class="col s12 m3 l3">
+                        <p class="strong">Total Due:</p>
+                        {% if discounted_price %}
+                        <h5 class="header">${{ discounted_price }}</h5>
+                        {% else %}
+                        <h5 class="header">${{ order.total_price }}</h5>
+                        {% endif %}
+                    </div>
+                    <div class="col s12 m3 l3">
+                        <p class="strong">Invoice No:</p>
+                        <h5 class="header">{{ order.order_id }}</h5>
+                    </div>
+                    <div class="col s12 m3 l3">
+                        <p class="strong">Date Ordered:</p>
+                        <h5 class="header">{{ order.date_ordered }}</h5>
+                    </div>                      
+                </div>
             </div>
-
-            <div class="invoce-company-contact right-align">
-            <span class="invoice-icon"><i class="mdi-communication-quick-contacts-mail orange-text"></i></span>
-            <p><span class="strong">www.bookish.com</span>
-                <br/>
-                <span>customerSupport@bookish.com</span>                
-            </p>
+            <div class="col s12 m6 l6">
+                <p>                                
+                    <br/>
+                    <span class="strong">{{ order.customer.first_name }} {{ order.customer.last_name }}</span>
+                    <br/>
+                    <span>{{ order.card.billing_address.street }}</span>
+                    <br/>
+                    <span>{{ order.card.billing_address.city }}, {{ order.card.billing_address.state_code }} {{ order.card.billing_address.zip_code }}</span>
+                    <br/>
+                    <span>{{ order.customer.work_phone}}</span>
+                </p>
             </div>
+            <div class="col s12 m6 l6">
+                <div class="right-align">                    
+                    <p>
+                        <span class="strong">Bookish Company</span>
+                        <br/>
+                        <span>125, ABC Street</span>
+                        <br/>
+                        <span>New York, NY 10010</span>
+                        <br/>
+                        <span>+1 (800) 722-1020</span>
+                    </p>
+                </div>
 
-        </div>
+                <div class="invoce-company-contact right-align">            
+                    <p>
+                        <span class="strong">www.bookish.com</span>
+                        <br/>
+                        <span>customerSupport@bookish.com</span>                
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
-
-    <div class="invoice-lable">
-        <div class="row">
-        <div class="col s12 m3 l3 orange">
-            <h4 class="white-text invoice-text">INVOICE</h4>
-        </div>
-        <div class="col s12 m9 l9 invoice-brief orange white-text">
-            <div class="row">
-            <div class="col s12 m3 l3">
-                <p class="strong">Total Due</p>
-                <h4 class="header">$ 3,600.00</h4>
-            </div>
-            <div class="col s12 m3 l3">
-                <p class="strong">Invoice No</p>
-                <h4 class="header">MT_A_124563</h4>
-            </div>
-            <div class="col s12 m3 l3">
-                <p class="strong">Due Date</p>
-                <h4 class="header">22.05.2015</h4>
-            </div>
-            </div>
-        </div>
-        </div>
-    </div>
-
     <div class="invoice-table">
         <div class="row">
-        <div class="col s12 m12 l12">
-            <table class="striped">
-            <thead>
-                <tr>
-                <th data-field="no">No</th>
-                <th data-field="item">Book</th>
-                <th data-field="uprice">Unit Price</th>
-                <th data-field="price">Unit</th>
-                <th data-field="price">Total</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for item in cart_items %}
-                <tr>
-                    <td>{{ forloop.counter }}.</td>
-                    <td>{{ item.book.title }}</td>                            
-                    <td class="grey-text">${{ item.book.inventory.retail_price }}</td>                            
-                    <td>{{ item.quantity_ordered }}</td>
-                    <td>${% multiply item.quantity_ordered item.book.inventory.retail_price %}</td>                                       
-                </tr>                                                                                                                                     
-                {% endfor %} 
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>                                                
-                    <td>Subtotal:</td>
-                    <td><h6>${{ cart_total }}</h6></td>                        
-                </tr>            
-            </tbody>
-            </table>
-        </div>
-        
+            <div class="col s12 m12 l12">
+                <table class="striped">
+                <thead>
+                    <tr>
+                    <th data-field="no">No</th>
+                    <th data-field="item">Book</th>
+                    <th data-field="uprice">Unit Price</th>
+                    <th data-field="price">Unit</th>
+                    <th data-field="price">Total</th>
+                    </tr>
+                </thead>                      
+                <tbody>
+                    {% for book in books %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ book.book.title }}</td> 
+                        <td>{{ book.book.inventory.retail_price }}</td>
+                        <td>{{ book.quantity }}</td>
+                        <td>{% multiply book.book.inventory.retail_price book.quantity %}</td>                            
+                    </tr>
+                    {% endfor %}                 
+                    {% if discount_price %}
+                    <tr>
+                        <td></td>                                                                        
+                        <td></td>
+                        <td></td>
+                        <td><b>Subtotal:</b></td>
+                        <td><h6 class="grey-text strike">${{ order.total_price }}</h6></td>
+                    </tr>
+                    <tr>
+                        <td></td>                                                                        
+                        <td></td>
+                        <td></td>
+                        <td><b>Discounted Price:</b></td>
+                        <td><h6>${{ discount_price }}</h6></td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td></td>                                                
+                        <td></td>
+                        <td></td>
+                        <td><b>Subtotal:</b></td>
+                        <td><h6>${{ order.total_price }}</h6></td>
+                    </tr>                
+                    {% endif %}
+                </tbody>
+                </table>
+            </div>
         </div>
     </div>
-    
     <div class="invoice-footer">
-        <div class="row">
-        <div class="col s12 m6 l6">
-            <p class="strong">Payment Method</p>
-            <p>Please make the cheque to: AMANDA ORTON</p>
-            <p class="strong">Terms & Condition</p>
-            <ul>
-            <li>You know, being a test pilot isn't always the healthiest business in the world.</li>
-            <li>We predict too much for the next year and yet far too little for the next 10.</li>
-            </ul>
-        </div>
-        <div class="col s12 m6 l6 center-align">
-            <p>Approved By</p>
-            <img src="images/signature-scan.png" alt="signature">
-            <p class="header">AMANDA ORTON</p>
-            <p>Managing Director</p>
-        </div>
+        <div class="row section">
+            <div class="col s12 m6 l6">            
+                <b>Terms & Conditions</b>
+                <ul>
+                    <li>Bookish books is not liable for any damage to product(s) during shipment.</li>
+                    <li>Deal with it.</li>
+                </ul>
+            </div>        
         </div>
     </div>
-    
-    </div>
+</div>
 {% endblock %}

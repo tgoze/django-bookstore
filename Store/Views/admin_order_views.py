@@ -35,6 +35,33 @@ class AdminOrderView(TemplateView):
     @never_cache
     def get(self,request):
         orders = self.odao.get_all()
+        
+        context = {
+            'orders': orders
+        }
+        user_id =  request.session['user_id'] 
+        username = request.session['username'] 
+        context['user_id'] = request.session['user_id']
+        context['username'] = request.session['username']
+        return render(request,self.template_name, context) 
+    
+    @never_cache
+    def post(self,request):
+        context={}
+        user_id =  request.session['user_id'] 
+        username = request.session['username'] 
+        context['user_id'] = request.session['user_id']
+        context['username'] = request.session['username']
+        return render(request,self.template_name, context) 
+
+class AdminCancelledOrderView(TemplateView):
+    template_name = 'Store/admin/orders/cancelled.html'
+    odao = RetailOrderDao()
+
+    @never_cache
+    def get(self,request):
+        orders = self.odao.getAllCancelledOrders()
+        
         context = {
             'orders': orders
         }

@@ -1,20 +1,18 @@
-{% extends 'Store/layout.html' %}
+{% extends 'Store/layoutadmin.html' %}
 {% load staticfiles %}
 {% load widget_tweaks %}
 {% block nav %}
   {% if user_id is none %}
     <li>You are currently logged out</li>
   {% else %}
-    <li><b>Greetings, {{username}}</li>
+    <li>Greetings, {{username}}</li>
   {% endif %}
 {% endblock %} 
 {% block head %}
 
 {% endblock %}
 {% block content %}
-<h6>
-    <a href='{% url 'adminindex' %}'><i class=" material-icons medium">keyboard_return</i> Return to Admin Management</a>
-</h6>
+
 <h4>Authors</h4>
 <table>
     <thead>

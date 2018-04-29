@@ -48,14 +48,14 @@ class BookDao(AbcDao):
             conn.close()
 
 
-    def get_byid(self, book_id):    
+    def get_byid(self,book_id):    
         book = Book()
         try:
             db_config = read_db_config()
             conn = MySQLConnection(**db_config)
             cursor = conn.cursor()
 
-            args = (book_id,)
+            args = [book_id]
             cursor.callproc('getBookByID', args)                
             # This gets the first resultset
             result = next(cursor.stored_results())

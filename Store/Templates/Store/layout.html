@@ -16,7 +16,8 @@
 </head>
 <body>
     <header>
-        <nav class="extended">
+        <div class="navbar-fixed">
+        <nav class="extended ">
             <div class="nav-wrapper teal">
             <a href="{% url 'home' %}" class="brand-logo">Bookish</a>
             <ul id="nav-mobile" class="right hide-on-med-and-down">                        
@@ -30,8 +31,10 @@
             </ul>
             </div>
             {% block nav %}
+            
             {% endblock %}
         </nav>
+        </div>
     </header>
     <main>
         <div class="container">
@@ -43,6 +46,7 @@
         <div class="container">
             <div class="row">
             <div class="col l6 s12">
+            
                 <h5 class="white-text">Feeling bookish?</h5>
                 <p class="grey-text text-lighten-4">Get some high quality books from the best</p>
             </div>
@@ -57,6 +61,7 @@
         <div class="footer-copyright teal darken-1">
             <div class="container">
             © 2018 Bookish Books
+           
             </div>
         </div>
     </footer>

@@ -7,11 +7,37 @@
 {% endblock %}
 
 {% block nav %}
-{% endblock %} 
-
+  {% if user_id is none %}
+    <li>You are currently logged out</li>
+  {% else %}
+    <li><b>Greetings, {{ username }}!</b></li>
+  {% endif %}
+  {% endblock %} 
 {% block content %}
-<h1 align="middle">Sup gets some books people</h1>
-<h1>  {{user_id}} </h1>
-<form request="POST">
-</form>
+
+<div class="row">
+{% for image in images %}
+  <div class="col s4">
+      <a style='color:black' href="{% url 'customer_book' image.book_id %}">
+    <div class="card horizontal ">
+      <div class="card-image">
+          <img src="{{ image.image_url }}">
+      </div>
+      <div class="card-content">
+          <dl>
+            <dt><b>{{image.title}}</b></dt>
+            <dd>${{image.retail_price}}</dd>
+          </dl>
+        </div>
+    </div>  
+    </a>        
+  </div>
+{% if forloop.counter|divisibleby:3 %}
+</div>
+<div class="row">
+{% endif %}
+{% endfor %}
+</div>
 {% endblock %}
+
+       

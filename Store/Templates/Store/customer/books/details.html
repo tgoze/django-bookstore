@@ -33,13 +33,12 @@
                     <form method="POST" class="col s12">
                         {% csrf_token %}
                         {{ cart_form.non_field_errors }}                    
-                        <h5 class="col s7">
+                        <h5 class="col s8">
                             ${{ book.inventory.retail_price }}
                         </h5>
-                        <div class="input-field col s3">
-                            {{ cart_form.quantity_ordered.errors }}
-                            <label for="{{ cart_form.quantity_ordered.id_for_label }}">Quantity</label> 
-                            {{ cart_form.quantity_ordered }}     
+                        <div class="input-field col s2">
+                            {{ cart_form.qty_choices.errors }}                        
+                            {{ cart_form.qty_choices }}     
                         </div>                                                    
                         <div class="col s2">                    
                             <button type="submit" class="btn-floating btn-large" name="add-cart">

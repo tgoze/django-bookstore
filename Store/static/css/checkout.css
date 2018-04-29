@@ -18,3 +18,7 @@
 .card-item {
     height: 60px;
 }
+
+.strike {
+    text-decoration: line-through;
+}

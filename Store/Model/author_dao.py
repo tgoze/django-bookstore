@@ -127,3 +127,57 @@ class AuthorDao(AbcDao):
             print(error)
         except Exception as e:
             print(e)
+    
+    def getTotalAuthorRevenueByAuthorID(self, author_id):
+        try:
+            totalSum = None
+            # Setup connection to the DB
+            db_config = read_db_config()
+            conn = MySQLConnection(**db_config)
+            cursor = conn.cursor()
+            args = [author_id]
+            # Calls the stored procedure
+            cursor.callproc('getTotalAuthorRevenueByAuthorID',args)         
+            
+            # This loop iterates through the resultsets
+            for result in cursor.stored_results():
+                # This loop iterates through the rows in each resultset
+                for x in result.fetchall():
+                    totalSum = x[0]
+
+            # Close the connection to the DB
+            cursor.close()
+            conn.close()
+        except Error as error:
+            print(error)
+        except Exception as e:
+            print(e)
+
+        return totalSum
+    
+    def getTotalInventoryByAuthorID(self, author_id):
+        try:
+            totalSum = None
+            # Setup connection to the DB
+            db_config = read_db_config()
+            conn = MySQLConnection(**db_config)
+            cursor = conn.cursor()
+            args = [author_id]
+            # Calls the stored procedure
+            cursor.callproc('getTotalInventoryByAuthorID',args)         
+            
+            # This loop iterates through the resultsets
+            for result in cursor.stored_results():
+                # This loop iterates through the rows in each resultset
+                for x in result.fetchall():
+                    totalSum = x[0]
+
+            # Close the connection to the DB
+            cursor.close()
+            conn.close()
+        except Error as error:
+            print(error)
+        except Exception as e:
+            print(e)
+
+        return totalSum

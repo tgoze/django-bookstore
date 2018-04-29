@@ -1,0 +1,220 @@
+{% extends 'Store/layoutadmin.html' %}
+{% load staticfiles %}
+{% load widget_tweaks %}
+{% block nav %}
+  {% if user_id is none %}
+    <li>You are currently logged out</li>
+  {% else %}
+    <li><b>Greetings, {{username}}</li>
+  {% endif %}
+{% endblock %} 
+
+{% block content %}
+
+
+<form method="POST" class="col s12">
+    {% csrf_token %}
+    {{ book_form.non_field_errors }}            
+    
+        <h4>Add Book</h4>
+        <div class="row section">            
+            <div class="row">
+                <div class="input-field col s6">
+                    {{ book_form.title.errors }}
+                    <label for="{{ book_form.title.id_for_label }}">Book Title</label>
+                    {{ book_form.title }}
+                </div>
+                <div class="input-field col s5">                
+                    {{ book_form.authors.errors }}
+                    {{ book_form.authors }}
+                    <label>Author</label>
+                </div>
+                <div class="col s1">
+                    <a href="#addauthor" class="addbtn btn-floating btn-small waves-effect modal-trigger"><i class="material-icons">add</i></a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s6">
+                    {{ book_form.isbn10.errors }}
+                    <label for="{{ book_form.isbn10.id_for_label }}">ISBN10</label>
+                    {{ book_form.isbn10 }}
+                </div>
+                <div class="input-field col s6">
+                    {{ book_form.isbn13.errors }}
+                    <label for="{{ book_form.isbn13.id_for_label }}">ISBN13</label>
+                    {{ book_form.isbn13 }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s4">
+                    {{ book_form.copyright_date.errors }}
+                    <label for="{{ book_form.copyright_date.id_for_label }}">Copyright Date</label>
+                    {{ book_form.copyright_date|add_class:"datepicker" }}
+                </div>
+                <div class="input-field col s4">
+                    {{ book_form.edition.errors }}
+                    <label for="{{ book_form.edition.id_for_label }}">Edition</label>
+                    {{ book_form.edition }}
+                </div>
+                <div class="input-field col s3">
+                    {{ book_form.publishers.errors }}
+                    {{ book_form.publishers }}
+                    <label>Publisher</label>
+                </div>
+                <div class="col s1">
+                    <a href="#addpublisher" class="addbtn btn-floating btn-small waves-effect modal-trigger"><i class="material-icons">add</i></a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s4">
+                    {{ book_form.book_type.errors }}
+                    <label for="{{ book_form.book_type.id_for_label }}">Book Type</label>
+                    {{ book_form.book_type }}
+                </div>
+                <div class="input-field col s4">
+                    {{ book_form.num_pages.errors }}
+                    <label for="{{ book_form.num_pages.id_for_label }}">Number of Pages</label>
+                    {{ book_form.num_pages }}
+                </div>                    
+                <div class="input-field col s3">
+                    {{ book_form.genres.errors }}
+                    {{ book_form.genres }}                        
+                    <label>Genre</label>
+                </div>
+                <div class="col s1">                        
+                    <a href="#addgenre" class="addbtn btn-floating btn-small waves-effect modal-trigger"><i class="material-icons">add</i></a>
+                </div>
+            </div>                                
+        </div>            
+        <h6>Inventory Information</h6>
+        <div class="divider"></div>
+        <div class="row section">
+            <div class="input-field col s4">
+                {{ book_form.quantity_on_hand.errors }}
+                <label for="{{ book_form.quantity_on_hand.id_for_label }}">Quantity On Hand</label>
+                {{ book_form.quantity_on_hand }}
+            </div>
+            <div class="input-field col s4">
+                {{ book_form.cost.errors }}
+                <label for="{{ book_form.cost.id_for_label }}">Cost</label>
+                {{ book_form.cost }}
+            </div>                    
+            <div class="input-field col s4">
+                {{ book_form.retail_price.errors }}
+                <label for="{{ book_form.retail_price.id_for_label }}">Retail Price</label>
+                {{ book_form.retail_price }}
+            </div>
+        </div>
+    
+               
+        <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+        <button type="submit" class="modal-action waves-effect waves-green btn-flat" name="create-book">Create Book</button>
+    
+</form>
+
+<div id="addauthor" class="modal">
+    <form method="POST" class="col s12">
+        {% csrf_token %}
+        {{ author_form.non_field_errors }}            
+        <div class="modal-content">
+            <h4>Add Author</h4>
+            <div class="row">
+                <div class="row">
+                    <div class="input-field col s6">
+                        {{ author_form.first_name.errors }}
+                        <label for="{{ author_form.first_name.id_for_label }}">First Name</label>
+                        {{ author_form.first_name }}       
+                    </div>
+                    <div class="input-field col s6">
+                        {{ author_form.last_name.errors }}
+                        <label for="{{ author_form.last_name.id_for_label }}">Last Name</label>
+                        {{ author_form.last_name }}    
+                    </div>
+                </div>            
+            </div>
+        </div>        
+        <div class="modal-footer">            
+            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+            <button type="submit" class="modal-action waves-effect waves-green btn-flat" name="create-author">Submit</button>
+        </div>
+    </form>
+</div>
+
+<div id="addpublisher" class="modal">
+    <form method="POST" class="col s12">
+        {% csrf_token %}
+        {{ publisher_form.non_field_errors }}            
+        <div class="modal-content">
+            <h4>Add Publisher</h4>
+            <div class="row">
+                <div class="row">
+                    <div class="input-field col s6">
+                        {{ publisher_form.company_name.errors }}
+                        <label for="{{ pubilsher_form.company_name.id_for_label }}">Company Name</label>
+                        {{ publisher_form.company_name }}       
+                    </div>
+                    <div class="input-field col s6">
+                        {{ publisher_form.city.errors }}
+                        <label for="{{ pubilsher_form.city.id_for_label }}">City</label>
+                        {{ publisher_form.city }}       
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s6">
+                        {{ publisher_form.state_code.errors }}                        
+                        {{ publisher_form.state_code }}
+                        <label>State</label>       
+                    </div>
+                    <div class="input-field col s6">
+                        {{ publisher_form.zip_code.errors }}
+                        <label for="{{ pubilsher_form.zip_code.id_for_label }}">Zip Code</label>
+                        {{ publisher_form.zip_code }}       
+                    </div>
+                    <div class="input-field col s6">
+                        {{ publisher_form.phone_number.errors }}
+                        <label for="{{ publisher_form.phone_number.id_for_label }}">Phone Number</label>
+                        {{ publisher_form.phone_number }}       
+                    </div>
+                    <div class="input-field col s6">
+                        {{ publisher_form.contact_name.errors }}
+                        <label for="{{ publisher_form.contact_name.id_for_label }}">Contact Name</label>
+                        {{ publisher_form.contact_name }}       
+                    </div>
+                </div>
+            </div>
+        </div>        
+        <div class="modal-footer">            
+            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+            <button type="submit" class="modal-action waves-effect waves-green btn-flat" name="create-publisher">Submit</button>
+        </div>
+    </form>
+</div>
+
+<div id="addgenre" class="modal">
+    <form method="POST" class="col s12">
+        {% csrf_token %}
+        {{ genre_form.non_field_errors }}            
+        <div class="modal-content">
+            <h4>Add Genre</h4>
+            <div class="row">
+                <div class="row">
+                    <div class="input-field col s6">
+                        {{ genre_form.genre.errors }}
+                        <label for="{{ genre_form.genre.id_for_label }}">Genre</label>
+                        {{ genre_form.genre }}       
+                    </div>                    
+                </div>            
+            </div>
+        </div>        
+        <div class="modal-footer">            
+            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+            <button type="submit" class="modal-action waves-effect waves-green btn-flat" name="create-genre">Submit</button>
+        </div>
+    </form>
+</div>
+
+  
+<script type="text/javascript" src="{% static "js/jquery-3.3.1.js" %}"></script>
+<script type="text/javascript" src="{% static "js/materialize.min.js" %}"></script>
+<script type="text/javascript" src="{% static "js/books.js" %}"></script> 
+{% endblock %}

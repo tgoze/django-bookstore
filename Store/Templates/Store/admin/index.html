@@ -1,4 +1,4 @@
-{% extends 'Store/layout.html' %}
+{% extends 'Store/layoutadmin.html' %}
 {% load staticfiles %}
 {% load widget_tweaks %}
 {% block nav %}
@@ -46,7 +46,7 @@
         <a href="{% url 'adminauthorindex' %}">AUTHORS</a>
     </td>
     <td>
-      MONTHLY REPORTS
+        <a href="{% url 'adminreportindex' %}">REPORTS</a>
     </td>
   </tr>
 </table>

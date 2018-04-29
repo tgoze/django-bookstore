@@ -6,6 +6,7 @@ class CustomerInfo:
         self.user = None 
         self.address = None
         self.payment_info = None
+        self.number_of_orders = None
     def get_user(self):
         return self.user
 

@@ -179,13 +179,30 @@ class OrderForm(forms.Form):
     quantity_ordered = forms.IntegerField()
 
 
+class AddToCartForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        qty_choices = kwargs.pop('qty_choices')
+        super(AddToCartForm, self).__init__(*args, **kwargs)
+        self.fields['qty_choices'] = forms.ChoiceField(choices=qty_choices)
+
+    qty_choices = forms.ChoiceField()
+
+
 class CartForm(forms.Form):
     def __init__(self, *args, **kwargs):
-        max_quantity = kwargs.pop('max_quantity')
+        self.book_ids = kwargs.pop('book_ids')
+        qtys_choices = kwargs.pop('qtys_choices')
         super(CartForm, self).__init__(*args, **kwargs)
-        self.fields['quantity_ordered'] = forms.IntegerField(min_value=1, max_value=max_quantity)
 
-    quantity_ordered = forms.IntegerField(min_value=1)
+        for i, qty_choices in enumerate(qtys_choices):
+            self.fields['qty_choice_%s' % i] = forms.ChoiceField(choices=qty_choices)
+
+    def item_fields(self):
+        for name, value in self.cleaned_data.items():
+            if name.startswith('qty_choice_'):
+                yield (value)
+
+    book_ids = None
 
 
 class ShipPayForm(forms.Form):

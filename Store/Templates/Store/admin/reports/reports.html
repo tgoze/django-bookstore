@@ -1,0 +1,58 @@
+{% extends 'Store/layoutadmin.html' %}
+{% load staticfiles %}
+{% load widget_tweaks %}
+{% block nav %}
+  {% if user_id is none %}
+    <li>You are currently logged out</li>
+  {% else %}
+    <li>Greetings, {{username}}</li>
+  {% endif %}
+{% endblock %} 
+{% block head %}
+<link href="{%  static "css/bookstyle.css" %}" type="text/css" rel="stylesheet">
+{% endblock %}
+{% block content %}
+<h4>Reports By Month</h4>
+<table>
+    <thead>
+        <tr>
+            <th>Month</th>
+            <th> Total Revenue </th>
+            
+        </tr>
+    </thead>
+    <tbody>
+         <tr>
+             <td><a style="color: black" href="{% url 'january' %}"> January</a></td>
+             <td>${{jan_revenue}}</td>
+         </tr>
+         <tr>
+            <td><a style="color: black" href="{% url 'february' %}"> February</a></td>
+             <td> ${{feb_revenue}}</td>
+         </tr>
+          <tr>
+            <td><a style="color: black" href="{% url 'march' %}"> March</a></td>
+              <td>${{mar_revenue}}</td>
+          </tr>
+          <tr>
+            <td><a style="color: black" href="{% url 'april' %}"> April</a></td>
+            <td>${{apr_revenue}}</td>
+        </tr>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td> Total Revenue: ${{total}} </td>
+        </tr>
+        <tr>
+            <td> AVG Transaction Amount: ${{avg}}</td>
+        </tr>
+        <tr>
+            <td>Total Number of Orders: {{num}} </td>
+        </tr>
+    </tfoot>
+</table>
+
+<script type="text/javascript" src="{% static "js/jquery-3.3.1.js" %}"></script>
+<script type="text/javascript" src="{% static "js/materialize.min.js" %}"></script>
+<script type="text/javascript" src="{% static "js/books.js" %}"></script>
+{% endblock %}

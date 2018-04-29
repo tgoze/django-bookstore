@@ -1,3 +1,5 @@
+
+
 class Inventory:
     def __init__(self):
         self.book_id = None

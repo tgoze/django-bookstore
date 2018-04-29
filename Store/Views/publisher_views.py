@@ -60,15 +60,17 @@ class AdminPublisherIndexView(TemplateView):
             context['user_id'] = request.session['user_id'],
             context['username'] = request.session['username'] 
             return redirect(reverse('adminpublisherindex'))
+
 class AdminPublisherDetailView(TemplateView):
     template_name = 'Store/admin/publishers/details.html'
     pdao = PublisherDao()
     bdao = BookDao()
-
+    idao = InventoryDao()
     @never_cache
     def get(self,request, publisher_id):
         publisher = self.pdao.get_byid(publisher_id)
-        books = self.bdao.getBooksByPublisherID(publisher_id)
+        books = self.idao.getInventoryByPublisher(publisher_id)
+
         initial_data = {
             'company_name': publisher.company_name,
             'city': publisher.city,
@@ -81,7 +83,9 @@ class AdminPublisherDetailView(TemplateView):
         context ={
             'publisher': publisher,
             'books': books,
-            'epublisher': epublisher
+            'epublisher': epublisher,
+            'sum':self.pdao.getTotalPublisherRevenueByPublisherID(publisher_id),
+            'sum_inventory': self.pdao.getTotalInventoryByPublisherID(publisher_id)
         }
         user_id =  request.session['user_id'] 
         username = request.session['username'] 
@@ -95,6 +99,7 @@ class AdminPublisherDetailView(TemplateView):
         username = request.session['username'] 
         context = {}
         epublisher = PublisherForm (request.POST)
+
         if 'update-publisher' in request.POST:
             if epublisher.is_valid():
                 p = Publisher()
@@ -109,6 +114,7 @@ class AdminPublisherDetailView(TemplateView):
                 context['user_id'] = request.session['user_id'],
                 context['username'] = request.session['username'] 
             return redirect(reverse(('adminpublisherdetail'),kwargs={ 'publisher_id': publisher_id }))
+
         if 'delete-publisher' in request.POST:
             self.pdao.delete(publisher_id)
             context['user_id'] = request.session['user_id'],

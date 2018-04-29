@@ -14,7 +14,7 @@ from Store.Model.image import Image
 from Store.Model.image_dao import ImageDao
 from Store.Model.cart import Cart
 from Store.Model.cart_dao import CartDao
-from Store.forms import BookForm, BookImageForm, AuthorForm, PublisherForm, GenreForm, CartForm
+from Store.forms import BookForm, BookImageForm, AuthorForm, PublisherForm, GenreForm, AddToCartForm
 
 from django.views.decorators.cache import never_cache
 
@@ -304,12 +304,12 @@ class CusBookView(TemplateView):
     def get(self, request):
         if 'user_id' in request.session:
             books = self.book_dao.get_all()
-
+            username = request.session['username'] 
             context = {            
                 'user_id': request.session['user_id'],
                 'books': books
             }
-
+            context['username'] = request.session['username']
             return render(request, self.template_name, context)
         else:
             return redirect(reverse('login'))
@@ -327,8 +327,14 @@ class CusBookDetailView(TemplateView):
         if 'user_id' in request.session:
             book = self.book_dao.get_byid(book_id)
             images = self.image_dao.get_byid(book_id)
+            
+            # Gets the total quantity and generates a list for choices of qty
             max_quantity = self.inventory_dao.get_byid(book_id).quantity_on_hand
-            cart_form = CartForm(max_quantity=max_quantity)
+            qty_choices = []
+            for i in range(1, (max_quantity+1)):
+                qty_choices.append((i, i))
+
+            cart_form = AddToCartForm(qty_choices=qty_choices)
 
             context = {
                 'user_id': request.session['user_id'],
@@ -342,13 +348,18 @@ class CusBookDetailView(TemplateView):
             return redirect(reverse('login'))
 
     def post(self, request, book_id):
+        # Gets the total quantity and generates a list for choices of qty
         max_quantity = self.inventory_dao.get_byid(book_id).quantity_on_hand
+        qty_choices = []
+        for i in range(1, (max_quantity+1)):
+            qty_choices.append((i, i))
+
         cart_item = Cart()
         cart_item.book.book_id = book_id
         cart_item.user_id = request.session['user_id']
-        cart_form = CartForm(request.POST, max_quantity=max_quantity)        
+        cart_form = AddToCartForm(request.POST, qty_choices=qty_choices)       
         if cart_form.is_valid():
-            cart_item.quantity_ordered = cart_form.cleaned_data['quantity_ordered']
+            cart_item.quantity_ordered = cart_form.cleaned_data['qty_choices']
             self.cart_dao.create(cart_item)
 
         return redirect(reverse('cart'))

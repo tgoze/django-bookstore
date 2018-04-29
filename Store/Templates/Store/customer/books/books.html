@@ -19,21 +19,23 @@
 {% endblock %}
 
 {% block content %}
+>
 <h4>Books</h4>
+
 <table>
     <thead>
         <tr>
             <th>Book</th>
             <th>Author</th>
-            <th>Publisher</th>                        
+            <th>Publisher</th>                       
         </tr>
     </thead>
     <tbody>                
         {% for book in books %}
         <tr>
-            <td><a href="books/details/{{ book.book_id }}">{{ book.title }}</a></td>  
+            <td><a href="{% url 'customer_book' book.book_id %}">{{ book.title }}</a></td>  
             <td>{{book.author.last_name}}, {{book.author.first_name}}</td>
-            <td>{{book.publisher.company_name}}</td>                                
+            <td>{{book.publisher.company_name}}</td>                             
         </tr>
         {% endfor %}          
     </tbody>    

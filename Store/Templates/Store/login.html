@@ -20,7 +20,7 @@
       <div class="card">
         <div class="card-content black-text">
           <span class="card-title">
-            <b>Sign in</b> {{text}}
+            <b>Sign in</b>
           </span>
           <div class="row">
             <div class="input-field col s8">
@@ -36,7 +36,8 @@
               {{ loginform.password }}
             </div>
           </div>
-        </div>
+          <h6 class="red-text">{{ login_error }}</h6>
+        </div>        
         <div class="card-action">          
           <button type="submit" class="modal-action waves-effect waves-green btn-flat" name="login-user">Login</button>
         </div>
@@ -54,51 +55,59 @@
     {% csrf_token %} {{ registerform.non_field_errors }}
     <div class="modal-content">
       <h4>Register</h4>
+      <div class="row">
           <div class="input-field col s4">
-            {{registerform.first_name.errors}}
-            <i class="material-icons prefix">account_circle</i>
-            <label for="{{registerform.first_name.id_for_label}}">First Name</label>
-            {{registerform.first_name}}
-          </div>
-          <div class="input-field col s4">
-            {{registerform.last_name.errors}}
-            <label for="{{registerform.last_name.id_for_label}}">Last Name</label>
-            {{registerform.last_name}}
-          </div>
-          <div class="input-field col s4">
-            {{registerform.username.errors}}
-            <i class="material-icons prefix">broken_image</i>
-            <label for="{{registerform.username.id_for_label}}">username</label>
-            {{registerform.username}}
-          </div>
+              {{registerform.first_name.errors}}
+              <i class="material-icons prefix">person</i>
+              <label for="{{registerform.first_name.id_for_label}}">First Name</label>
+              {{registerform.first_name}}
+            </div>
+            <div class="input-field col s4">
+              {{registerform.last_name.errors}}
+              <label for="{{registerform.last_name.id_for_label}}">Last Name</label>
+              {{registerform.last_name}}
+            </div>
+        </div>
+        <div class="row">
           <div class="input-field col s6">
             {{registerform.email.errors}}
             <i class="material-icons prefix">email</i>
             <label for="{{registerform.email.id_for_label}}">E-mail</label>
             {{registerform.email}}
           </div>
+        </div>
+        <div class ="row">
+          <div class="input-field col s4">
+            {{registerform.username.errors}}
+            <i class="material-icons prefix">account_circle</i>
+            <label for="{{registerform.username.id_for_label}}">username</label>
+            {{registerform.username}}
+          </div>
           <div class="input-field col s6">
             {{registerform.password.errors}}
-            <i class="material-icons prefix">broken_image</i>
+            <i class="material-icons prefix">enhanced_encryption</i>
             <label for="{{registerform.password.id_for_label}}">password</label>
             {{registerform.password}}
           </div>
+        </div>
+        <div class="row">
           <div class="input-field col s6">
               {{registerform.work_phone.errors}}
-              <i class="material-icons prefix">broken_image</i>
+              <i class="material-icons prefix">phone</i>
               <label for="{{registerform.work_phone.id_for_label}}">work phone</label>
               {{registerform.work_phone}}
           </div>
           <div class="input-field col s6">
               {{registerform.home_phone.errors}}
-              <i class="material-icons prefix">broken_image</i>
+              <i class="material-icons prefix">phone</i>
               <label for="{{registerform.home_phone.id_for_label}}">home phone</label>
               {{registerform.home_phone}}
             </div>
+        </div>
     </div>
     <div class="modal-footer">
         <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
-        <button type="submit" class="modal-action waves-effect waves-green btn-flat" name="create-user" href="customer/login.html">Submit</button>
+        <button type="submit" class="modal-action waves-effect waves-green btn-flat" name="create-user" href="customer/login.html">Register</button>
     </div>
   </form>
 </div>
