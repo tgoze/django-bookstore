@@ -5,6 +5,8 @@ from Store.Model.user_dao import UserDao
 from Store.Model.customer_info import CustomerInfo
 from Store.Model.customer_info_dao import CustomerInfoDAO
 from Store.Model.customer_address import CustomerAddress
+from Store.Model.image import Image
+from Store.Model.image_dao import ImageDao
 from django.conf import settings
 from django.contrib.auth.hashers import check_password, BCryptPasswordHasher,make_password
 
@@ -16,17 +18,22 @@ from bcrypt import *
 
 class HomeView(TemplateView):
     template_name = 'Store/index.html'
+    imdao = ImageDao()
     @never_cache
     def get(self, request):
-        context = {}
+        images = self.imdao.get_all()
+        context = {
+            'images':images
+        }
         context['user_id'] = request.session['user_id']
+        context['username'] = request.session['username']
         return render(request, self.template_name, context)
         
 class LoginView(TemplateView):
     user = User()
     udao = UserDao()
     template_name = 'Store/login.html'
-    cus_loggedin_template = 'Store/customer/index.html' 
+    cus_loggedin_template = 'Store/index.html' 
     admin_loggedin_template = 'Store/admin/index.html' 
     user.username = 'not logged in'
     customer = CustomerInfo()
@@ -69,10 +76,10 @@ class LoginView(TemplateView):
                     context['username'] = request.session['username']                    
                     self.udao.updateLastLogin(user.id)
                     if user.is_staff == 0 and user.is_active == 1:
-                        return redirect(reverse('customer_index'))
+                        return redirect(reverse('home'))
                     elif user.is_active == 0 and user.is_staff == 0:
                         self.udao.activateUser(user.id)
-                        return redirect(reverse('customer_index'))
+                        return redirect(reverse('home'))
                     else:
                         return redirect(reverse('adminindex'))
                                         

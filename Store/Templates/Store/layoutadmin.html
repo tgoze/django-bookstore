@@ -16,14 +16,25 @@
 </head>
 <body>
     <header>
-        <div class="navbar-fixed">
-        <nav class="extended ">
+            
+            <ul id="dropdown1" class="dropdown-content">
+                    <li><a href="{% url 'adminbookindex' %}"> BOOKS</a></li>
+                    <li><a href="{% url 'admincustomerindex' %}"> CUSTOMERS</a></li>
+                    <li><a href="{% url 'adminorderindex' %}"> ORDERS</a></li>
+                    <li><a href="{% url 'admininventoryindex' %}"> INVENTORY</a></li>
+                    <li> <a href="{% url 'admingenreindex' %}"> GENRES </a></li>
+                    <li><a href="{% url 'adminpublisherindex' %}">PUBLISHERS</a></li>
+                    <li> <a href="{% url 'adminauthorindex' %}">AUTHORS</a></li>
+                    <li><a href="{% url 'adminreportindex' %}">REPORTS</a></li>
+                  </ul>
+        
+        <nav class="extended">
             <div class="nav-wrapper teal">
             <a href="{% url 'home' %}" class="brand-logo">Bookish</a>
             <ul id="nav-mobile" class="right hide-on-med-and-down">                        
                 {% if user_id %}
-                    <li><a href="{% url 'customeraccount' %}">{{username}}</a></li>
-                    <li><a href="{% url 'cart' %}"><i class="material-icons">shopping_cart</i></a></li>
+                    <li>{{username}}</li>
+                    <li><a class="dropdown-trigger" href="{% url 'adminindex' %}" data-target="dropdown1">Admin Management</a></li>                
                     <li><a href="{% url 'login' %}">Logout</a></li>
                 {% else %}
                     <li><a href="login">Login</a></li>            
@@ -34,7 +45,7 @@
             
             {% endblock %}
         </nav>
-        </div>
+       
     </header>
     <main>
         <div class="container">
@@ -61,9 +72,11 @@
         <div class="footer-copyright teal darken-1">
             <div class="container">
             © 2018 Bookish Books
-           
             </div>
         </div>
     </footer>
 </body>
 </html>
+<script type="text/javascript" src="{% static "js/jquery-3.3.1.js" %}"></script>
+<script type="text/javascript" src="{% static "js/materialize.min.js" %}"></script>
+<script type="text/javascript" src="{% static "js/books.js" %}"></script>

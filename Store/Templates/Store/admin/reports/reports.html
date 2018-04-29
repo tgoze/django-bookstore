@@ -1,4 +1,4 @@
-{% extends 'Store/layout.html' %}
+{% extends 'Store/layoutadmin.html' %}
 {% load staticfiles %}
 {% load widget_tweaks %}
 {% block nav %}
@@ -12,9 +12,6 @@
 <link href="{%  static "css/bookstyle.css" %}" type="text/css" rel="stylesheet">
 {% endblock %}
 {% block content %}
-<h6>
-    <a href='{% url 'adminindex' %}'><i class=" material-icons medium">keyboard_return</i> Return to Admin Management</a>
-</h6>
 <h4>Reports By Month</h4>
 <table>
     <thead>
@@ -26,19 +23,19 @@
     </thead>
     <tbody>
          <tr>
-             <td><a href="{% url 'january' %}"> January</a></td>
+             <td><a style="color: black" href="{% url 'january' %}"> January</a></td>
              <td>${{jan_revenue}}</td>
          </tr>
          <tr>
-            <td><a href="{% url 'february' %}"> February</a></td>
+            <td><a style="color: black" href="{% url 'february' %}"> February</a></td>
              <td> ${{feb_revenue}}</td>
          </tr>
           <tr>
-            <td><a href="{% url 'march' %}"> March</a></td>
+            <td><a style="color: black" href="{% url 'march' %}"> March</a></td>
               <td>${{mar_revenue}}</td>
           </tr>
           <tr>
-            <td><a href="{% url 'april' %}"> April</a></td>
+            <td><a style="color: black" href="{% url 'april' %}"> April</a></td>
             <td>${{apr_revenue}}</td>
         </tr>
     </tbody>

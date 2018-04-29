@@ -1,4 +1,4 @@
-{% extends 'Store/layout.html' %}
+{% extends 'Store/layoutadmin.html' %}
 {% load staticfiles %}
 {% load widget_tweaks %}
 {% block head %}
@@ -12,10 +12,7 @@
   {% endif %}
 {% endblock %} 
 
-{% block content %}
-<h6>
-    <a href='{% url 'adminpublisherindex' %}'><i class=" material-icons medium">keyboard_return</i> Return to Publishers</a>
-</h6>
+
 <h4>{{publisher.company_name}} </h4>
 <h6> Total Revenue for Publisher: ${{sum}} <br>
     Total Number of books for Publisher: {{sum_inventory}}

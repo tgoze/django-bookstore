@@ -4,6 +4,7 @@ $(document).ready(function(){
     $('select').formSelect();
     $('.carousel').carousel();
     $('input#input_text, textarea#textarea2').characterCounter();
+    $(".dropdown-trigger").dropdown();
 });
 
 var addButtons = document.getElementsByClassName('addbtn')
