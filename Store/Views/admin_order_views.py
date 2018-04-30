@@ -85,15 +85,17 @@ class AdminOrderDetailView(TemplateView):
     odao = RetailOrderDao()
     pdao = PaymentInfoDao()
     bodao = BookOrderDao()
-    bdao = Book()
+    
     @never_cache
     def get(self, request, order_id):
         order = self.odao.get_byid(order_id)
         bookorder = self.bodao.get_byid(order_id)
+        billing = self.pdao.get_byid(order.card.card_id)
        
         context = {
             'order': order,
-            'bookorder':bookorder
+            'bookorder':bookorder,
+            'billing': billing
         }
         user_id =  request.session['user_id'] 
         username = request.session['username'] 
