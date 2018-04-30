@@ -3,7 +3,6 @@ from Store.Views.home_views import *
 from Store.Views.book_views import *
 from Store.Views.customer_views import *
 from Store.Views.order_views import *
-from Store.Views import order_views
 from Store.Views.admin_views import *
 from Store.Views.publisher_views import *
 from Store.Views.genre_views import * 
@@ -18,6 +17,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('', HomeView.as_view(), name='home'),
     path('login', LoginView.as_view(), name='login'),
+    path('logout', logout, name='logout'),
 
     path('admin/index', AdminIndexView.as_view(), name='adminindex'),
 

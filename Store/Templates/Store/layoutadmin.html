@@ -16,36 +16,32 @@
 </head>
 <body>
     <header>
-            
-            <ul id="dropdown1" class="dropdown-content">
-                    <li><a href="{% url 'adminbookindex' %}"> BOOKS</a></li>
-                    <li><a href="{% url 'admincustomerindex' %}"> CUSTOMERS</a></li>
-                    <li><a href="{% url 'adminorderindex' %}"> ORDERS</a></li>
-                    <li><a href="{% url 'admininventoryindex' %}"> INVENTORY</a></li>
-                    <li> <a href="{% url 'admingenreindex' %}"> GENRES </a></li>
-                    <li><a href="{% url 'adminpublisherindex' %}">PUBLISHERS</a></li>
-                    <li> <a href="{% url 'adminauthorindex' %}">AUTHORS</a></li>
-                    <li><a href="{% url 'adminreportindex' %}">REPORTS</a></li>
-                  </ul>
-        
-        <nav class="extended">
+        <ul id="dropdown1" class="dropdown-content">
+            <li><a href="{% url 'adminbookindex' %}">BOOKS</a></li>
+            <li><a href="{% url 'admincustomerindex' %}">CUSTOMERS</a></li>
+            <li><a href="{% url 'adminorderindex' %}">ORDERS</a></li>
+            <li><a href="{% url 'admininventoryindex' %}">INVENTORY</a></li>
+            <li> <a href="{% url 'admingenreindex' %}">GENRES </a></li>
+            <li><a href="{% url 'adminpublisherindex' %}">PUBLISHERS</a></li>
+            <li> <a href="{% url 'adminauthorindex' %}">AUTHORS</a></li>
+            <li><a href="{% url 'adminreportindex' %}">REPORTS</a></li>
+        </ul>
+        <nav class="nav-extended">
             <div class="nav-wrapper teal">
-            <a href="{% url 'home' %}" class="brand-logo">Bookish</a>
-            <ul id="nav-mobile" class="right hide-on-med-and-down">                        
-                {% if user_id %}
-                    <li>{{username}}</li>
-                    <li><a class="dropdown-trigger" href="{% url 'adminindex' %}" data-target="dropdown1">Admin Management</a></li>                
-                    <li><a href="{% url 'login' %}">Logout</a></li>
-                {% else %}
-                    <li><a href="login">Login</a></li>            
-                {% endif %}              
-            </ul>
+                <a href="{% url 'home' %}" class="brand-logo">Bookish</a>
+                <ul id="nav-mobile" class="right hide-on-med-and-down">                        
+                    {% if user_id %}
+                        <li>{{username}}</li>
+                        <li><a class="dropdown-trigger" href="{% url 'adminindex' %}" data-target="dropdown1">Admin Management</a></li>                
+                        <li><a href="{% url 'logout' %}">Logout</a></li>
+                    {% else %}
+                        <li><a href="{% url 'login' %}">Login</a></li>            
+                    {% endif %}              
+                </ul>
             </div>
-            {% block nav %}
-            
+            {% block nav %}            
             {% endblock %}
-        </nav>
-       
+        </nav>       
     </header>
     <main>
         <div class="container">

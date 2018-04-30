@@ -241,9 +241,7 @@ class AdminAddBookView(TemplateView):
                     'author_form': author_form,
                     'genre_form': genre_form
                 }
-
-                user_id =  request.session['user_id'] 
-                username = request.session['username'] 
+                
                 context['user_id'] = request.session['user_id'],
                 context['username'] = request.session['username'] 
 
@@ -254,9 +252,7 @@ class AdminAddBookView(TemplateView):
             return redirect(reverse('login'))     
 
     def post(self,request):  
-        context = {}    
-        user_id =  request.session['user_id'] 
-        username = request.session['username'] 
+        context = {}            
         self.get_dropdown_data()
         # Handle POST requests
         if 'create-book' in request.POST:
@@ -305,9 +301,9 @@ class AdminAddBookView(TemplateView):
                 publisher.contact_name = sub_publisher_form.cleaned_data['contact_name']
                 self.publisher_dao.create(publisher)
                 context['user_id'] = request.session['user_id'],
-                context['username'] = request.session['username'] 
-                return redirect(reverse('adminaddbook'))
+                context['username'] = request.session['username']                 
                 context['notification'] = "Publisher saved successfully!"
+                return redirect(reverse('adminaddbook'))
             else:
                 context['notification'] = "Not a valid submission."         
         
@@ -320,9 +316,9 @@ class AdminAddBookView(TemplateView):
 
                 self.author_dao.create(author) 
                 context['user_id'] = request.session['user_id'],
-                context['username'] = request.session['username'] 
-                return redirect(reverse('adminaddbook'))
+                context['username'] = request.session['username']                 
                 context['notification'] = "Author saved successfully!"
+                return redirect(reverse('adminaddbook'))
             else:
                 context['notification'] = "Not a valid submission."
 
