@@ -37,7 +37,7 @@
                         <tbody>
                             {% for order in orders %}
                             <tr>
-                                <td>{{order.order_id}}</td>
+                                <td><a href="{% url 'adminorderdetail' order.order_id %}">{{order.order_id}}</a></td>
                                 <td>${{order.total_price}}</td>
                             </tr>
                             {% endfor %}

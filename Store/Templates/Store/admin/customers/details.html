@@ -51,7 +51,7 @@
                     {% for order in orders %}
                     <tr>
                         <td><a href="{% url 'adminorderdetail' order.order_id %}" >{{ order.order_id }}</a></td>       
-                        <td>{{ order.total_price}}</td> 
+                        <td>${{ order.total_price}}</td> 
                         <td>{{ order.date_ordered}}</td>           
                     </tr>
                     {% endfor %}
