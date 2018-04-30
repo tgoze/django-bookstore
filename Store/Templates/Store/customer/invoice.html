@@ -47,9 +47,9 @@
                     <br/>
                     <span class="strong">{{ order.customer.first_name }} {{ order.customer.last_name }}</span>
                     <br/>
-                    <span>{{ order.card.billing_address.street }}</span>
+                    <span>{{ payment_info.billing_address.street }}</span>
                     <br/>
-                    <span>{{ order.card.billing_address.city }}, {{ order.card.billing_address.state_code }} {{ order.card.billing_address.zip_code }}</span>                                        
+                    <span>{{ payment_info.billing_address.city }}, {{ payment_info.billing_address.state_code }} {{ payment_info.billing_address.zip_code }}</span>                                        
                 </p>
             </div>
             <div class="col s12 m6 l6">

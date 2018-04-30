@@ -6,13 +6,7 @@
 {% block head %}
 <link href="{% static "css/checkout.css" %}" type="text/css" rel="stylesheet">
 {% endblock %}
-{% block nav %}
-  {% if user_id is none %}
-    <li>You are currently logged out</li>
-  {% else %}
-    <li><b>Greetings, {{ username }}!</b></li>
-  {% endif %}
-  {% endblock %} 
+
 {% block content %}
 <nav class="clean">
     <div class="nav-wrapper">            

@@ -50,7 +50,7 @@ urlpatterns = [
     path('admin/mar', AdminMarchReport.as_view(), name='march'),
     path('admin/apr', AdminAprilReport.as_view(), name='april'),
     
-    path('customer/books', CusBookView.as_view(), name="customer_books"),
+    # path('customer/books', CusBookView.as_view(), name="customer_books"),
     path('customer/books/details/<int:book_id>/', CusBookDetailView.as_view(), name="customer_book"),   
     path('customer/cart', CartView.as_view(), name="cart"),
     path('customer/cart/ajax/update/', update_cart_view, name="cart_update"),

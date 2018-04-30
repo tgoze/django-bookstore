@@ -125,49 +125,15 @@ class CartView(TemplateView):
 
         return render(request, self.template_name, context)
 
-    def post(self, request):
-        context = {}
+    def post(self, request):        
         user_id = request.session['user_id']
-        cart_dao = CartDao()
-
-        cart_items = self.cart_dao.get_all(user_id)
-
-        cart_total = 0
-        # An array of arrays of choices for each book
-        qtys_choices = []
-        # An array of book IDs to pass to the cart form
-        book_ids = []
-        # A dictionary for all of the initial choices
-        initial_data = {}
-        for index, item in enumerate(cart_items):
-            cart_total += (item.book.inventory.retail_price * item.quantity_ordered)
-
-            # Get quantities on hand of each item in cart
-            qty_on_hand = self.inventory_dao.get_byid(item.book.book_id).quantity_on_hand
-            qty_choices = []
-            for i in range(1, (qty_on_hand+1)):
-                qty_choices.append((i, i))
-            qtys_choices.append(qty_choices)
-
-            # Append initial data for each item to the dictionary
-            initial_data['qty_choice_%s' % index] = item.quantity_ordered
-
-            # Append book ID to list
-            book_ids.append(item.book.book_id)
-        
-        cart_form = CartForm(initial_data, book_ids=book_ids, qtys_choices=qtys_choices)
 
         if 'delete-item' in request.POST:
+            cart_dao = CartDao()
             book_id = int(request.POST.get('delete-item'))
-            self.cart_dao.delete_from_cart(book_id, user_id)
-            self.cart_items = self.cart_dao.get_all(user_id)
+            cart_dao.delete_from_cart(book_id, user_id)            
 
-        context['cart_form'] = cart_form
-        context['cart_items'] = cart_items
-        context['cart_total'] = cart_total
-        context['user_id'] = user_id
-
-        return render(request, self.template_name, context)
+        return redirect(reverse('cart'))
 
 
 class ShipPayView(TemplateView):
@@ -317,6 +283,7 @@ class InvoiceView(TemplateView):
     template_name = 'Store/customer/invoice.html'
     retail_order_dao = RetailOrderDao() 
     book_order_dao = BookOrderDao()
+    payment_dao = PaymentInfoDao()
 
     @never_cache
     def get(self, request, order_id):
@@ -325,13 +292,15 @@ class InvoiceView(TemplateView):
                 # Get data from db to show order summary
                 user_id = request.session['user_id']                
                 order = self.retail_order_dao.get_byid(order_id)                
-                books = self.book_order_dao.get_byid(order_id)
+                books = self.book_order_dao.get_byid(order_id)                
+                payment_info = self.payment_dao.get_byid(order.card.card_id)
 
                 context = {
                     'order': order,
                     'books': books,
                     'user_id': user_id,
-                    'username': request.session['username']
+                    'username': request.session['username'],
+                    'payment_info': payment_info
                 }
                 if order.discount > 0:
                     context['discount_price'] = round((order.total_price * Decimal((1 - order.discount))), 2)

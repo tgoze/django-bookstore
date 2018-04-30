@@ -28,7 +28,7 @@ from Store.forms import *
 from bcrypt import *
 from django.views.decorators.cache import never_cache 
 
-
+from decimal import Decimal
 
 
 class CustomerIndexView(TemplateView):
@@ -349,12 +349,15 @@ class CustomerAddCardView(TemplateView):
             address_val = (str(address.address_id), str(address.street) + " " + str(address.city) + ", " 
                     + str(address.state_code) + " " + str(address.zip_code))
             bill_address_choices.append(address_val)
+        num_bill_address = len(bill_address_choices)
         aaddress = AddAddressForm2()
         addcard = AddPaymentInfoForm(bill_address_choices=bill_address_choices)
         context['addcard'] = addcard
         context['aaddress'] = aaddress
         context['user_id'] = request.session['user_id']
         context['username'] = request.session['username'] 
+        context['num_bill_address'] = num_bill_address
+        
         return render(request, self.template_name,context)
 
     @never_cache
@@ -412,28 +415,25 @@ class CustomerOrderView(TemplateView):
     bdao = Book()
     @never_cache
     def get(self, request, order_id):
-        order = self.odao.get_byid(order_id)
-        
+        order = self.odao.get_byid(order_id)        
         bookorder = self.bodao.get_byid(order_id)
         billing = self.pdao.get_byid(order.card.card_id)
         
         
         context = {
             'order': order,
+            'discount_price': round((order.total_price * Decimal(1 - order.discount)), 2),
+            'discount': round((Decimal(order.discount) * 100), 2),
             'bookorder':bookorder,
             'billing': billing
         }
 
-        user_id =  request.session['user_id'] 
-        username = request.session['username'] 
         context['user_id'] = request.session['user_id']
         context['username'] = request.session['username']
         return render(request, self.template_name, context)
     
     @never_cache
     def post(self,request, order_id):
-        user_id =  request.session['user_id'] 
-        username = request.session['username'] 
         context = {}
         if 'cancel-order' in request.POST:
             self.odao.update(order_id)
