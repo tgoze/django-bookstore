@@ -2,8 +2,9 @@ $(document).ready(function(){
     $('.modal').modal();
     $('.datepicker').datepicker();
     $('select').formSelect();
-    $('.carousel').carousel();   
+    $('.materialboxed').materialbox();  
     $(".dropdown-trigger").dropdown();
+    $('.slider').slider();
 });
 
 var addButtons = document.getElementsByClassName('addbtn')
@@ -11,6 +12,7 @@ var addButtons = document.getElementsByClassName('addbtn')
 $(".addbtn").click(function(){
     $('.modal').modal('close');
 });
+
 
 $(function() {
     // This function gets cookie with a given name

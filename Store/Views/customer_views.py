@@ -421,12 +421,16 @@ class CustomerOrderView(TemplateView):
         
         
         context = {
-            'order': order,
-            'discount_price': round((order.total_price * Decimal(1 - order.discount)), 2),
-            'discount': round((Decimal(order.discount) * 100), 2),
+            'order': order,            
             'bookorder':bookorder,
             'billing': billing
         }
+        
+        if order.discount > 0.0:
+            original_price = round((order.total_price / Decimal(1 - order.discount)), 2)
+            context['original_price'] = original_price
+            context['discount'] = round((Decimal(order.discount) * 100), 2)
+            context['money_saved'] = original_price - order.total_price
 
         context['user_id'] = request.session['user_id']
         context['username'] = request.session['username']

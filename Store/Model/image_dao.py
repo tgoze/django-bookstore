@@ -13,7 +13,7 @@ class ImageDao(AbcDao):
             conn = MySQLConnection(**db_config)
             cursor = conn.cursor()
             
-            args = (image.image_url, image.caption, image.book_id)
+            args = (image.image_url, image.caption, image.book.book_id)
             cursor.callproc('createImage', args)
 
             conn.commit()
@@ -43,7 +43,7 @@ class ImageDao(AbcDao):
                     image.image_id = image_row[0]
                     image.image_url = image_row[1]
                     image.caption = image_row[2]
-                    image.book_id = image_row[3]
+                    image.book.book_id = image_row[3]
                     images.append(image)
 
             # Close the connection to the DB
@@ -75,9 +75,11 @@ class ImageDao(AbcDao):
                     image.image_id = image_row[0]
                     image.image_url = image_row[1]
                     image.caption = image_row[2]
-                    image.book_id = image_row[3]
-                    image.title = image_row[4]
-                    image.retail_price = image_row[5]
+                    image.book.book_id = image_row[3]
+                    image.book.title = image_row[4]
+                    image.book.inventory.retail_price = image_row[5]
+                    image.book.inventory.quantity_ordered = image_row[6]
+                    image.book.inventory.quantity_on_hand = image_row[7]
                     images.append(image)
 
             # Close the connection to the DB

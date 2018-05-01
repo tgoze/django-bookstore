@@ -65,25 +65,26 @@ class RetailOrderDao(AbcDao):
                     order.date_ordered =x[1]
                     order.discount = x[2]
                     order.total_price = x[3]
+                    order.status = x[4]
 
                     u = User()
-                    u.id = x[4]
-                    u.first_name = x[5]
-                    u.last_name = x[6]
+                    u.id = x[5]
+                    u.first_name = x[6]
+                    u.last_name = x[7]
                     order.customer = u
 
                     p = PaymentInfo()
-                    p.card_id = x[7]
-                    p.last_four = x[8]
-                    p.card_issuer = x[9]
+                    p.card_id = x[8]
+                    p.last_four = x[9]
+                    p.card_issuer = x[10]
                     order.card = p
 
                     a = CustomerAddress()
-                    a.address_id = x[10]
-                    a.street = x[11]
-                    a.city = x[12]
-                    a.state_code = x[13]
-                    a.zip_code = x[14]
+                    a.address_id = x[11]
+                    a.street = x[12]
+                    a.city = x[13]
+                    a.state_code = x[14]
+                    a.zip_code = x[15]
                     order.shipping_address = a
                     
             # Close the connection to the DB
@@ -119,9 +120,7 @@ class RetailOrderDao(AbcDao):
                     order.date_ordered =x[1]
                     order.total_price = x[2]
                     order.discount = x[3]
-                    order.customer = udao.get_byid(x[4])
-                    order.shipping_address = cadao.get_byid(x[5])
-                    order.card = pdao.get_byid(x[6])
+                    order.customer.id = x[4]                    
                     order.status = x[7]
                     orders.append(order)
 

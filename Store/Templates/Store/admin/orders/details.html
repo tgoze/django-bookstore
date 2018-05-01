@@ -1,13 +1,7 @@
 {% extends 'Store/layoutadmin.html' %}
 {% load staticfiles %}
 {% load widget_tweaks %}
-{% block nav %}
-  {% if user_id is none %}
-    <li>You are currently logged out</li>
-  {% else %}
-    <li>Greetings, {{username}}</li>
-  {% endif %}
-{% endblock %} 
+ 
 {% block head %}
 
 {% endblock %}

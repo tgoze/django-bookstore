@@ -19,11 +19,15 @@ from bcrypt import *
 class HomeView(TemplateView):
     template_name = 'Store/index.html'
     imdao = ImageDao()
+    
     @never_cache
     def get(self, request):
-        images = self.imdao.get_all()
+        images = self.imdao.get_all()        
         context = {
-            'images':images
+            'images':images,
+            'best_sell_1': images[0],
+            'best_sell_2': images[1],
+            'best_sell_3': images[2],
         }
         context['user_id'] = request.session['user_id']
         context['username'] = request.session['username']

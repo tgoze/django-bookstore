@@ -303,7 +303,7 @@ class InvoiceView(TemplateView):
                     'payment_info': payment_info
                 }
                 if order.discount > 0:
-                    context['discount_price'] = round((order.total_price * Decimal((1 - order.discount))), 2)
+                    context['original_price'] = round((order.total_price / Decimal((1 - order.discount))), 2)
             else:
                 return redirect(reverse('ship_pay'))
         else: 

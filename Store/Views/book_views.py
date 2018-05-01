@@ -285,7 +285,7 @@ class AdminBookDetailView(TemplateView):
                 image = Image()
                 image.image_url = uploaded_file_url
                 image.caption = ''
-                image.book_id = book_id
+                image.book.book_id = book_id
 
                 self.image_dao.create(image)
 

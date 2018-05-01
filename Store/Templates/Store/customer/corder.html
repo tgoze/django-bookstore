@@ -1,13 +1,7 @@
 {% extends 'Store/layout.html' %}
 {% load staticfiles %}
 {% load widget_tweaks %}
-{% block nav %}
-  {% if user_id is none %}
-    <li>You are currently logged out</li>
-  {% else %}
-    <li>Greetings, {{username}}</li>
-  {% endif %}
-{% endblock %} 
+
 {% block head %}
 
 {% endblock %}
@@ -19,21 +13,50 @@
 
 <div class="row">
     <div class="col s12 m5">
-            <div class="card">
+            <div class="card medium">
                 <div class="card-content">
                     <span class="card-title"><b>Order Overview</b></span>
-                    <ul>
-                        <li>Date Ordered: {{order.date_ordered}} </li>
-                        <li>Discount: {{discount}}%</li>
-                        <li>Total Price: ${{discount_price}}</li>
-                       
-                    </ul>
-                     
+                    <h6><b>Status:</b> {{ order.status }}</h6>
+                    <table>
+                        <tbody>
+                            {% if original_price %}
+                            <tr>
+                                <td><b>Date Ordered:</b></td>
+                                <td>{{ order.date_ordered }}</td>
+                            </tr>
+                            <tr>
+                                <td><b>Original Price:</b></td>
+                                <td>${{ original_price }}</td>                            
+                            </tr>
+                            <tr>
+                                <td><b>Discount:</b></td>
+                                <td>{{ discount }}%</td>
+                            </tr>
+                            <tr>
+                                <td><b>Total Price:</b></td>
+                                <td>${{ order.total_price }}</td>                                
+                            </tr>
+                            <tr>
+                                <td><b>Money Saved:</b></td>
+                                <td><span class="green-text">${{ money_saved }}</span></td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td><b>Date Ordered:</b></td>
+                                <td>{{ order.date_ordered }}</td>
+                            </tr>
+                            <tr>
+                                <td><b>Total Price:</b></td>
+                                <td>${{ order.total_price }}</td>                                
+                            </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>                            
                 </div>       
             </div>
         </div>
     <div class="col s12 m5">
-        <div class="card">
+        <div class="card medium">
             <div class="card-content">
                 <span class="card-title"><b>Books on Order</b></span>
                 <table>
@@ -59,21 +82,29 @@
     </div>
     <div class="row">
             <div class="col s12 m5">
-                    <div class="card">
+                    <div class="card small">
                         <div class="card-content">
                             <span class="card-title"><b>Payment Info</b></span>
-                            <ul>
-                                <li>Credit Card: {{order.card.card_issuer}} Ending in {{order.card.last_four}}  </li>
-                                <li>Billing Address: </li>
-                                <li> {{billing.billing_address.street}}  </li>
-                                <li> {{billing.billing_address.city}} {{billing.billing_address.state_code}} {{billing.billing_address.zip_code}} </li>
-                            </ul>
-        
+                            <div class="row">
+                                <div class="col s6">
+                                    <ul>
+                                        <li><b>Credit Card:</b></li>
+                                        <li>"{{order.card.card_issuer}}" card ending in {{order.card.last_four}}</li>
+                                    </ul>                                    
+                                </div>
+                                <div class="col s6">
+                                    <ul>
+                                        <li><b>Billing Address:</b></li>
+                                        <li>{{billing.billing_address.street}}</li>
+                                        <li>{{billing.billing_address.city}}, {{billing.billing_address.state_code}} {{billing.billing_address.zip_code}}</li>
+                                    </ul>
+                                </div>
+                            </div>                                                            
                         </div>       
                     </div>
                 </div>
             <div class="col s12 m5">
-                <div class="card">
+                <div class="card small">
                     <div class="card-content">
                         <span class="card-title"><b>Shipping Address</b></span>
                         <ul>
