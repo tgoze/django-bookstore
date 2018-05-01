@@ -25,7 +25,7 @@
             </div>
           </li>
           <li>
-            <img class="slider-image" src="{{ best_sell_2.image_url }}" syle="background-position: left;"> 
+            <img class="slider-image" src="{{ best_sell_2.image_url }}" style="background-position: left;"> 
             <div class="black-text caption right-align">
               <h3>{{ best_sell_2.book.title }}</h3>
               <h5 class="light text-lighten-3">Read to your heart's content</h5>
@@ -54,13 +54,14 @@
           <div class="row">
             <div class="col s12">
               <b>{{ image.book.title }}</b>
-            </div>
-            <div class="row" style="position: absolute; margin: bottom;">
-              <div class="col s12">
-                ${{ image.book.inventory.retail_price }}  
-              </div>              
-            </div>                                  
-          </div>                    
+              <p class="grey-text">{{ image.book.inventory.quantity_on_hand }} left in stock</p>
+            </div>                                             
+          </div>
+          <div class="row" style="position: absolute; bottom: 0; right: 5%;">
+            <div class="col s12">
+              <h6>${{ image.book.inventory.retail_price }}</h6>
+            </div>              
+          </div>                     
         </div>
       </div>
     </a>
@@ -70,6 +71,9 @@
 <div class="row">
 {% endif %}
 {% endfor %}
+</div>
+<div class="row center-align">
+  <h5><a href="{% url 'customer_books' %}">See the rest of our library</a></h5>
 </div>
 
 <script type="text/javascript" src="{% static "js/jquery-3.3.1.js" %}"></script>

@@ -1,0 +1,76 @@
+{% extends 'Store/layout.html' %} 
+{% load staticfiles %} 
+{% load widget_tweaks %} 
+{% block head %}
+<link href="{% static "css/homestyle.css" %}" type="text/css" rel="stylesheet"> 
+{% endblock %}
+{% block nav %}
+<div class="nav-content teal darken-1">
+    <div class="nav-wrapper">
+        <form action="">
+            <div class="input-field">
+                <input id="search-books" type="search" style="min-height: 64px;" onkeyup="filterByTitle()" placeholder="Search for titles..." required>
+                <label class="label-icon" for="search"><i class="material-icons">search</i></label>
+                <i class="material-icons">close</i>
+            </div>            
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block content %}
+<div class="section">
+    <div class="row">
+        <div class="col s12">
+            <h4><i class="material-icons small">book</i> Books</h4>
+        </div>       
+    </div>
+</div>
+<table id="books">
+    <thead>
+        <tr>
+            <th>Book</th>
+            <th>Author</th>
+            <th>Publisher</th>
+            <th>Genre</th>
+            <th>Price</th>
+            <th>In Stock</th>
+        </tr>
+    </thead>
+    <tbody>                
+        {% for book in books %}
+        <tr>
+            <td><a href="{% url 'customer_book' book.book_id %}">{{ book.title }}</a></td>  
+            <td>{{ book.author.last_name }}, {{ book.author.first_name }}</td>
+            <td>{{ book.publisher.company_name }}</td>
+            <td>{{ book.genre.genre }}</td>                                
+            <td>${{ book.inventory.retail_price }}</td>
+            <td>{{ book.inventory.quantity_on_hand }}</td>
+        </tr>
+        {% endfor %}                   
+    </tbody>
+    {{notification}}
+</table>
+<div class="section"></div>
+<script type="text/javascript" src="{% static "js/jquery-3.3.1.js" %}"></script>
+<script type="text/javascript" src="{% static "js/materialize.min.js" %}"></script>
+<script type="text/javascript" src="{% static "js/books.js" %}"></script>
+<script>
+    function filterByTitle() {
+        var input, filter, table, tr, td, i;
+        input = document.getElementById("search-books");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("books");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0];
+            if (td) {
+                if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }       
+        }
+    }
+</script>
+{% endblock %}

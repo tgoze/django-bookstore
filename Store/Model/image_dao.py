@@ -56,7 +56,7 @@ class ImageDao(AbcDao):
 
         return images
 
-    def get_all(self):
+    def get_all(self, limit):
         images = []
         try:
             # Setup connection to the DB
@@ -65,7 +65,7 @@ class ImageDao(AbcDao):
             cursor = conn.cursor()
 
             # Calls the stored procedure
-            cursor.callproc('getAllImages')         
+            cursor.callproc('getAllImages', (limit,))         
             
             # This loop iterates through the resultsets
             for result in cursor.stored_results():

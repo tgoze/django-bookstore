@@ -1,6 +1,6 @@
 .slider .slides li .slider-image {
-    background-size: 30% auto;
-    background-position: left;
+    height: 100%;
+    background-size: 20% auto;
     background-repeat: no-repeat;
 }
 
@@ -8,10 +8,10 @@
     height: 300px;
     /* width: 300px; */
 }
-
+/* 
 .card .card-content {
     width: 25%; 
-}
+} */
 
 .card .card-image {
     max-width: 60%; 

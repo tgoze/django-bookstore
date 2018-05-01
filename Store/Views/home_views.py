@@ -22,12 +22,12 @@ class HomeView(TemplateView):
     
     @never_cache
     def get(self, request):
-        images = self.imdao.get_all()        
+        images = self.imdao.get_all(6)        
         context = {
             'images':images,
             'best_sell_1': images[0],
             'best_sell_2': images[1],
-            'best_sell_3': images[2],
+            'best_sell_3': images[2]
         }
         context['user_id'] = request.session['user_id']
         context['username'] = request.session['username']
@@ -43,6 +43,8 @@ class LoginView(TemplateView):
     user.username = 'not logged in'
     customer = CustomerInfo()
     cdao = CustomerInfoDAO()
+
+    @never_cache
     def get(self, request):  
         loginform = LoginForm()  
         registerform = RegisterUserForm()
