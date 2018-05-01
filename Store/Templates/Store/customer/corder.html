@@ -1,13 +1,7 @@
 {% extends 'Store/layout.html' %}
 {% load staticfiles %}
 {% load widget_tweaks %}
-{% block nav %}
-  {% if user_id is none %}
-    <li>You are currently logged out</li>
-  {% else %}
-    <li>Greetings, {{username}}</li>
-  {% endif %}
-{% endblock %} 
+
 {% block head %}
 
 {% endblock %}
@@ -19,23 +13,50 @@
 
 <div class="row">
     <div class="col s12 m5">
-            <div class="card">
+            <div class="card medium">
                 <div class="card-content">
                     <span class="card-title"><b>Order Overview</b></span>
-                    <ul>
-                        <li>Date Ordered: {{order.date_ordered}} </li>
-                        <li>Discount: {{order.discount}}</li>
-                        <li>Total Price: {{order.total_price}}</li>
-                        <li>Status: {{order.status}} </li>
-                    </ul>
-                    <div class="card-action">
-                        <a class="modal-trigger "href="#cancelOrder">Cancel Order</a>
-                    </div>     
+                    <h6><b>Status:</b> {{ order.status }}</h6>
+                    <table>
+                        <tbody>
+                            {% if original_price %}
+                            <tr>
+                                <td><b>Date Ordered:</b></td>
+                                <td>{{ order.date_ordered }}</td>
+                            </tr>
+                            <tr>
+                                <td><b>Original Price:</b></td>
+                                <td>${{ original_price }}</td>                            
+                            </tr>
+                            <tr>
+                                <td><b>Discount:</b></td>
+                                <td>{{ discount }}%</td>
+                            </tr>
+                            <tr>
+                                <td><b>Total Price:</b></td>
+                                <td>${{ order.total_price }}</td>                                
+                            </tr>
+                            <tr>
+                                <td><b>Money Saved:</b></td>
+                                <td><span class="green-text">${{ money_saved }}</span></td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td><b>Date Ordered:</b></td>
+                                <td>{{ order.date_ordered }}</td>
+                            </tr>
+                            <tr>
+                                <td><b>Total Price:</b></td>
+                                <td>${{ order.total_price }}</td>                                
+                            </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>                            
                 </div>       
             </div>
         </div>
     <div class="col s12 m5">
-        <div class="card">
+        <div class="card medium">
             <div class="card-content">
                 <span class="card-title"><b>Books on Order</b></span>
                 <table>
@@ -61,21 +82,29 @@
     </div>
     <div class="row">
             <div class="col s12 m5">
-                    <div class="card">
+                    <div class="card small">
                         <div class="card-content">
                             <span class="card-title"><b>Payment Info</b></span>
-                            <ul>
-                                <li>Credit Card: {{order.card.card_issuer}} Ending in {{order.card.last_four}}  </li>
-                                <li>Billing Address: </li>
-                                <li> {{order.card.billing_address.street}}  </li>
-                                <li> {{order.card.billing_address.city}} {{order.card.billing_address.state_code}} {{order.card.billing_address.zip_code}} </li>
-                            </ul>
-        
+                            <div class="row">
+                                <div class="col s6">
+                                    <ul>
+                                        <li><b>Credit Card:</b></li>
+                                        <li>"{{order.card.card_issuer}}" card ending in {{order.card.last_four}}</li>
+                                    </ul>                                    
+                                </div>
+                                <div class="col s6">
+                                    <ul>
+                                        <li><b>Billing Address:</b></li>
+                                        <li>{{billing.billing_address.street}}</li>
+                                        <li>{{billing.billing_address.city}}, {{billing.billing_address.state_code}} {{billing.billing_address.zip_code}}</li>
+                                    </ul>
+                                </div>
+                            </div>                                                            
                         </div>       
                     </div>
                 </div>
             <div class="col s12 m5">
-                <div class="card">
+                <div class="card small">
                     <div class="card-content">
                         <span class="card-title"><b>Shipping Address</b></span>
                         <ul>
@@ -86,21 +115,7 @@
                 </div>
                 </div>
             </div>
-            <div id="cancelOrder" class="modal">
-                    <form method="POST" class="col s12" >
-                    {% csrf_token %} 
-                    
-                    <div class="modal-content">
-                            <h3> Cancel Order?</h3>
-                        <div class="row">
-                            <p>Money Will be Refunded within 5-7 Business Days</p>
-                        </div>
-                    <div class="modal-footer">
-                        
-                        <button type="submit" class="modal-action waves-effect waves-green btn-flat" name="cancel-order">Cancel Order</button>
-                    </div>
-                    </form>
-                    </div>
+    
 <script type="text/javascript" src="{% static "js/jquery-3.3.1.js" %}"></script>
 <script type="text/javascript" src="{% static "js/materialize.min.js" %}"></script>
 <script type="text/javascript" src="{% static "js/books.js" %}"></script>

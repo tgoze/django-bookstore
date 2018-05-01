@@ -30,9 +30,7 @@ class ReportDao():
                         order.date_ordered =x[1]
                         order.total_price = x[2]
                         order.discount = x[3]
-                        order.customer = udao.get_byid(x[4])
-                        order.shipping_address = cadao.get_byid(x[5])
-                        order.card = pdao.get_byid(x[6])
+                        order.customer = x[4]                       
                         orders.append(order)
 
                 # Close the connection to the DB
@@ -95,9 +93,7 @@ class ReportDao():
                         order.date_ordered =x[1]
                         order.total_price = x[2]
                         order.discount = x[3]
-                        order.customer = udao.get_byid(x[4])
-                        order.shipping_address = cadao.get_byid(x[5])
-                        order.card = pdao.get_byid(x[6])
+                        order.customer = x[4]        
                         orders.append(order)
 
                 # Close the connection to the DB
@@ -159,9 +155,7 @@ class ReportDao():
                     order.date_ordered =x[1]
                     order.total_price = x[2]
                     order.discount = x[3]
-                    order.customer = udao.get_byid(x[4])
-                    order.shipping_address = cadao.get_byid(x[5])
-                    order.card = pdao.get_byid(x[6])
+                    order.customer = x[4]        
                     orders.append(order)
 
             # Close the connection to the DB
@@ -225,9 +219,7 @@ class ReportDao():
                     order.date_ordered =x[1]
                     order.total_price = x[2]
                     order.discount = x[3]
-                    order.customer = udao.get_byid(x[4])
-                    order.shipping_address = cadao.get_byid(x[5])
-                    order.card = pdao.get_byid(x[6])
+                    order.customer = x[4]        
                     orders.append(order)
 
             # Close the connection to the DB

@@ -1,13 +1,7 @@
 {% extends 'Store/layoutadmin.html' %}
 {% load staticfiles %}
 {% load widget_tweaks %}
-{% block nav %}
-  {% if user_id is none %}
-    <li>You are currently logged out</li>
-  {% else %}
-    <li>Greetings, {{username}}</li>
-  {% endif %}
-{% endblock %} 
+
 {% block head %}
 <link href="{%  static "css/bookstyle.css" %}" type="text/css" rel="stylesheet">
 {% endblock %}
@@ -50,18 +44,7 @@
                 </div>       
             </div>
         </div>
-    </div>
-    <div class="row">
-    <div class="col s12 ">
-            <div class="card">
-                <div class="card-content">
-                    <span class="card-title"><b>TBD</b></span>
-                    
-                    
-                </div>       
-            </div>
-        </div>
-    </div>
+    </div>    
 <div id="updategenre" class="modal">
         <form method="POST" class="col s12">
             {% csrf_token %}

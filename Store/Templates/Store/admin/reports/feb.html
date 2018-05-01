@@ -1,13 +1,7 @@
 {% extends 'Store/layoutadmin.html' %}
 {% load staticfiles %}
 {% load widget_tweaks %}
-{% block nav %}
-  {% if user_id is none %}
-    <li>You are currently logged out</li>
-  {% else %}
-    <li>Greetings, {{username}}</li>
-  {% endif %}
-{% endblock %} 
+ 
 {% block head %}
 {% endblock %}
 
@@ -37,7 +31,7 @@
                         <tbody>
                             {% for order in orders %}
                             <tr>
-                                <td>{{order.order_id}}</td>
+                                <td><a href="{% url 'adminorderdetail' order.order_id %}">{{order.order_id}}</a></td>
                                 <td>${{order.total_price}}</td>
                             </tr>
                             {% endfor %}

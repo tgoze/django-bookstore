@@ -1,36 +1,30 @@
 {% extends 'Store/layoutadmin.html' %}
 {% load staticfiles %}
 {% load widget_tweaks %}
-{% block nav %}
-  {% if user_id is none %}
-    <li>You are currently logged out</li>
-  {% else %}
-    <li>Greetings, {{username}}</li>
-  {% endif %}
-{% endblock %} 
+ 
 {% block head %}
 <link href="{%  static "css/bookstyle.css" %}" type="text/css" rel="stylesheet">
 {% endblock %}
 {% block content %}
-<ul id="dropdown2" class="dropdown-content">
-        <li><a href="{%  url 'admincancelledorders' %}">  Cancelled Orders</a></li>
-      </ul>
-<h4><a style="color: black" class="dropdown-trigger" href="#!" data-target="dropdown2"> Orders</a></h4>
+
+<h4> Orders</h4>
 
 <table>
     <thead>
         <tr>
             <th>Order ID</th>
-            <th> Customer ID</th>
-            <th> Date Ordered </th>
+            <th>Customer ID</th>
+            <th>Date Ordered </th>
+            <th>Status</th>
         </tr>
     </thead>
     <tbody>
             {% for order in orders %}
             <tr>
-                <td><a href="orders/details/{{order.order_id}}" >{{ order.order_id }}</a></td>       
+                <td><a href="{% url 'adminorderdetail' order.order_id %}">{{order.order_id}}</a></td>
                 <td>{{ order.customer.id}}</td> 
-                <td>{{ order.date_ordered}}</td>           
+                <td>{{ order.date_ordered}}</td>
+                <td>{{ order.status }}</td>           
             </tr>
             {% endfor %}
         </form>           

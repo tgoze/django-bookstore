@@ -47,11 +47,9 @@
                     <br/>
                     <span class="strong">{{ order.customer.first_name }} {{ order.customer.last_name }}</span>
                     <br/>
-                    <span>{{ order.card.billing_address.street }}</span>
+                    <span>{{ payment_info.billing_address.street }}</span>
                     <br/>
-                    <span>{{ order.card.billing_address.city }}, {{ order.card.billing_address.state_code }} {{ order.card.billing_address.zip_code }}</span>
-                    <br/>
-                    <span>{{ order.customer.work_phone}}</span>
+                    <span>{{ payment_info.billing_address.city }}, {{ payment_info.billing_address.state_code }} {{ payment_info.billing_address.zip_code }}</span>                                        
                 </p>
             </div>
             <div class="col s12 m6 l6">
@@ -100,20 +98,20 @@
                         <td>{% multiply book.book.inventory.retail_price book.quantity %}</td>                            
                     </tr>
                     {% endfor %}                 
-                    {% if discount_price %}
+                    {% if original_price %}
                     <tr>
                         <td></td>                                                                        
                         <td></td>
                         <td></td>
                         <td><b>Subtotal:</b></td>
-                        <td><h6 class="grey-text strike">${{ order.total_price }}</h6></td>
+                        <td><h6 class="grey-text strike">${{ original_price }}</h6></td>
                     </tr>
                     <tr>
                         <td></td>                                                                        
                         <td></td>
                         <td></td>
                         <td><b>Discounted Price:</b></td>
-                        <td><h6>${{ discount_price }}</h6></td>
+                        <td><h6>${{ order.total_price }}</h6></td>
                     </tr>
                     {% else %}
                     <tr>

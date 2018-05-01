@@ -1,13 +1,7 @@
 {% extends 'Store/layoutadmin.html' %}
 {% load staticfiles %}
 {% load widget_tweaks %}
-{% block nav %}
-  {% if user_id is none %}
-    <li>You are currently logged out</li>
-  {% else %}
-    <li>Greetings, {{username}}</li>
-  {% endif %}
-{% endblock %} 
+
 {% block head %}
 <link href="{%  static "css/bookstyle.css" %}" type="text/css" rel="stylesheet">
 {% endblock %}
@@ -51,7 +45,7 @@
                     {% for order in orders %}
                     <tr>
                         <td><a href="{% url 'adminorderdetail' order.order_id %}" >{{ order.order_id }}</a></td>       
-                        <td>{{ order.total_price}}</td> 
+                        <td>${{ order.total_price}}</td> 
                         <td>{{ order.date_ordered}}</td>           
                     </tr>
                     {% endfor %}

@@ -19,15 +19,20 @@ from bcrypt import *
 class HomeView(TemplateView):
     template_name = 'Store/index.html'
     imdao = ImageDao()
+    
     @never_cache
     def get(self, request):
-        images = self.imdao.get_all()
+        images = self.imdao.get_all()        
         context = {
-            'images':images
+            'images':images,
+            'best_sell_1': images[0],
+            'best_sell_2': images[1],
+            'best_sell_3': images[2],
         }
         context['user_id'] = request.session['user_id']
         context['username'] = request.session['username']
         return render(request, self.template_name, context)
+
         
 class LoginView(TemplateView):
     user = User()
@@ -75,6 +80,7 @@ class LoginView(TemplateView):
                     context['user_id'] = request.session['user_id']
                     context['username'] = request.session['username']                    
                     self.udao.updateLastLogin(user.id)
+                    
                     if user.is_staff == 0 and user.is_active == 1:
                         return redirect(reverse('home'))
                     elif user.is_active == 0 and user.is_staff == 0:
@@ -92,8 +98,7 @@ class LoginView(TemplateView):
                         'registerform': registerform,   
                         'login_error': 'Either username or password is incorrect'        
                     }          
-                    return render(request, self.template_name, context)
-                
+                    return render(request, self.template_name, context)                
             else:
                 context['text'] = 'try again'
                 return render(request, self.template_name, context)
@@ -125,3 +130,8 @@ class LoginView(TemplateView):
                 }           
 
                 return render(request, self.template_name, context)
+    
+
+def logout(request):
+    request.session.flush()
+    return redirect(reverse('login'))

@@ -119,10 +119,13 @@ class AdminBookDetailView(TemplateView):
             'book_form': book_form,
             'image_form': image_form
         }
-
+        context['user_id'] = request.session['user_id'],
+        context['username'] = request.session['username']
         return render(request, self.template_name, context)
 
     def post(self, request, book_id):
+        user_id =  request.session['user_id'] 
+        username = request.session['username'] 
         book_form = BookForm(request.POST, author_choices=self.authors, publisher_choices=self.publishers, genre_choices=self.genres)
         book = self.book_dao.get_byid(book_id)
         
@@ -162,9 +165,13 @@ class AdminBookDetailView(TemplateView):
                 self.inventory_dao.update(updated_inventory)
 
                 context['notification'] = "Book updated successfully!"
+                context['user_id'] = request.session['user_id'],
+                context['username'] = request.session['username']
                 return redirect(reverse(('adminbookdetail'), kwargs={'book_id': book_id}))
               
             else:
+                context['user_id'] = request.session['user_id'],
+                context['username'] = request.session['username']
                 context['notification'] = "Not a valid submission."
 
         elif 'delete-book' in request.POST:
@@ -183,7 +190,7 @@ class AdminBookDetailView(TemplateView):
                 image = Image()
                 image.image_url = uploaded_file_url
                 image.caption = ''
-                image.book_id = book_id
+                image.book.book_id = book_id
 
                 self.image_dao.create(image)
 
@@ -241,9 +248,7 @@ class AdminAddBookView(TemplateView):
                     'author_form': author_form,
                     'genre_form': genre_form
                 }
-
-                user_id =  request.session['user_id'] 
-                username = request.session['username'] 
+                
                 context['user_id'] = request.session['user_id'],
                 context['username'] = request.session['username'] 
 
@@ -254,9 +259,7 @@ class AdminAddBookView(TemplateView):
             return redirect(reverse('login'))     
 
     def post(self,request):  
-        context = {}    
-        user_id =  request.session['user_id'] 
-        username = request.session['username'] 
+        context = {}            
         self.get_dropdown_data()
         # Handle POST requests
         if 'create-book' in request.POST:
@@ -305,9 +308,9 @@ class AdminAddBookView(TemplateView):
                 publisher.contact_name = sub_publisher_form.cleaned_data['contact_name']
                 self.publisher_dao.create(publisher)
                 context['user_id'] = request.session['user_id'],
-                context['username'] = request.session['username'] 
-                return redirect(reverse('adminaddbook'))
+                context['username'] = request.session['username']                 
                 context['notification'] = "Publisher saved successfully!"
+                return redirect(reverse('adminaddbook'))
             else:
                 context['notification'] = "Not a valid submission."         
         
@@ -320,9 +323,9 @@ class AdminAddBookView(TemplateView):
 
                 self.author_dao.create(author) 
                 context['user_id'] = request.session['user_id'],
-                context['username'] = request.session['username'] 
-                return redirect(reverse('adminaddbook'))
+                context['username'] = request.session['username']                 
                 context['notification'] = "Author saved successfully!"
+                return redirect(reverse('adminaddbook'))
             else:
                 context['notification'] = "Not a valid submission."
 

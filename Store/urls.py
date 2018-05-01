@@ -3,7 +3,6 @@ from Store.Views.home_views import *
 from Store.Views.book_views import *
 from Store.Views.customer_views import *
 from Store.Views.order_views import *
-from Store.Views import order_views
 from Store.Views.admin_views import *
 from Store.Views.publisher_views import *
 from Store.Views.genre_views import * 
@@ -18,6 +17,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('', HomeView.as_view(), name='home'),
     path('login', LoginView.as_view(), name='login'),
+    path('logout', logout, name='logout'),
 
     path('admin/index', AdminIndexView.as_view(), name='adminindex'),
 
@@ -50,7 +50,7 @@ urlpatterns = [
     path('admin/mar', AdminMarchReport.as_view(), name='march'),
     path('admin/apr', AdminAprilReport.as_view(), name='april'),
     
-    path('customer/books', CusBookView.as_view(), name="customer_books"),
+    # path('customer/books', CusBookView.as_view(), name="customer_books"),
     path('customer/books/details/<int:book_id>/', CusBookDetailView.as_view(), name="customer_book"),   
     path('customer/cart', CartView.as_view(), name="cart"),
     path('customer/cart/ajax/update/', update_cart_view, name="cart_update"),
@@ -65,5 +65,5 @@ urlpatterns = [
     path('customer/corder/<int:order_id>/', CustomerOrderView.as_view(), name='customerorder')
 ]
 
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+#if settings.DEBUG:
+    #urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

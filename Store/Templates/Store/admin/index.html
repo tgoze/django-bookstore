@@ -1,56 +1,44 @@
 {% extends 'Store/layoutadmin.html' %}
 {% load staticfiles %}
 {% load widget_tweaks %}
-{% block nav %}
-  {% if user_id is none %}
-    <li>You are currently logged out</li>
-  {% else %}
-    <li><b>Greetings, {{username}}</b></li>
-  {% endif %}
-{% endblock %} 
+
 {% block head %}
 <link href="{%  static "css/bookstyle.css" %}" type="text/css" rel="stylesheet">
 {% endblock %}
 {% block content %}
 <h1 align="middle">Admin Management Page</h1>
-<table>
-  <tr>
-   
-  </tr>
-  <tr>
-    <td>
-        <a href="{% url 'adminbookindex' %}"> BOOKS</a>
-    </td>
-    <td> 
-        <a href="{% url 'admincustomerindex' %}"> CUSTOMERS</a>
-    </td>
-  </tr>
-  <tr>
-    <td>
-        <a href="{% url 'adminorderindex' %}"> ORDERS</a>
-      </td>
-    <td>
-        <a href="{% url 'admininventoryindex' %}"> INVENTORY</a>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <a href="{% url 'admingenreindex' %}"> GENRES </a>
-    </td>
-    <td>
-        <a href="{% url 'adminpublisherindex' %}">PUBLISHERS</a>
-    </td>
-  </tr>
-  <tr>
-    <td>
-        <a href="{% url 'adminauthorindex' %}">AUTHORS</a>
-    </td>
-    <td>
-        <a href="{% url 'adminreportindex' %}">REPORTS</a>
-    </td>
-  </tr>
-</table>
-<script type="text/javascript" src="{% static "js/jquery-3.3.1.js" %}"></script>
-<script type="text/javascript" src="{% static "js/materialize.min.js" %}"></script>
-<script type="text/javascript" src="{% static "js/books.js" %}"></script>
+<div class="row section">
+  <div class="row">
+    <div class="col s6">
+      <a href="{% url 'adminbookindex' %}"><i class="material-icons">book</i>  Books</a>
+    </div>
+    <div class="col s6">
+      <a href="{% url 'admincustomerindex' %}"><i class="material-icons">account_circle</i>  Customers</a>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col s6">
+      <a href="{% url 'admininventoryindex' %}"><i class="material-icons">collections_bookmark</i>  Inventory</a>
+    </div>
+    <div class="col s6">
+      <a href="{% url 'adminpublisherindex' %}"><i class="material-icons">bookmark</i>  Publishers</a>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col s6">
+      <a href="{% url 'adminorderindex' %}"><i class="material-icons">receipt</i>  Orders</a>
+    </div>
+    <div class="col s6">
+      <a href="{% url 'adminauthorindex' %}"><i class="material-icons">mode_edit</i>  Authors</a>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col s6">
+      <a href="{% url 'admingenreindex' %}"><i class="material-icons">filter_list</i>  Genres</a>
+    </div>
+    <div class="col s6">
+      <a href="{% url 'adminreportindex' %}"><i class="material-icons">reorder</i>  Reports</a>
+    </div>
+  </div>
+</div>
 {% endblock %}
