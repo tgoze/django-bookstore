@@ -29,6 +29,8 @@ from Store.forms import *
 from bcrypt import *
 from django.views.decorators.cache import never_cache
 
+import calendar
+
 class AdminReportIndex(TemplateView):
     template_name = 'Store/admin/reports/reports.html'
     rdao = ReportDao()
@@ -45,11 +47,46 @@ class AdminReportIndex(TemplateView):
             'avg': self.rdao.getAVGTransactionAmount(),
             'num': self.rdao.getTotalNumberOfOrders()
         }
-        user_id =  request.session['user_id'] 
-        username = request.session['username'] 
+
         context['user_id'] = request.session['user_id']
         context['username'] = request.session['username']
         return render(request,self.template_name, context) 
+
+# Testing -tgoze
+class AdminSalesReportByMonth(TemplateView):
+    template_name = 'Store/admin/reports/months.html'
+    rdao = ReportDao()
+    
+    @never_cache
+    def get(self, request):
+        context= {}
+        context['user_id'] = request.session['user_id']
+        context['username'] = request.session['username']
+        return render(request, self.template_name, context)
+
+    def post(self, request):
+        context = {}
+        month_num = request.POST.get('month-value')
+        year_num = request.POST.get('year-value')
+        orders = self.rdao.getOrdersByMnthYr(month_num, year_num)
+
+        total_revenue = 0
+        for order in orders:
+            total_revenue += order.total_price
+
+        month = calendar.month_name[int(month_num)]
+
+        context = {
+            'orders': orders,
+            'total_revenue': total_revenue,
+            'num_orders': len(orders),
+            'month': month
+        }
+        
+        context['user_id'] = request.session['user_id']
+        context['username'] = request.session['username']
+        return render(request, self.template_name, context)
+
 
 class AdminJanReport(TemplateView):
     template_name = 'Store/admin/reports/jan.html'

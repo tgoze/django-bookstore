@@ -45,6 +45,7 @@ urlpatterns = [
     path('admin/orders/details/<int:order_id>/', AdminOrderDetailView.as_view(), name='adminorderdetail'),
 
     path('admin/reports', AdminReportIndex.as_view(), name='adminreportindex'),
+    path('admin/reports/months/', AdminSalesReportByMonth.as_view(), name='adminmonths'),
     path('admin/jan', AdminJanReport.as_view(), name='january'),
     path('admin/feb', AdminFebReport.as_view(), name='february'),
     path('admin/mar', AdminMarchReport.as_view(), name='march'),
