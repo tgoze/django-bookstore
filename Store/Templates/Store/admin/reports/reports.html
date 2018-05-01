@@ -15,24 +15,7 @@
             
         </tr>
     </thead>
-    <tbody>
-         <tr>
-             <td><a style="color: black" href="{% url 'january' %}"> January</a></td>
-             <td>${{jan_revenue}}</td>
-         </tr>
-         <tr>
-            <td><a style="color: black" href="{% url 'february' %}"> February</a></td>
-             <td> ${{feb_revenue}}</td>
-         </tr>
-          <tr>
-            <td><a style="color: black" href="{% url 'march' %}"> March</a></td>
-              <td>${{mar_revenue}}</td>
-          </tr>
-          <tr>
-            <td><a style="color: black" href="{% url 'april' %}"> April</a></td>
-            <td>${{apr_revenue}}</td>
-        </tr>
-    </tbody>
+    <a href="{% url 'adminmonths' %}">Look at the reports brudda</a>
     <tfoot>
         <tr>
             <td> Total Revenue: ${{total}} </td>
