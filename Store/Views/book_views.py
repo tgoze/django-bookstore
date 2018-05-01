@@ -302,17 +302,23 @@ class CusBookView(TemplateView):
     
     @never_cache
     def get(self, request):
-        if 'user_id' in request.session:
+        context = {}
+        if 'user_id' in request.session:                                
+            # Create forms for Django to handle                        
             books = self.book_dao.get_all()
-            username = request.session['username'] 
+
             context = {            
-                'user_id': request.session['user_id'],
-                'books': books
+                'books': books,
+                'num_books': len(books)
             }
+
+            context['user_id'] = request.session['user_id'],
             context['username'] = request.session['username']
+
             return render(request, self.template_name, context)
+              
         else:
-            return redirect(reverse('login'))
+            return redirect(reverse('login'))  
 
 
 class CusBookDetailView(TemplateView):

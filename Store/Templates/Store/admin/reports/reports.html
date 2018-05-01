@@ -7,21 +7,16 @@
 {% endblock %}
 {% block content %}
 <h4>Reports By Month</h4>
+<div class="row section">
+    <a href="{% url 'adminmonths' %}">View Monthly Reports</a>
+</div>
 <table>
-    <thead>
-        <tr>
-            <th>Month</th>
-            <th> Total Revenue </th>
-            
-        </tr>
-    </thead>
-    <a href="{% url 'adminmonths' %}">Look at the reports brudda</a>
     <tfoot>
         <tr>
             <td> Total Revenue: ${{total}} </td>
         </tr>
         <tr>
-            <td> AVG Transaction Amount: ${{avg}}</td>
+            <td> Average Transaction Amount: ${{avg}}</td>
         </tr>
         <tr>
             <td>Total Number of Orders: {{num}} </td>
