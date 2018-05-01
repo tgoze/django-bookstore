@@ -61,8 +61,11 @@ urlpatterns = [
     path('customer/customeraccount', CustomerAccountView.as_view(), name='customeraccount'),
     path('customer/index', CustomerIndexView.as_view(), name='customerindex'),
     path('customer/caddressaccount/<int:address_id>',CAddressAccountView.as_view(), name='customeraddress'),
+    path('customer/cpayment.html', CustomerPaymentView.as_view(), name='cpaymentindex'),
+    path('customer/caddressindex', CustomerAddressIndexView.as_view(), name='caddressindex'),
     path('customer/ccard/<int:card_id>/', CustomerCardView.as_view(), name='customercard' ),
     path('customer/addcard', CustomerAddCardView.as_view(), name='customeraddcard'),
+    path('customer/corderindex', CustomerOrderIndexView.as_view(), name='customerorderindex'),
     path('customer/corder/<int:order_id>/', CustomerOrderView.as_view(), name='customerorder')
 ]
 

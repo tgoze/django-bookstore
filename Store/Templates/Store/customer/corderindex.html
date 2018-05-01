@@ -1,19 +1,15 @@
-{% extends 'Store/layoutadmin.html' %}
-{% load staticfiles %}
-{% load widget_tweaks %}
- 
-{% block head %}
-<link href="{%  static "css/bookstyle.css" %}" type="text/css" rel="stylesheet">
-{% endblock %}
-{% block content %}
+{% extends 'Store/layout.html' %} 
+{% load staticfiles %} 
+{% load widget_tweaks %} 
 
+{% block content %}
 <h4> Orders</h4>
 
 <table>
     <thead>
         <tr>
             <th>Order ID</th>
-            <th>Customer ID</th>
+            <th>Total Price</th>
             <th>Date Ordered </th>
             
         </tr>
@@ -21,8 +17,8 @@
     <tbody>
             {% for order in orders %}
             <tr>
-                <td><a href="{% url 'adminorderdetail' order.order_id %}">{{order.order_id}}</a></td>
-                <td>{{ order.customer.id}}</td> 
+                <td><a href="{% url 'customerorder' order.order_id %}">{{order.order_id}}</a></td>
+                <td>{{ order.total_price}}</td> 
                 <td>{{ order.date_ordered}}</td>
                           
             </tr>
