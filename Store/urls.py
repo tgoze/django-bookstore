@@ -45,6 +45,7 @@ urlpatterns = [
     path('admin/orders/details/<int:order_id>/', AdminOrderDetailView.as_view(), name='adminorderdetail'),
 
     path('admin/reports', AdminReportIndex.as_view(), name='adminreportindex'),
+    path('admin/reports/months/', AdminSalesReportByMonth.as_view(), name='adminmonths'),
     path('admin/jan', AdminJanReport.as_view(), name='january'),
     path('admin/feb', AdminFebReport.as_view(), name='february'),
     path('admin/mar', AdminMarchReport.as_view(), name='march'),
@@ -60,8 +61,11 @@ urlpatterns = [
     path('customer/customeraccount', CustomerAccountView.as_view(), name='customeraccount'),
     path('customer/index', CustomerIndexView.as_view(), name='customerindex'),
     path('customer/caddressaccount/<int:address_id>',CAddressAccountView.as_view(), name='customeraddress'),
+    path('customer/cpayment.html', CustomerPaymentView.as_view(), name='cpaymentindex'),
+    path('customer/caddressindex', CustomerAddressIndexView.as_view(), name='caddressindex'),
     path('customer/ccard/<int:card_id>/', CustomerCardView.as_view(), name='customercard' ),
     path('customer/addcard', CustomerAddCardView.as_view(), name='customeraddcard'),
+    path('customer/corderindex', CustomerOrderIndexView.as_view(), name='customerorderindex'),
     path('customer/corder/<int:order_id>/', CustomerOrderView.as_view(), name='customerorder')
 ]
 

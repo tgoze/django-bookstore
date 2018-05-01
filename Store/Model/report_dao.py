@@ -7,6 +7,39 @@ from Store.Model.abc_dao import AbcDao
 from mysql.connector import MySQLConnection, Error
 class ReportDao():
 
+    def getOrdersByMnthYr(self, month, year):
+        orders = []
+        try:
+            # Setup connection to the DB
+            db_config = read_db_config()
+            conn = MySQLConnection(**db_config)
+            cursor = conn.cursor()
+            args = (month, year)
+            
+            # Calls the stored procedure
+            cursor.callproc('getOrdersByMnthYr', args)  
+            # This loop iterates through the resultsets
+            for result in cursor.stored_results():
+                # This loop iterates through the rows in each resultset
+                for x in result.fetchall():
+                    order = RetailOrder()
+                    order.order_id = x[0]
+                    order.date_ordered =x[1]
+                    order.total_price = x[2]
+                    order.discount = x[3]
+                    order.customer = x[4]                       
+                    orders.append(order)
+
+            # Close the connection to the DB
+            cursor.close()
+            conn.close()
+        except Error as error:
+            print(error)
+        except Exception as e:
+            print(e)
+
+        return orders
+
     def getJanuaryOrders(self):
             orders = []
             try:
