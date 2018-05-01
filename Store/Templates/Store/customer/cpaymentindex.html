@@ -1,0 +1,54 @@
+{% extends 'Store/layout.html' %} 
+{% load staticfiles %} 
+{% load widget_tweaks %} 
+{% block head %}
+<link href="{% static " css/checkout.css " %}" type="text/css" rel="stylesheet"> 
+{% endblock %} 
+{% block nav %} 
+{% if user_id is none %}
+<li>You are currently logged out</li>
+{% else %}
+<li>
+    <b>Greetings, {{ username }}!</b>
+</li>
+{% endif %} {% endblock %} {% block content %}
+<h3>Payment Information</h3>
+<div class="row">
+<div class="col s12 m5">
+        <div class="card">
+            <div class="card-content">
+                <span class="card-title">
+                    
+                </span>
+                <table>
+                    <tr>
+                        <thead>
+                            <td>Cards on File</td>
+                            <td> </td>
+                        </thead>
+                    </tr>
+                    {% for p in payment %}
+                    <tr>
+                        <form request="POST" name="card-detail">
+                            <td>{{p.card_issuer}} </td>
+                            <td>
+                                <a href='ccard/{{p.card_id}}'>ending in {{p.last_four}}</a>
+                            </td>
+
+                        </form>
+                    </tr>
+                    {% endfor %}
+                </table>
+                <div class="card-action">
+                    <a class="modal-trigger btn " href="addcard">
+                        <i class=" material-icons">add_box</i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<script type="text/javascript" src="{% static "js/jquery-3.3.1.js" %}"></script>
+<script type="text/javascript" src="{% static "js/materialize.min.js" %}"></script>
+<script type="text/javascript" src="{% static "js/books.js" %}"></script> {% endblock %}
