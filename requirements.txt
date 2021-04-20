@@ -31,7 +31,7 @@ Pillow==5.1.0
 pluggy==0.6.0
 psutil==5.4.3
 pwn==1.0
-pwntools==3.12.0
+pwntools==4.3.1
 py==1.5.2
 pyasn1==0.4.2
 pycparser==2.18
